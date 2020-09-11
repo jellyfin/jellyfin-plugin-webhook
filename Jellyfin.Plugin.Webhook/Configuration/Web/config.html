@@ -1,0 +1,103 @@
+﻿<div data-role="page" id="webhookConfigurationPage" class="page type-interior pluginConfigurationPage fullWidthContent"
+     data-controller="__plugin/WebhookJS">
+    <div class="content-primary">
+        <div class="verticalSection">
+            <div class="sectionTitleContainer">
+                <h2 class="sectionTitle">Webhook</h2>
+                <a is="emby-linkbutton" class="raised raised-mini" style="margin-left: 2em;" target="_blank"
+                   href="https://github.com/crobibero/jellyfin-plugin-webhook">
+                    <i class="md-icon button-icon button-icon-left secondaryText"></i>
+                    <span>Help</span>
+                </a>
+            </div>
+        </div>
+
+        <form class="webhookConfigurationForm">
+            <div class="inputContainer">
+                <input is="emby-input" type="text" id="txtServerUrl" required="required" label="Server Url:"/>
+                <span>For linking to content. Include base url.</span>
+            </div>
+            <button id="btnAddDiscord" is="emby-button" type="button" class="raised button block">
+                <span>Add Discord Destination</span>
+            </button>
+            <br/>
+            <div id="configurationWrapper">
+                
+            </div>
+            <br/>
+            <button id="saveConfig" is="emby-button" type="submit" class="raised button-submit block">
+                <span>Save</span>
+            </button>
+        </form>
+    </div>
+
+    <template id="template-base">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
+            <span>For linking to content. Include base url.</span>
+        </div>
+        <div id="notificationTypeGroup" style="padding-left: 35px;">
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableMovies"/>
+                <span>Movies</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableEpisodes"/>
+                <span>Episodes</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeasons"/>
+                <span>Season</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeries"/>
+                <span>Series</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableAlbums"/>
+                <span>Albums</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSongs"/>
+                <span>Songs</span>
+            </label>
+        </div>
+        <div class="inputContainer">            
+            <label>Template:</label>
+            <div>
+                <textarea data-name="txtTemplate" style="width: 100%; height: 400px"></textarea>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-discord">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtAvatarUrl" label="Avatar Url:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUsername" label="Webhook Username:"/>
+        </div>
+        <div class="selectContainer">
+            <select is="emby-select" data-name="ddlMentionType" label="Mention Type:">
+                <option value="Everyone">@everyone</option>
+                <option value="Here">@here</option>
+                <option value="None">None</option>
+            </select>
+        </div>
+        <div class="inputContainer">
+            <label>Embed Color</label>
+            <input type="color" data-name="EmbedColor" is="emby-input" style="height: 2.2em;"/>
+            <input type="text" is="emby-input" data-name="txtEmbedColor"/>
+        </div>
+    </template>
+
+    <style>
+        .checkboxContainer {
+            max-width: fit-content;
+        }
+
+        #embedColor:hover {
+            cursor: pointer;
+        }
+    </style>
+</div>

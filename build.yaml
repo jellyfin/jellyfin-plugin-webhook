@@ -1,0 +1,15 @@
+---
+name: "Webhook"
+guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
+version: "1.0.0.0"
+targetAbi: "10.6.0.0"
+owner: "crobibero"
+overview: "Sends notifications."
+description: >
+  Sends notifications to destinations via webhooks.
+category: "Notifications"
+artifacts:
+- "Jellyfin.Plugin.Webhook.dll"
+- "Handlebars.dll"
+changelog: >
+  Initial release

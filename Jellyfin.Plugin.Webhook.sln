@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jellyfin.Plugin.Webhook", "Jellyfin.Plugin.Webhook\Jellyfin.Plugin.Webhook.csproj", "{4BE7DEEF-3ACC-4023-8066-5EA3B5CA1A7C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BE7DEEF-3ACC-4023-8066-5EA3B5CA1A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BE7DEEF-3ACC-4023-8066-5EA3B5CA1A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BE7DEEF-3ACC-4023-8066-5EA3B5CA1A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BE7DEEF-3ACC-4023-8066-5EA3B5CA1A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
