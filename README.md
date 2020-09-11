@@ -7,7 +7,7 @@ https://repo.codyrobibero.dev/manifest.json
 
 Use Handlebars templating engine to format notifications however you wish.
 
-See `Templates` for sample templates.
+See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
 
 Destinations:
 - Discord
