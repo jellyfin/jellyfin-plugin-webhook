@@ -10,10 +10,10 @@ Use Handlebars templating engine to format notifications however you wish.
 See `Templates` for sample templates.
 
 Destinations:
--   Discord
+- Discord
+- Gotify
 
 TODO
-- Gotify
 - Pushbullet
 - Pushover
 - Prowl
