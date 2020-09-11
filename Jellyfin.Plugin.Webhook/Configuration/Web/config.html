@@ -20,10 +20,11 @@
             <button id="btnAddDiscord" is="emby-button" type="button" class="raised button block">
                 <span>Add Discord Destination</span>
             </button>
+            <button id="btnAddGotify" is="emby-button" type="button" class="raised button block">
+                <span>Add Gotify Destination</span>
+            </button>
             <br/>
-            <div id="configurationWrapper">
-                
-            </div>
+            <div id="configurationWrapper"></div>
             <br/>
             <button id="saveConfig" is="emby-button" type="submit" class="raised button-submit block">
                 <span>Save</span>
@@ -62,7 +63,7 @@
                 <span>Songs</span>
             </label>
         </div>
-        <div class="inputContainer">            
+        <div class="inputContainer">
             <label>Template:</label>
             <div>
                 <textarea data-name="txtTemplate" style="width: 100%; height: 400px"></textarea>
@@ -88,6 +89,15 @@
             <label>Embed Color</label>
             <input type="color" data-name="EmbedColor" is="emby-input" style="height: 2.2em;"/>
             <input type="text" is="emby-input" data-name="txtEmbedColor"/>
+        </div>
+    </template>
+
+    <template id="template-gotify">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtPriority" label="Priority:"/>
         </div>
     </template>
 

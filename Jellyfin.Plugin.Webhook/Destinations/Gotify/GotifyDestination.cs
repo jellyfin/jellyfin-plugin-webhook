@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using MediaBrowser.Common.Net;
+using MediaBrowser.Model.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
@@ -26,9 +27,28 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
         }
 
         /// <inheritdoc />
-        public Task SendAsync(GotifyOption options, Dictionary<string, object> message)
+        public async Task SendAsync(GotifyOption options, Dictionary<string, object> data)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                // Add gotify specific properties.
+                data["Priority"] = options.Priority;
+
+                var body = options.GetCompiledTemplate()(data);
+                _logger.LogTrace("SendAsync Body: {body}", body);
+                var requestOptions = new HttpRequestOptions
+                {
+                    Url = options.WebhookUri.TrimEnd() + $"/message?token={options.Token}",
+                    RequestContent = body,
+                    RequestContentType = MediaTypeNames.Application.Json
+                };
+
+                using var response = await _httpClient.Post(requestOptions).ConfigureAwait(false);
+            }
+            catch (HttpException e)
+            {
+                _logger.LogWarning(e, "Error sending notification.");
+            }
         }
     }
 }
