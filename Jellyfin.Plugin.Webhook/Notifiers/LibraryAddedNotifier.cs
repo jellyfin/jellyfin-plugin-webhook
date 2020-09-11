@@ -81,33 +81,6 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             _gotifyDestination = new GotifyDestination(
                 loggerFactory.CreateLogger<GotifyDestination>(),
                 httpClient);
-
-            /*var c = new PluginConfiguration
-            {
-                ServerUrl = "http://localhost:8096",
-                DiscordOptions = new[]
-                {
-                    new DiscordOptions
-                    {
-                        AvatarUrl = "https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/NSIS/modern-install.png",
-                        EmbedColor = "#aa5cc3",
-                        EnableAlbums = true,
-                        EnableSeasons = true,
-                        EnableEpisodes = true,
-                        EnableMovies = true,
-                        EnableSeries = true,
-                        EnableSongs = true,
-                        Username = "jellybot",
-                        MentionType = DiscordMentionType.Here,
-                        Template = "ewogICJjb250ZW50IjogInt7TWVudGlvblR5cGV9fSIsCiAgImF2YXRhcl91cmwiOiAie3tBdmF0YXJVcmx9fSIsCiAgInVzZXJuYW1lIjogInt7VXNlcm5hbWV9fSIKICAiZW1iZWRzIjogWwoJewoJCSJjb2xvciI6ICJ7e0VtYmVkQ29sb3J9fSIsCgkJImZvb3RlciI6IHsKCQkJInRleHQiOiAiRnJvbSB7e1NlcnZlck5hbWV9fSIsCgkJCSJpY29uVXJsIjogInt7QXZhdGFyVXJsfX0iCgkJfSwKCQkidGltZXN0YW1wIjogInt7VXRjVGltZXN0YW1wfX0iLAogICAgICAgIHt7I2lzX2VxdWFscyBJdGVtVHlwZSAnU2Vhc29uJ319CiAgICAgICAgICAgICJ0aXRsZSI6ICJ7e1Nlcmllc05hbWV9fSB7e05hbWV9fSBoYXMgYmVlbiBhZGRlZCB0byB7e1NlcnZlck5hbWV9fSIKICAgICAgICB7e2Vsc2V9fQogICAgICAgIHt7I2lzX2VxdWFscyBJdGVtVHlwZSAnRXBpc29kZSd9fQogICAgICAgICAgICAidGl0bGUiOiAie3tTZXJpZXNOYW1lfX0gU3t7U2Vhc29uTnVtYmVyfX1Fe3tFcGlzb2RlTnVtYmVyfX0ge3tOYW1lfX0gaGFzIGJlZW4gYWRkZWQgdG8ge3tTZXJ2ZXJOYW1lfX0iCiAgICAgICAge3tlbHNlfX0KICAgICAgICAgICAgInRpdGxlIjogInt7TmFtZX19ICh7e1llYXJ9fSkgaGFzIGJlZW4gYWRkZWQgdG8ge3tTZXJ2ZXJOYW1lfX0iICAgICAgICAKICAgICAgICB7ey9pc19lcXVhbHN9fSAgICAgICAKICAgICAgICB7ey9pc19lcXVhbHN9fQogICAgICAgICJ1cmwiOiAie3tTZXJ2ZXJVcmx9fS93ZWIvaW5kZXguaHRtbC8jIS9kZXRhaWxzP2lkPXt7SXRlbUlkfX0mc2VydmVySWQ9e3tTZXJ2ZXJJZH19IiwKICAgICAgICAidGh1bWJuYWlsIjp7CiAgICAgICAgICAgICJ1cmwiOiAie3tTZXJ2ZXJVcmx9fS9JdGVtcy97e0l0ZW1JZH19L0ltYWdlcy9QcmltYXJ5IgogICAgICAgIH0KCX0KICBdCn0=",
-                        WebhookUri = "https://discordapp.com/api/webhooks/752725480880210000/xJSIE0Pp8E73ojyqXjwPk5EKD3syDabQWBQbmFvqlN9YVnVWPOxcr24oCrJ43Zd415gq"
-                    },
-                }
-            };
-
-            WebhookPlugin.Instance.Configuration.ServerUrl = c.ServerUrl;
-            WebhookPlugin.Instance.Configuration.DiscordOptions = c.DiscordOptions;
-            WebhookPlugin.Instance.SaveConfiguration();*/
         }
 
         /// <inheritdoc />
