@@ -226,6 +226,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             data["Timestamp"] = DateTime.Now;
             data["UtcTimestamp"] = DateTime.UtcNow;
             data["Name"] = item.Name;
+            data["Overview"] = item.Overview;
             data["ItemId"] = item.Id;
             data["ServerId"] = _applicationHost.SystemId;
             data["ServerUrl"] = WebhookPlugin.Instance.Configuration.ServerUrl;
