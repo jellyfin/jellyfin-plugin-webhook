@@ -54,7 +54,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             Handlebars.RegisterHelper("if_exist", StringExistHelper);
             Handlebars.RegisterHelper("link_to", (writer, context, parameters) =>
             {
-                writer.WriteSafeString($"<a href='{(object)context.url}'>{(object)context.text}</a>");
+                writer.WriteSafeString($"<a href='{parameters["url"]}'>{context["text"]}</a>");
             });
         }
 
@@ -66,8 +66,13 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// </remarks>
         /// <param name="base64EncodedData">The encoded data.</param>
         /// <returns>The decoded string.</returns>
-        public static string Base64Decode(string base64EncodedData)
+        public static string Base64Decode(string? base64EncodedData)
         {
+            if (string.IsNullOrEmpty(base64EncodedData))
+            {
+                return string.Empty;
+            }
+
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }

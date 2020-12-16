@@ -1,5 +1,4 @@
-﻿using System;
-using HandlebarsDotNet;
+﻿using HandlebarsDotNet;
 using Jellyfin.Plugin.Webhook.Helpers;
 
 namespace Jellyfin.Plugin.Webhook.Destinations
@@ -9,12 +8,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations
     /// </summary>
     public abstract class BaseOption
     {
-        private Func<object, string> _compiledTemplate;
+        private HandlebarsTemplate<object, string>? _compiledTemplate;
 
         /// <summary>
         /// Gets or sets the webhook uri.
         /// </summary>
-        public string WebhookUri { get; set; }
+        public string? WebhookUri { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to notify on movies.
@@ -49,13 +48,13 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         /// <summary>
         /// Gets or sets the handlebars template.
         /// </summary>
-        public string Template { get; set; }
+        public string? Template { get; set; }
 
         /// <summary>
         /// Gets the compiled handlebars template.
         /// </summary>
         /// <returns>The compiled handlebars template.</returns>
-        public Func<object, string> GetCompiledTemplate()
+        public HandlebarsTemplate<object, string> GetCompiledTemplate()
         {
             return _compiledTemplate ??= Handlebars.Compile(HandlebarsFunctionHelpers.Base64Decode(Template));
         }

@@ -29,7 +29,7 @@ namespace Jellyfin.Plugin.Webhook
         /// <summary>
         /// Gets current plugin instance.
         /// </summary>
-        public static WebhookPlugin Instance { get; private set; }
+        public static WebhookPlugin? Instance { get; private set; }
 
         /// <inheritdoc />
         public override Guid Id => _id;

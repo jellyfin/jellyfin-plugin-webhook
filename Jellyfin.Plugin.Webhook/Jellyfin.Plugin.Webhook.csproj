@@ -1,26 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <FileVersion>1.0.0.0</FileVersion>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <FileVersion>2.0.0.0</FileVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>CA1707;CA1819</NoWarn>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Handlebars.Net" Version="1.10.1" />
-      <PackageReference Include="Jellyfin.Controller" Version="10.6.0" />
+      <PackageReference Include="Handlebars.Net" Version="2.0.3" />
+      <PackageReference Include="Jellyfin.Controller" Version="10.*-*" />
     </ItemGroup>
 
-    <!-- Code Analyzers-->
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.*" PrivateAssets="All" /> 
         <PackageReference Include="SerilogAnalyzer" Version="0.15.0" PrivateAssets="All" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
         <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="5.*" />
     </ItemGroup>
+    
     <ItemGroup>
       <None Remove="Configuration\Web\config.html" />
       <EmbeddedResource Include="Configuration\Web\config.html" />

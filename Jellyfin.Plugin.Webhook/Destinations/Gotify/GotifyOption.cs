@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets or sets the authentication token.
         /// </summary>
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
         /// <summary>
         /// Gets or sets the notification priority.

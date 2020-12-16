@@ -23,6 +23,12 @@
             <button id="btnAddGotify" is="emby-button" type="button" class="raised button block">
                 <span>Add Gotify Destination</span>
             </button>
+            <button id="btnAddPushover" is="emby-button" type="button" class="raised button block">
+                <span>Add Pushover Destination</span>
+            </button>
+            <button id="btnAddGeneric" is="emby-button" type="button" class="raised button block">
+                <span>Add Generic Destination</span>
+            </button>
             <br/>
             <div id="configurationWrapper"></div>
             <br/>
@@ -98,6 +104,83 @@
         </div>
         <div class="inputContainer">
             <input is="emby-input" type="text" data-name="txtPriority" label="Priority:"/>
+        </div>
+    </template>
+
+    <template id="template-pushover">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUserToken" label="User Token:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtDevice" label="Device:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtTitle" label="Title:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtMessageUrl" label="Message Url:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtMessageUrlTitle" label="Message Url Title:"/>
+        </div>
+        <div class="selectContainer">
+            <select is="emby-select" data-name="ddlMessagePriority" label="Message Priority:">
+                <option value="-2">Lowest Priority</option>
+                <option value="-1">Low Priority</option>
+                <option value="0">Normal</option>
+                <option value="1">High Priority</option>
+                <option value="2">Emergency Priority</option>
+            </select>
+        </div>
+        <div class="selectContainer">
+            <select is="emby-select" data-name="ddlNotificationSound" label="Notification Sound:">
+                <option value="">User default</option>
+                <option value="pushover">Pushover (default)</option>
+                <option value="bike">Bike</option>
+                <option value="bugle">Bugle</option>
+                <option value="cashregister">Cash Register</option>
+                <option value="classical">Classical</option>
+                <option value="cosmic">Cosmic</option>
+                <option value="falling">Falling</option>
+                <option value="gamelan">Gamelan</option>
+                <option value="incoming">Incoming</option>
+                <option value="intermission">Intermission</option>
+                <option value="magic">Magic</option>
+                <option value="mechanical">Mechanical</option>
+                <option value="pianobar">Piano Bar</option>
+                <option value="siren">Siren</option>
+                <option value="spacealarm">Space Alarm</option>
+                <option value="tugboat">Tug Boat</option>
+                <option value="alien">Alien Alarm (long)</option>
+                <option value="climb">Climb (long)</option>
+                <option value="persistent">Persistent (long)</option>
+                <option value="echo">Pushover Echo (long)</option>
+                <option value="updown">Up Down (long)</option>
+                <option value="vibrate">Vibrate Only</option>
+                <option value="none">None (silent)</option>
+            </select>
+        </div>
+    </template>
+
+    <template id="template-generic">
+        <button data-name="btnAddHeader" is="emby-button" type="button" class="raised button block">
+            <span>Add Request Header</span>
+        </button>
+        <div data-name="header-wrapper"></div>
+
+        <button data-name="btnAddField" is="emby-button" type="button" class="raised button block">
+            <span>Add Field</span>
+        </button>
+        <div data-name="field-wrapper"></div>
+    </template>
+
+    <template id="template-generic-value">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
+            <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>
         </div>
     </template>
 

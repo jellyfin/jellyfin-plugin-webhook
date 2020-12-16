@@ -5,24 +5,15 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Data.Entities;
-using Jellyfin.Plugin.Webhook.Destinations;
-using Jellyfin.Plugin.Webhook.Destinations.Discord;
-using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Models;
 using MediaBrowser.Common;
-using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Entities.Audio;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Notifications;
 using Microsoft.Extensions.Logging;
 using Constants = Jellyfin.Plugin.Webhook.Configuration.Constants;
-using Episode = MediaBrowser.Controller.Entities.TV.Episode;
-using Movie = MediaBrowser.Controller.Entities.Movies.Movie;
-using MusicAlbum = MediaBrowser.Controller.Entities.Audio.MusicAlbum;
-using Season = MediaBrowser.Controller.Entities.TV.Season;
-using Series = MediaBrowser.Controller.Entities.TV.Series;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers
 {
@@ -34,57 +25,52 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         private readonly ILogger<LibraryAddedNotifier> _logger;
         private readonly ILibraryManager _libraryManager;
         private readonly IApplicationHost _applicationHost;
+        private readonly WebhookSender _webhookSender;
 
         private readonly ConcurrentDictionary<Guid, QueuedItemContainer> _itemProcessQueue;
         private readonly CancellationTokenSource _cancellationTokenSource;
-
-        private readonly DiscordDestination _discordDestination;
-        private readonly GotifyDestination _gotifyDestination;
+        private readonly Task _periodicAsyncTask;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LibraryAddedNotifier"/> class.
         /// </summary>
-        /// <param name="loggerFactory">Instance of the <see cref="ILoggerFactory"/> interface.</param>
+        /// <param name="logger">Instance of the <see cref="ILogger{LibraryAddedNotifier}"/> interface.</param>
         /// <param name="libraryManager">Instance of the <see cref="ILibraryManager"/> interface.</param>
-        /// <param name="httpClient">Instance of the <see cref="IHttpClient"/> interface.</param>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        public LibraryAddedNotifier(ILoggerFactory loggerFactory, ILibraryManager libraryManager, IHttpClient httpClient, IApplicationHost applicationHost)
+        /// <param name="webhookSender">Instance of the <see cref="WebhookSender"/>.</param>
+        public LibraryAddedNotifier(
+            ILogger<LibraryAddedNotifier> logger,
+            ILibraryManager libraryManager,
+            IApplicationHost applicationHost,
+            WebhookSender webhookSender)
         {
-            _logger = loggerFactory.CreateLogger<LibraryAddedNotifier>();
+            _logger = logger;
             _libraryManager = libraryManager ?? throw new ArgumentNullException(nameof(libraryManager));
             _applicationHost = applicationHost;
+            _webhookSender = webhookSender;
 
             _itemProcessQueue = new ConcurrentDictionary<Guid, QueuedItemContainer>();
             _libraryManager.ItemAdded += ItemAddedHandler;
 
             HandlebarsFunctionHelpers.RegisterHelpers();
             _cancellationTokenSource = new CancellationTokenSource();
-            PeriodicAsyncHelper.PeriodicAsync(
-                    async () =>
+            _periodicAsyncTask = PeriodicAsyncHelper.PeriodicAsync(
+                async () =>
+                {
+                    try
                     {
-                        try
-                        {
-                            await ProcessItemsAsync().ConfigureAwait(false);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogWarning(ex, "Error");
-                        }
-                    }, TimeSpan.FromMilliseconds(Constants.RecheckIntervalMs),
-                    _cancellationTokenSource.Token)
-                .ConfigureAwait(false);
-
-            _discordDestination = new DiscordDestination(
-                loggerFactory.CreateLogger<DiscordDestination>(),
-                httpClient);
-
-            _gotifyDestination = new GotifyDestination(
-                loggerFactory.CreateLogger<GotifyDestination>(),
-                httpClient);
+                        await ProcessItemsAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Error");
+                    }
+                }, TimeSpan.FromMilliseconds(Constants.RecheckIntervalMs),
+                _cancellationTokenSource.Token);
         }
 
         /// <inheritdoc />
-        public string Name => WebhookPlugin.Instance.Name;
+        public string Name => WebhookPlugin.Instance?.Name ?? throw new NullReferenceException(nameof(WebhookPlugin.Instance.Name));
 
         /// <inheritdoc />
         public Task SendNotification(UserNotification request, CancellationToken cancellationToken) => Task.CompletedTask;
@@ -109,48 +95,12 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             {
                 _libraryManager.ItemAdded -= ItemAddedHandler;
                 _cancellationTokenSource.Cancel();
+                _periodicAsyncTask.GetAwaiter().GetResult();
                 _cancellationTokenSource.Dispose();
             }
         }
 
-        private bool NotifyOnItem<T>(T baseOptions, Type itemType)
-            where T : BaseOption
-        {
-            _logger.LogDebug("NotifyOnItem");
-            if (baseOptions.EnableAlbums && itemType == typeof(MusicAlbum))
-            {
-                return true;
-            }
-
-            if (baseOptions.EnableMovies && itemType == typeof(Movie))
-            {
-                return true;
-            }
-
-            if (baseOptions.EnableEpisodes && itemType == typeof(Episode))
-            {
-                return true;
-            }
-
-            if (baseOptions.EnableSeries && itemType == typeof(Series))
-            {
-                return true;
-            }
-
-            if (baseOptions.EnableSeasons && itemType == typeof(Season))
-            {
-                return true;
-            }
-
-            if (baseOptions.EnableSongs && itemType == typeof(Audio))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private void ItemAddedHandler(object sender, ItemChangeEventArgs itemChangeEventArgs)
+        private void ItemAddedHandler(object? sender, ItemChangeEventArgs itemChangeEventArgs)
         {
             // Never notify on virtual items.
             if (itemChangeEventArgs.Item.IsVirtualItem)
@@ -177,7 +127,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 {
                     _logger.LogDebug("Requeue {itemName}, no provider ids.", item.Name);
                     container.RetryCount++;
-                    _itemProcessQueue.AddOrUpdate(key, container, (_, __) => container);
+                    _itemProcessQueue.AddOrUpdate(key, container, (_, _) => container);
                     continue;
                 }
 
@@ -186,37 +136,10 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 // Send notification to each configured destination.
                 var itemData = GetDataObject(item);
                 var itemType = item.GetType();
-                foreach (var option in WebhookPlugin.Instance.Configuration.DiscordOptions)
-                {
-                    await SendNotification(_discordDestination, option, itemData, itemType).ConfigureAwait(false);
-                }
-
-                foreach (var option in WebhookPlugin.Instance.Configuration.GotifyOptions)
-                {
-                    await SendNotification(_gotifyDestination, option, itemData, itemType).ConfigureAwait(false);
-                }
+                await _webhookSender.SendItemAddedNotification(itemData, itemType);
 
                 // Remove item from queue.
                 _itemProcessQueue.TryRemove(key, out _);
-            }
-        }
-
-        private async Task SendNotification<T>(IDestination<T> destination, T option, Dictionary<string, object> itemData, Type itemType)
-            where T : BaseOption
-        {
-            if (NotifyOnItem(option, itemType))
-            {
-                try
-                {
-                    await destination.SendAsync(
-                            option,
-                            itemData)
-                        .ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "Unable to send webhook.");
-                }
             }
         }
 
@@ -229,24 +152,24 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             data["Overview"] = item.Overview;
             data["ItemId"] = item.Id;
             data["ServerId"] = _applicationHost.SystemId;
-            data["ServerUrl"] = WebhookPlugin.Instance.Configuration.ServerUrl;
+            data["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096";
             data["ServerName"] = _applicationHost.Name;
             data["ItemType"] = item.GetType().Name;
 
-            if (!item.ProductionYear.HasValue)
+            if (item.ProductionYear.HasValue)
             {
                 data["Year"] = item.ProductionYear;
             }
 
             switch (item)
             {
-                case Season _:
+                case Season:
                     if (!string.IsNullOrEmpty(item.Parent?.Name))
                     {
                         data["SeriesName"] = item.Parent.Name;
                     }
 
-                    if (item.Parent?.ProductionYear.HasValue ?? false)
+                    if (item.Parent?.ProductionYear != null)
                     {
                         data["Year"] = item.Parent.ProductionYear;
                     }
@@ -259,13 +182,13 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     }
 
                     break;
-                case Episode _:
+                case Episode:
                     if (!string.IsNullOrEmpty(item.Parent?.Parent?.Name))
                     {
                         data["SeriesName"] = item.Parent.Parent.Name;
                     }
 
-                    if (item.Parent?.IndexNumber.HasValue ?? false)
+                    if (item.Parent?.IndexNumber != null)
                     {
                         data["SeasonNumber"] = item.Parent.IndexNumber;
                         data["SeasonNumber00"] = item.Parent.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
@@ -279,7 +202,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                         data["EpisodeNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
-                    if (item.Parent?.Parent?.ProductionYear.HasValue ?? false)
+                    if (item.Parent?.Parent?.ProductionYear != null)
                     {
                         data["Year"] = item.Parent.Parent.ProductionYear;
                     }

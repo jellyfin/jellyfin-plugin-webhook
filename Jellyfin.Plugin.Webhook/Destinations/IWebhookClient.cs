@@ -7,15 +7,15 @@ namespace Jellyfin.Plugin.Webhook.Destinations
     /// Destination interface.
     /// </summary>
     /// <typeparam name="TDestinationOptions">The type of options.</typeparam>
-    public interface IDestination<in TDestinationOptions>
+    public interface IWebhookClient<in TDestinationOptions>
      where TDestinationOptions : BaseOption
     {
         /// <summary>
         /// Send message to destination.
         /// </summary>
         /// <param name="options">The destination options.</param>
-        /// <param name="message">The message to send.</param>
+        /// <param name="data">The message to send.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SendAsync(TDestinationOptions options, Dictionary<string, object> message);
+        Task SendItemAddedAsync(TDestinationOptions options, Dictionary<string, object> data);
     }
 }

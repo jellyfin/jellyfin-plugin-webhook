@@ -24,8 +24,8 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             while (!cancellationToken.IsCancellationRequested)
             {
                 var delayTask = Task.Delay(interval, cancellationToken);
-                await taskFactory().ConfigureAwait(false);
-                await delayTask.ConfigureAwait(false);
+                await taskFactory();
+                await delayTask;
             }
         }
     }
