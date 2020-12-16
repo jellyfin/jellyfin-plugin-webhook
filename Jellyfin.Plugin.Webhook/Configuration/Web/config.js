@@ -206,30 +206,74 @@
 
                 const baseConfig = Webhook.baseConfig.addConfig(template, "Generic");
                 Webhook.configurationWrapper.appendChild(baseConfig);
+                template.querySelector("[data-name=btnAddHeader]").addEventListener("click", function () {
+                    Webhook.generic.addHeader(baseConfig, {});
+                });
+                template.querySelector("[data-name=btnAddField]").addEventListener("click", function () {
+                    Webhook.generic.addField(baseConfig, {});
+                });
 
                 // Load configuration
-                Webhook.baseConfig.setConfig(config, baseConfig);
+                Webhook.generic.setConfig(config, baseConfig);
             },
             setConfig: function (config, element) {
                 Webhook.baseConfig.setConfig(config, element);
+                console.log(config);
                 for (let i = 0; i < config.Headers.length; i++) {
-                    Webhook.generic.addHeader(config.Headers[i], element);
+                    Webhook.generic.addHeader(element, config.Headers[i]);
                 }
 
                 for (let i = 0; i < config.Fields.length; i++) {
-                    Webhook.generic.addField(config.Fields[i], element);
+                    Webhook.generic.addField(element, config.Fields[i]);
                 }
             },
             getConfig: function (e) {
                 const config = Webhook.baseConfig.getConfig(e);
-                // TODO get fields and headers.
+                const fieldValues = document
+                    .querySelector("[data-name=field-wrapper]")
+                    .querySelectorAll("[data-name=value]");
+
+                config.Fields = [];
+                for (let i = 0; i < fieldValues.length; i++) {
+                    config.Fields.push({
+                        Key: fieldValues[i].querySelector("[data-name=txtKey]").value,
+                        Value: fieldValues[i].querySelector("[data-name=txtValue]").value
+                    });
+                }
+
+                const headerValues = document
+                    .querySelector("[data-name=header-wrapper]")
+                    .querySelectorAll("[data-name=value]");
+
+                config.Headers = [];
+                for (let i = 0; i < headerValues.length; i++) {
+                    config.Headers.push({
+                        Key: headerValues[i].querySelector("[data-name=txtKey]").value,
+                        Value: headerValues[i].querySelector("[data-name=txtValue]").value
+                    });
+                }
+
                 return config;
             },
-            addHeader: function (config, element) {
-                // TODO
+            addHeader: function (element, config) {
+                const template = document.createElement("div");
+                template.appendChild(Webhook.generic.templateGenericValue.cloneNode(true).content);
+
+                console.log(config);
+                template.querySelector("[data-name=txtKey]").value = config.Key || "";
+                template.querySelector("[data-name=txtValue]").value = config.Value || "";
+                
+                element.querySelector("[data-name=header-wrapper]").appendChild(template);
             },
-            addField: function (config, element) {
-                // TODO
+            addField: function (element, config) {
+                const template = document.createElement("div");
+                template.appendChild(Webhook.generic.templateGenericValue.cloneNode(true).content);
+
+                console.log(config);
+                template.querySelector("[data-name=txtKey]").value = config.Key || "";
+                template.querySelector("[data-name=txtValue]").value = config.Value || "";
+                
+                element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },
 
@@ -243,15 +287,10 @@
 
             Webhook.loadConfig();
         },
-        /**
-         * Removes config from dom.
-         * @param e {Event}
-         */
         removeConfig: function (e) {
             e.preventDefault();
             findParentBySelector(e.target, '[data-config-wrapper]').remove();
         },
-
         saveConfig: function (e) {
             e.preventDefault();
 
@@ -285,7 +324,6 @@
 
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
-
         loadConfig: function () {
             Dashboard.showLoadingMsg();
 

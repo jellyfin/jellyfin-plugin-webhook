@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using MediaBrowser.Common.Json;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Generic
 {
@@ -15,7 +15,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<GenericClient> _logger;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericClient"/> class.
@@ -28,7 +27,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
-            _jsonSerializerOptions = JsonDefaults.GetOptions();
         }
 
         /// <inheritdoc />
@@ -49,6 +47,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@body}", body);
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
+                var contentType = MediaTypeNames.Text.Plain;
                 foreach (var header in options.Headers)
                 {
                     if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
@@ -56,11 +55,19 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                         continue;
                     }
 
-                    httpRequestMessage.Headers.TryAddWithoutValidation(header.Value, header.Value);
+                    // Content-Type cannot be set manually, must be set on the content.
+                    if (string.Equals(HeaderNames.ContentType, header.Key, StringComparison.OrdinalIgnoreCase)
+                        && !string.IsNullOrEmpty(header.Value))
+                    {
+                        contentType = header.Value;
+                    }
+                    else
+                    {
+                        httpRequestMessage.Headers.TryAddWithoutValidation(header.Value, header.Value);
+                    }
                 }
 
-                var jsonString = JsonSerializer.Serialize(body, _jsonSerializerOptions);
-                httpRequestMessage.Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json);
+                httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .SendAsync(httpRequestMessage);
