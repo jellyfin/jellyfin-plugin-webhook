@@ -51,7 +51,7 @@ namespace Jellyfin.Plugin.Webhook
 
             yield return new PluginPageInfo
             {
-                Name = $"{Name}JS",
+                Name = $"{Name}.js",
                 EmbeddedResourcePath = GetType().Namespace + ".Configuration.Web.config.js"
             };
         }

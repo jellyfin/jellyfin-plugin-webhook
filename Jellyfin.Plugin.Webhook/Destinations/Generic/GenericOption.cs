@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Generic
 {
@@ -12,18 +12,18 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         /// </summary>
         public GenericOption()
         {
-            Headers = new Dictionary<string, string>();
-            Fields = new Dictionary<string, string>();
+            Headers = Array.Empty<GenericOptionValue>();
+            Fields = Array.Empty<GenericOptionValue>();
         }
 
         /// <summary>
         /// Gets or sets the headers.
         /// </summary>
-        public Dictionary<string, string> Headers { get; set; }
+        public GenericOptionValue[] Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the fields.
         /// </summary>
-        public Dictionary<string, string> Fields { get; set; }
+        public GenericOptionValue[] Fields { get; set; }
     }
 }

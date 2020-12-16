@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
-using MediaBrowser.Common.Json;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +13,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
     {
         private readonly ILogger<PushoverClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PushoverClient"/> class.
@@ -25,7 +23,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
-            _jsonSerializerOptions = JsonDefaults.GetOptions();
         }
 
         /// <inheritdoc />
@@ -55,7 +52,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                     data["MessageUrlTitle"] = options.MessageUrlTitle;
                 }
 
-                if (!string.IsNullOrEmpty(options.MessagePriority))
+                if (options.MessagePriority.HasValue)
                 {
                     data["MessagePriority"] = options.MessagePriority;
                 }
@@ -66,10 +63,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                 }
 
                 var body = options.GetCompiledTemplate()(data);
-                _logger.LogDebug("SendAsync Body: {@body}", body);
+                _logger.LogDebug("SendAsync Body: {body}", body);
+                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsJsonAsync(options.WebhookUri ?? PushoverOption.ApiUrl, body, _jsonSerializerOptions);
+                    .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : options.WebhookUri, content);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException e)

@@ -46,7 +46,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         /// <summary>
         /// Gets or sets the message priority.
         /// </summary>
-        public string? MessagePriority { get; set; }
+        public int? MessagePriority { get; set; }
 
         /// <summary>
         /// Gets or sets the notification sound.

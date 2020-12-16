@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
-using MediaBrowser.Common.Json;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +14,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
     {
         private readonly ILogger<DiscordClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordClient"/> class.
@@ -26,7 +24,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
-            _jsonSerializerOptions = JsonDefaults.GetOptions();
         }
 
         /// <inheritdoc />
@@ -53,9 +50,10 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
 
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@body}", body);
+                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsJsonAsync(options.WebhookUri, body, _jsonSerializerOptions);
+                    .PostAsync(options.WebhookUri, content);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException e)

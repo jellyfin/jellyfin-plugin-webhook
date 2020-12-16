@@ -36,27 +36,27 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         {
             try
             {
-                foreach (var (key, value) in options.Fields)
+                foreach (var field in options.Fields)
                 {
-                    if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
+                    if (string.IsNullOrEmpty(field.Key) || string.IsNullOrEmpty(field.Value))
                     {
                         continue;
                     }
 
-                    data[key] = value;
+                    data[field.Key] = field.Value;
                 }
 
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@body}", body);
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
-                foreach (var (key, value) in options.Headers)
+                foreach (var header in options.Headers)
                 {
-                    if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
+                    if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
                     {
                         continue;
                     }
 
-                    httpRequestMessage.Headers.TryAddWithoutValidation(key, value);
+                    httpRequestMessage.Headers.TryAddWithoutValidation(header.Value, header.Value);
                 }
 
                 var jsonString = JsonSerializer.Serialize(body, _jsonSerializerOptions);

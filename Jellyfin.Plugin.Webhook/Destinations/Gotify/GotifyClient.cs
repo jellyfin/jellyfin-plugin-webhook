@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
-using MediaBrowser.Common.Json;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +14,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
     {
         private readonly ILogger<GotifyClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GotifyClient"/> class.
@@ -26,7 +24,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
-            _jsonSerializerOptions = JsonDefaults.GetOptions();
         }
 
         /// <inheritdoc />
@@ -44,9 +41,10 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
 
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@body}", body);
+                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsJsonAsync(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}", body, _jsonSerializerOptions);
+                    .PostAsync(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}", content);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException e)

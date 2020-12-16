@@ -20,25 +20,25 @@ namespace Jellyfin.Plugin.Webhook
     public class WebhookSender
     {
         private readonly ILogger<WebhookSender> _logger;
-        private readonly DiscordClient _discordClient;
-        private readonly GotifyClient _gotifyClient;
-        private readonly PushoverClient _pushoverClient;
-        private readonly GenericClient _genericClient;
+        private readonly IWebhookClient<DiscordOption> _discordClient;
+        private readonly IWebhookClient<GotifyOption> _gotifyClient;
+        private readonly IWebhookClient<PushoverOption> _pushoverClient;
+        private readonly IWebhookClient<GenericOption> _genericClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookSender"/> class.
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger{WebhookSender}"/> interface.</param>
-        /// <param name="discordClient">Instance of <see cref="DiscordClient"/>.</param>
-        /// <param name="gotifyClient">Instance of <see cref="GotifyClient"/>.</param>
-        /// <param name="pushoverClient">Instance of the <see cref="PushoverClient"/>.</param>
-        /// <param name="genericClient">Instance of the <see cref="GenericClient"/>.</param>
+        /// <param name="discordClient">Instance of <see cref="IWebhookClient{DiscordOption}"/>.</param>
+        /// <param name="gotifyClient">Instance of <see cref="IWebhookClient{GotifyOption}"/>.</param>
+        /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverClient}"/>.</param>
+        /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericClient}"/>.</param>
         public WebhookSender(
             ILogger<WebhookSender> logger,
-            DiscordClient discordClient,
-            GotifyClient gotifyClient,
-            PushoverClient pushoverClient,
-            GenericClient genericClient)
+            IWebhookClient<DiscordOption> discordClient,
+            IWebhookClient<GotifyOption> gotifyClient,
+            IWebhookClient<PushoverOption> pushoverClient,
+            IWebhookClient<GenericOption> genericClient)
         {
             _logger = logger;
             _discordClient = discordClient;
@@ -91,7 +91,7 @@ namespace Jellyfin.Plugin.Webhook
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unable to send webhook.");
+                    _logger.LogError(e, "Unable to send ");
                 }
             }
         }
