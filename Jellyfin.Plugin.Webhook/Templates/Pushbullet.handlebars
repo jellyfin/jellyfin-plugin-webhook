@@ -1,0 +1,21 @@
+﻿/* 
+    Required Headers:
+        Content-Type: application/json
+        Access-Token: ${your-access-token}
+*/
+
+
+{
+    "type": "link",
+    "title": "{{Name}} added to {{ServerName}}",
+    "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
+    {{if_equals ItemType 'Season'}}
+        "body": "{{SeriesName}} {{Name}} has been added to {{ServerName}}"
+    {{else}}
+        {{if_equals ItemType 'Episode'}}
+            "body": "{{SeriesName}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{Name}} has been added to {{ServerName}}"
+        {{else}}
+            "body": "{{Name}} ({{Year}}) has been added to {{ServerName}}"
+        {{/if_equals}}
+    {{/if_equals}}
+}
