@@ -1,45 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Common;
 using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Entities.Audio;
-using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
-using MediaBrowser.Model.Dto;
+using MediaBrowser.Controller.Library;
 
 namespace Jellyfin.Plugin.Webhook.Helpers
 {
     /// <summary>
     /// Data object helpers.
     /// </summary>
-    public class DataObjectHelpers
+    public static class DataObjectHelpers
     {
         /// <summary>
         /// Get data object from <see cref="BaseItem"/>.
         /// </summary>
+        /// <param name="dataObject">The existing data object.</param>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
         /// <param name="item">Instance of the <see cref="BaseItem"/>.</param>
         /// <returns>The data object.</returns>
-        public static Dictionary<string, object> GetBaseItemDataObject(IApplicationHost applicationHost, BaseItem item)
+        public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, IApplicationHost applicationHost, BaseItem item)
         {
-            var data = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["Timestamp"] = DateTime.Now,
-                ["UtcTimestamp"] = DateTime.UtcNow,
-                ["Name"] = item.Name,
-                ["Overview"] = item.Overview,
-                ["ItemId"] = item.Id,
-                ["ServerId"] = applicationHost.SystemId,
-                ["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096",
-                ["ServerName"] = applicationHost.Name,
-                ["ItemType"] = item.GetType().Name
-            };
+            dataObject["Timestamp"] = DateTime.Now;
+            dataObject["UtcTimestamp"] = DateTime.UtcNow;
+            dataObject["Name"] = item.Name;
+            dataObject["Overview"] = item.Overview;
+            dataObject["ItemId"] = item.Id;
+            dataObject["ServerId"] = applicationHost.SystemId;
+            dataObject["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096";
+            dataObject["ServerName"] = applicationHost.Name;
+            dataObject["ItemType"] = item.GetType().Name;
 
             if (item.ProductionYear.HasValue)
             {
-                data["Year"] = item.ProductionYear;
+                dataObject["Year"] = item.ProductionYear;
             }
 
             switch (item)
@@ -47,45 +42,45 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 case Season:
                     if (!string.IsNullOrEmpty(item.Parent?.Name))
                     {
-                        data["SeriesName"] = item.Parent.Name;
+                        dataObject["SeriesName"] = item.Parent.Name;
                     }
 
                     if (item.Parent?.ProductionYear != null)
                     {
-                        data["Year"] = item.Parent.ProductionYear;
+                        dataObject["Year"] = item.Parent.ProductionYear;
                     }
 
                     if (item.IndexNumber.HasValue)
                     {
-                        data["SeasonNumber"] = item.IndexNumber;
-                        data["SeasonNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        data["SeasonNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber"] = item.IndexNumber;
+                        dataObject["SeasonNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
                     break;
                 case Episode:
                     if (!string.IsNullOrEmpty(item.Parent?.Parent?.Name))
                     {
-                        data["SeriesName"] = item.Parent.Parent.Name;
+                        dataObject["SeriesName"] = item.Parent.Parent.Name;
                     }
 
                     if (item.Parent?.IndexNumber != null)
                     {
-                        data["SeasonNumber"] = item.Parent.IndexNumber;
-                        data["SeasonNumber00"] = item.Parent.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        data["SeasonNumber000"] = item.Parent.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber"] = item.Parent.IndexNumber;
+                        dataObject["SeasonNumber00"] = item.Parent.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber000"] = item.Parent.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
                     if (item.IndexNumber.HasValue)
                     {
-                        data["EpisodeNumber"] = item.IndexNumber;
-                        data["EpisodeNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        data["EpisodeNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["EpisodeNumber"] = item.IndexNumber;
+                        dataObject["EpisodeNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["EpisodeNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
                     if (item.Parent?.Parent?.ProductionYear != null)
                     {
-                        data["Year"] = item.Parent.Parent.ProductionYear;
+                        dataObject["Year"] = item.Parent.Parent.ProductionYear;
                     }
 
                     break;
@@ -93,51 +88,29 @@ namespace Jellyfin.Plugin.Webhook.Helpers
 
             foreach (var (providerKey, providerValue) in item.ProviderIds)
             {
-                data[$"Provider_{providerKey.ToLowerInvariant()}"] = providerValue;
+                dataObject[$"Provider_{providerKey.ToLowerInvariant()}"] = providerValue;
             }
 
-            return data;
+            return dataObject;
         }
 
         /// <summary>
-        /// Get data object from <see cref="BaseItemDto"/>.
+        /// Add playback progress data.
         /// </summary>
-        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        /// <param name="item">Instance of the <see cref="BaseItemDto"/>.</param>
-        /// <returns>The data object.</returns>
-        public static Dictionary<string, object> GetBaseItemDtoDataObject(IApplicationHost applicationHost, BaseItemDto item)
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="playbackProgressEventArgs">The playback progress event args.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddPlaybackProgressData(this Dictionary<string, object> dataObject, PlaybackProgressEventArgs playbackProgressEventArgs)
         {
-            var data = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["Timestamp"] = DateTime.Now,
-                ["UtcTimestamp"] = DateTime.UtcNow,
-                ["Name"] = item.Name,
-                ["Overview"] = item.Overview,
-                ["ItemId"] = item.Id,
-                ["ServerId"] = applicationHost.SystemId,
-                ["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096",
-                ["ServerName"] = applicationHost.Name,
-                ["ItemType"] = item.GetType().Name
-            };
+            dataObject[nameof(playbackProgressEventArgs.PlaybackPositionTicks)] = playbackProgressEventArgs.PlaybackPositionTicks ?? 0;
+            dataObject[nameof(playbackProgressEventArgs.MediaSourceId)] = playbackProgressEventArgs.MediaSourceId;
+            dataObject[nameof(playbackProgressEventArgs.IsPaused)] = playbackProgressEventArgs.IsPaused;
+            dataObject[nameof(playbackProgressEventArgs.IsAutomated)] = playbackProgressEventArgs.IsAutomated;
+            dataObject[nameof(playbackProgressEventArgs.DeviceId)] = playbackProgressEventArgs.DeviceId;
+            dataObject[nameof(playbackProgressEventArgs.DeviceName)] = playbackProgressEventArgs.DeviceName;
+            dataObject[nameof(playbackProgressEventArgs.ClientName)] = playbackProgressEventArgs.ClientName;
 
-            if (item.ProductionYear.HasValue)
-            {
-                data["Year"] = item.ProductionYear;
-            }
-
-            if (item.IndexNumber.HasValue)
-            {
-                data["EpisodeNumber"] = item.IndexNumber;
-                data["EpisodeNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                data["EpisodeNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
-            }
-
-            foreach (var (providerKey, providerValue) in item.ProviderIds)
-            {
-                data[$"Provider_{providerKey.ToLowerInvariant()}"] = providerValue;
-            }
-
-            return data;
+            return dataObject;
         }
     }
 }

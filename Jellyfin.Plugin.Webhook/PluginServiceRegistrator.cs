@@ -4,6 +4,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Notifiers;
+using MediaBrowser.Common.Net;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Library;
@@ -19,17 +20,22 @@ namespace Jellyfin.Plugin.Webhook
         /// <inheritdoc />
         public void RegisterServices(IServiceCollection serviceCollection)
         {
-            // Register webhook clients.
-            serviceCollection.AddSingleton<IWebhookClient<DiscordOption>, DiscordClient>();
-            serviceCollection.AddSingleton<IWebhookClient<GotifyOption>, GotifyClient>();
-            serviceCollection.AddSingleton<IWebhookClient<PushoverOption>, PushoverClient>();
-            serviceCollection.AddSingleton<IWebhookClient<GenericOption>, GenericClient>();
+            serviceCollection.AddHttpClient<IWebhookClient<DiscordOption>, DiscordClient>()
+                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
+            serviceCollection.AddHttpClient<IWebhookClient<GotifyOption>, GotifyClient>()
+                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
+            serviceCollection.AddHttpClient<IWebhookClient<PushoverOption>, PushoverClient>()
+                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
+            serviceCollection.AddHttpClient<IWebhookClient<GenericOption>, GenericClient>()
+                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
 
             // Register sender.
-            serviceCollection.AddSingleton<WebhookSender>();
+            serviceCollection.AddScoped<WebhookSender>();
 
             // Register event consumers.
             serviceCollection.AddScoped<IEventConsumer<PlaybackStartEventArgs>, PlaybackStartNotifier>();
+            serviceCollection.AddScoped<IEventConsumer<PlaybackProgressEventArgs>, PlaybackProgressNotifier>();
+            serviceCollection.AddScoped<IEventConsumer<PlaybackStopEventArgs>, PlaybackStopNotifier>();
         }
     }
 }

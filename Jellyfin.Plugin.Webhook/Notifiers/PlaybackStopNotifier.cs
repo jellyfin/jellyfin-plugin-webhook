@@ -10,19 +10,19 @@ using MediaBrowser.Controller.Library;
 namespace Jellyfin.Plugin.Webhook.Notifiers
 {
     /// <summary>
-    /// Playback start notifier.
+    /// Playback stop notifier.
     /// </summary>
-    public class PlaybackStartNotifier : IEventConsumer<PlaybackStartEventArgs>
+    public class PlaybackStopNotifier : IEventConsumer<PlaybackStopEventArgs>
     {
         private readonly IApplicationHost _applicationHost;
         private readonly WebhookSender _webhookSender;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaybackStartNotifier"/> class.
+        /// Initializes a new instance of the <see cref="PlaybackStopNotifier"/> class.
         /// </summary>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
         /// <param name="webhookSender">Instance of the <see cref="WebhookSender"/>.</param>
-        public PlaybackStartNotifier(
+        public PlaybackStopNotifier(
             IApplicationHost applicationHost,
             WebhookSender webhookSender)
         {
@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         }
 
         /// <inheritdoc />
-        public async Task OnEvent(PlaybackStartEventArgs eventArgs)
+        public async Task OnEvent(PlaybackStopEventArgs eventArgs)
         {
             if (eventArgs.Item == null)
             {
@@ -54,7 +54,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
                 .AddBaseItemData(_applicationHost, eventArgs.Item)
                 .AddPlaybackProgressData(eventArgs);
-            dataObject[nameof(NotificationType)] = NotificationType.PlaybackStart;
+            dataObject[nameof(NotificationType)] = NotificationType.PlaybackStop;
+            dataObject[nameof(eventArgs.PlayedToCompletion)] = eventArgs.PlayedToCompletion;
 
             foreach (var user in eventArgs.Users)
             {
@@ -64,7 +65,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     ["UserId"] = user.Id
                 };
 
-                await _webhookSender.SendItemNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType());
+                await _webhookSender.SendItemNotification(NotificationType.PlaybackStop, userDataObject, eventArgs.Item.GetType());
             }
         }
     }

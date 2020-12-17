@@ -19,5 +19,15 @@
         /// Playback start notification.
         /// </summary>
         PlaybackStart = 3,
+
+        /// <summary>
+        /// Playback progress notification.
+        /// </summary>
+        PlaybackProgress = 4,
+
+        /// <summary>
+        /// Playback stop notification.
+        /// </summary>
+        PlaybackStop = 5
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Configuration;
@@ -128,9 +129,11 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 _logger.LogDebug("Notifying for {itemName}", item.Name);
 
                 // Send notification to each configured destination.
-                var itemData = DataObjectHelpers.GetBaseItemDataObject(_applicationHost, item);
+                var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                    .AddBaseItemData(_applicationHost, item);
+
                 var itemType = item.GetType();
-                await _webhookSender.SendItemNotification(NotificationType.ItemAdded, itemData, itemType);
+                await _webhookSender.SendItemNotification(NotificationType.ItemAdded, dataObject, itemType);
 
                 // Remove item from queue.
                 _itemProcessQueue.TryRemove(key, out _);
