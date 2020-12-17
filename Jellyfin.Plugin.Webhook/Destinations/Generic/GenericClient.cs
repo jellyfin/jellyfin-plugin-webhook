@@ -63,7 +63,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                     }
                     else
                     {
-                        httpRequestMessage.Headers.TryAddWithoutValidation(header.Value, header.Value);
+                        httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
 
@@ -71,7 +71,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .SendAsync(httpRequestMessage);
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Error sending notification: {Response}", responseStr);
+                }
             }
             catch (HttpRequestException e)
             {

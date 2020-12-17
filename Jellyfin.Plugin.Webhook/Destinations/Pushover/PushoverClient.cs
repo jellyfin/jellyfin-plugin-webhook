@@ -68,7 +68,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : options.WebhookUri, content);
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Error sending notification: {Response}", responseStr);
+                }
             }
             catch (HttpRequestException e)
             {

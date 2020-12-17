@@ -229,28 +229,32 @@
             },
             getConfig: function (e) {
                 const config = Webhook.baseConfig.getConfig(e);
-                const fieldValues = document
-                    .querySelector("[data-name=field-wrapper]")
-                    .querySelectorAll("[data-name=value]");
 
                 config.Fields = [];
+                const fieldValues = e.querySelector("[data-name=field-wrapper]")
+                    .querySelectorAll("[data-name=value]");
                 for (let i = 0; i < fieldValues.length; i++) {
-                    config.Fields.push({
+                    const field = {
                         Key: fieldValues[i].querySelector("[data-name=txtKey]").value,
                         Value: fieldValues[i].querySelector("[data-name=txtValue]").value
-                    });
+                    };
+
+                    if (field.Key !== "" && field.Value !== "") {
+                        config.Fields.push(field);
+                    }
                 }
 
-                const headerValues = document
-                    .querySelector("[data-name=header-wrapper]")
-                    .querySelectorAll("[data-name=value]");
-
                 config.Headers = [];
+                const headerValues = e.querySelector("[data-name=header-wrapper]")
+                    .querySelectorAll("[data-name=value]");
                 for (let i = 0; i < headerValues.length; i++) {
-                    config.Headers.push({
+                    const header = {
                         Key: headerValues[i].querySelector("[data-name=txtKey]").value,
                         Value: headerValues[i].querySelector("[data-name=txtValue]").value
-                    });
+                    };
+                    if (header.Key !== "" && header.Value !== "") {
+                        config.Headers.push(header);
+                    }
                 }
 
                 return config;
@@ -262,7 +266,7 @@
                 console.log(config);
                 template.querySelector("[data-name=txtKey]").value = config.Key || "";
                 template.querySelector("[data-name=txtValue]").value = config.Value || "";
-                
+
                 element.querySelector("[data-name=header-wrapper]").appendChild(template);
             },
             addField: function (element, config) {
@@ -272,7 +276,7 @@
                 console.log(config);
                 template.querySelector("[data-name=txtKey]").value = config.Key || "";
                 template.querySelector("[data-name=txtValue]").value = config.Value || "";
-                
+
                 element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },

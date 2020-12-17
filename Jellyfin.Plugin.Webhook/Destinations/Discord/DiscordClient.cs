@@ -54,7 +54,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .PostAsync(options.WebhookUri, content);
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Error sending notification: {Response}", responseStr);
+                }
             }
             catch (HttpRequestException e)
             {

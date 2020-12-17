@@ -45,7 +45,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .PostAsync(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}", content);
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseStr = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("Error sending notification: {Response}", responseStr);
+                }
             }
             catch (HttpRequestException e)
             {
