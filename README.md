@@ -77,7 +77,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
   - UserId
     - The user Id
   - NotificationType
-    - The [NofiticationType](Jellyfin.Plugin.Webhook/Destinations/NotificationType.cs)
+    - The [NotificationType](Jellyfin.Plugin.Webhook/Destinations/NotificationType.cs)
   - PlayedToCompletion 
     - `true/false`, Only when `NotificationType == PlaybackStop`
 
