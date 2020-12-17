@@ -70,6 +70,10 @@
                 element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || true;
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
                 element.querySelector("[data-name=txtTemplate]").value = atob(config.Template || "");
+
+                for (let i = 0; i < config.NotificationTypes.length; i++) {
+                    element.querySelector('[data-value=' + config.NotificationTypes[i] + ']').checked = true;
+                }
             },
             getConfig: function (element) {
                 const config = {};
@@ -83,6 +87,15 @@
                 config.WebhookUri = element.querySelector("[data-name=txtWebhookUri]").value || "";
                 config.Template = btoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
+                config.NotificationTypes = [];
+                const notificationTypes = element.querySelectorAll('[data-name=chkNotificationTypeGroup] input[type="checkbox"]');
+                for (let i = 0; i < notificationTypes.length; i++) {
+                    if (notificationTypes[i].checked) {
+                        config.NotificationTypes.push(notificationTypes[i].dataset.value);
+                    }
+                }
+
+                console.log(config.NotificationTypes);
                 return config;
             }
         },

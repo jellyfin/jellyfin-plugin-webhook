@@ -1,4 +1,5 @@
-﻿using HandlebarsDotNet;
+﻿using System;
+using HandlebarsDotNet;
 using Jellyfin.Plugin.Webhook.Helpers;
 
 namespace Jellyfin.Plugin.Webhook.Destinations
@@ -9,6 +10,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations
     public abstract class BaseOption
     {
         private HandlebarsTemplate<object, string>? _compiledTemplate;
+
+        /// <summary>
+        /// Gets or sets the notification type.
+        /// </summary>
+        public NotificationType[] NotificationTypes { get; set; } = Array.Empty<NotificationType>();
 
         /// <summary>
         /// Gets or sets the webhook uri.

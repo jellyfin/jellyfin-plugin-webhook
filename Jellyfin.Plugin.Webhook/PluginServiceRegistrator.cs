@@ -3,7 +3,10 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Notifiers;
 using MediaBrowser.Common.Plugins;
+using MediaBrowser.Controller.Events;
+using MediaBrowser.Controller.Library;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jellyfin.Plugin.Webhook
@@ -24,6 +27,9 @@ namespace Jellyfin.Plugin.Webhook
 
             // Register sender.
             serviceCollection.AddSingleton<WebhookSender>();
+
+            // Register event consumers.
+            serviceCollection.AddScoped<IEventConsumer<PlaybackStartEventArgs>, PlaybackStartNotifier>();
         }
     }
 }

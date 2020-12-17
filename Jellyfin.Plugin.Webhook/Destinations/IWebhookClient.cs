@@ -16,6 +16,6 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         /// <param name="options">The destination options.</param>
         /// <param name="data">The message to send.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SendItemAddedAsync(TDestinationOptions options, Dictionary<string, object> data);
+        Task SendAsync(TDestinationOptions options, Dictionary<string, object> data);
     }
 }

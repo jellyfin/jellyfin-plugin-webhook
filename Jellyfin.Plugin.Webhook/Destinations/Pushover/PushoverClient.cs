@@ -26,7 +26,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         }
 
         /// <inheritdoc />
-        public async Task SendItemAddedAsync(PushoverOption options, Dictionary<string, object> data)
+        public async Task SendAsync(PushoverOption options, Dictionary<string, object> data)
         {
             try
             {

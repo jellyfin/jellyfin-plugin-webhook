@@ -27,7 +27,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
         }
 
         /// <inheritdoc />
-        public async Task SendItemAddedAsync(GotifyOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GotifyOption options, Dictionary<string, object> data)
         {
             try
             {

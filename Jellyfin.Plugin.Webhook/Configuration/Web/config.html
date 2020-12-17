@@ -43,7 +43,29 @@
             <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
             <span>For linking to content. Include base url.</span>
         </div>
-        <div id="notificationTypeGroup" style="padding-left: 35px;">
+        <div data-name="chkNotificationTypeGroup">
+            <label>Notification Type:</label>
+            <div class="selectContainer">
+                <label class="checkboxContainer">
+                    <input is="emby-checkbox" type="checkbox" data-value="ItemAdded"/>
+                    <span>Item Added</span>
+                </label>
+            </div>
+            <div class="selectContainer">
+                <label class="checkboxContainer">
+                    <input is="emby-checkbox" type="checkbox" data-value="Generic"/>
+                    <span>Generic</span>
+                </label>
+            </div>
+            <div class="selectContainer">
+                <label class="checkboxContainer">
+                    <input is="emby-checkbox" type="checkbox" data-value="PlaybackStart"/>
+                    <span>Playback Start</span>
+                </label>
+            </div>
+        </div>
+        <div>
+            <label>Item Type:</label>
             <label class="checkboxContainer">
                 <input is="emby-checkbox" type="checkbox" data-name="chkEnableMovies"/>
                 <span>Movies</span>

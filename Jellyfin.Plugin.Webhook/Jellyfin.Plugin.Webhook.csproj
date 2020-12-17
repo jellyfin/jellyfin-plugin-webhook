@@ -28,10 +28,6 @@
       <None Remove="Configuration\Web\config.js" />
       <EmbeddedResource Include="Configuration\Web\config.js" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Destinations\Pushbullet" />
-    </ItemGroup>
 
     <PropertyGroup>
         <CodeAnalysisRuleSet>../jellyfin.ruleset</CodeAnalysisRuleSet>

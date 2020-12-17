@@ -30,7 +30,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         }
 
         /// <inheritdoc />
-        public async Task SendItemAddedAsync(GenericOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GenericOption options, Dictionary<string, object> data)
         {
             try
             {

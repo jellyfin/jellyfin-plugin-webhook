@@ -27,7 +27,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
         }
 
         /// <inheritdoc />
-        public async Task SendItemAddedAsync(DiscordOption options, Dictionary<string, object> data)
+        public async Task SendAsync(DiscordOption options, Dictionary<string, object> data)
         {
             try
             {
