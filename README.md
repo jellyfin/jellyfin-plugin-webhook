@@ -98,3 +98,6 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - MessageUrlTitle
     - MessagePriority
     - NotificationSound
+    
+
+Future events can be created from https://github.com/jellyfin/jellyfin/blob/master/Jellyfin.Server.Implementations/Events/EventingServiceCollectionExtensions.cs
