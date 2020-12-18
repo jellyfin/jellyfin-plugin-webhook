@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
@@ -51,10 +50,10 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 return;
             }
 
-            var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-                .AddBaseItemData(_applicationHost, eventArgs.Item)
+            var dataObject = DataObjectHelpers
+                .GetBaseDataObject(_applicationHost, NotificationType.PlaybackStart)
+                .AddBaseItemData(eventArgs.Item)
                 .AddPlaybackProgressData(eventArgs);
-            dataObject[nameof(NotificationType)] = NotificationType.PlaybackStart;
 
             foreach (var user in eventArgs.Users)
             {
