@@ -36,6 +36,55 @@
 
         configurationWrapper: document.querySelector("#configurationWrapper"),
 
+        notificationType: {
+            template: document.querySelector("#template-notification-type"),
+            values: {
+                "ItemAdded": "Item Added",
+                "Generic": "Generic",
+                "PlaybackStart": "Playback Start",
+                "PlaybackProgress": "Playback Progress",
+                "PlaybackStop": "Playback Stop",
+                "SubtitleDownloadFailure": "Subtitle Download Failure",
+                "AuthenticationFailure": "Authentication Failure",
+                "AuthenticationSuccess": "Authentication Success",
+                "SessionStart": "Session Start",
+                "PendingRestart": "Pending Restart",
+                "TaskCompleted": "Task Completed",
+                "PluginInstallationCanceled": "Plugin Installation Cancelled",
+                "PluginInstallationFailed": "Plugin Installation Failed",
+                "PluginInstalled": "Plugin Installed",
+                "PluginInstalling": "Plugin Installing",
+                "PluginUninstalled": "Plugin Uninstalled",
+                "PluginUpdated": "Plugin Updated",
+                "UserCreated": "User Created",
+                "UserDeleted": "User Deleted",
+                "UserLockedOut": "User Locked Out",
+                "UserPasswordChanged": "User Password Changed",
+                "UserUpdated": "User Updated"
+            },
+            create: function (container, selected = []) {
+                const notificationTypeKeys = Object.keys(Webhook.notificationType.values).sort();
+                for (const key of notificationTypeKeys) {
+                    const template = Webhook.notificationType.template.cloneNode(true).content;
+                    const name = template.querySelector("[data-name=notificationTypeName]");
+                    const value = template.querySelector("[data-name=notificationTypeValue]");
+
+                    name.innerText = Webhook.notificationType.values[key];
+                    value.dataset.value = key;
+                    value.checked = selected.includes(key);
+
+                    container.appendChild(template);
+                }
+            },
+            get: function (container) {
+                const notificationTypes = [];
+                const checkboxes = container.querySelectorAll('[data-name=notificationTypeValue]:checked')
+                for (const checkbox of checkboxes) {
+                    notificationTypes.push(checkbox.dataset.value);
+                }
+                return notificationTypes;
+            }
+        },
         baseConfig: {
             template: document.querySelector("#template-base"),
             addConfig: function (template, name) {
@@ -71,9 +120,9 @@
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
                 element.querySelector("[data-name=txtTemplate]").value = atob(config.Template || "");
 
-                for (let i = 0; i < config.NotificationTypes.length; i++) {
-                    element.querySelector('[data-value=' + config.NotificationTypes[i] + ']').checked = true;
-                }
+
+                const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
+                Webhook.notificationType.create(notificationTypeContainer, config.NotificationTypes);
             },
             getConfig: function (element) {
                 const config = {};
@@ -88,13 +137,7 @@
                 config.Template = btoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];
-                const notificationTypes = element.querySelectorAll('[data-name=chkNotificationTypeGroup] input[type="checkbox"]');
-                for (let i = 0; i < notificationTypes.length; i++) {
-                    if (notificationTypes[i].checked) {
-                        config.NotificationTypes.push(notificationTypes[i].dataset.value);
-                    }
-                }
-
+                config.NotificationTypes = Webhook.notificationType.get(element);
                 console.log(config.NotificationTypes);
                 return config;
             }
@@ -231,13 +274,16 @@
             },
             setConfig: function (config, element) {
                 Webhook.baseConfig.setConfig(config, element);
-                console.log(config);
-                for (let i = 0; i < config.Headers.length; i++) {
-                    Webhook.generic.addHeader(element, config.Headers[i]);
+                if (config.Headers) {
+                    for (let i = 0; i < config.Headers.length; i++) {
+                        Webhook.generic.addHeader(element, config.Headers[i]);
+                    }
                 }
 
-                for (let i = 0; i < config.Fields.length; i++) {
-                    Webhook.generic.addField(element, config.Fields[i]);
+                if (config.Fields) {
+                    for (let i = 0; i < config.Fields.length; i++) {
+                        Webhook.generic.addField(element, config.Fields[i]);
+                    }
                 }
             },
             getConfig: function (e) {

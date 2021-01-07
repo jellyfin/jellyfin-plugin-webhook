@@ -15,10 +15,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook
 {
-    /// <summary>
-    /// Webhook sender.
-    /// </summary>
-    public class WebhookSender
+    /// <inheritdoc />
+    public class WebhookSender : IWebhookSender
     {
         private readonly ILogger<WebhookSender> _logger;
         private readonly IWebhookClient<DiscordOption> _discordClient;
@@ -52,14 +50,8 @@ namespace Jellyfin.Plugin.Webhook
             WebhookPlugin.Instance?.Configuration
             ?? throw new NullReferenceException(nameof(WebhookPlugin.Instance.Configuration));
 
-        /// <summary>
-        /// Send item added notification.
-        /// </summary>
-        /// <param name="notificationType">The notification type.</param>
-        /// <param name="itemData">The item data.</param>
-        /// <param name="itemType">The item type.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SendItemNotification(NotificationType notificationType, Dictionary<string, object> itemData, Type itemType)
+        /// <inheritdoc />
+        public async Task SendNotification(NotificationType notificationType, Dictionary<string, object> itemData, Type? itemType = null)
         {
             foreach (var option in Configuration.DiscordOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
@@ -82,68 +74,14 @@ namespace Jellyfin.Plugin.Webhook
             }
         }
 
-        /// <summary>
-        /// Send generic notification.
-        /// </summary>
-        /// <param name="notificationType">The notification type.</param>
-        /// <param name="notificationData">The notification data.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SendGenericNotification(NotificationType notificationType, Dictionary<string, object> notificationData)
-        {
-            foreach (var option in Configuration.DiscordOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
-            {
-                await SendNotification(_discordClient, option, notificationData);
-            }
-
-            foreach (var option in Configuration.GotifyOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
-            {
-                await SendNotification(_gotifyClient, option, notificationData);
-            }
-
-            foreach (var option in Configuration.PushoverOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
-            {
-                await SendNotification(_pushoverClient, option, notificationData);
-            }
-
-            foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
-            {
-                await SendNotification(_genericClient, option, notificationData);
-            }
-        }
-
-        private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> itemData, Type itemType)
+        private static bool NotifyOnItem<T>(T baseOptions, Type? itemType)
             where T : BaseOption
         {
-            if (NotifyOnItem(option, itemType))
+            if (itemType == null)
             {
-                try
-                {
-                    await webhookClient.SendAsync(option, itemData);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "Unable to send notification.");
-                }
+                return true;
             }
-        }
 
-        private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> notificationData)
-            where T : BaseOption
-        {
-            try
-            {
-                await webhookClient.SendAsync(option, notificationData);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Unable to send notification.");
-            }
-        }
-
-        private bool NotifyOnItem<T>(T baseOptions, Type itemType)
-            where T : BaseOption
-        {
-            _logger.LogDebug("NotifyOnItem");
             if (baseOptions.EnableAlbums && itemType == typeof(MusicAlbum))
             {
                 return true;
@@ -175,6 +113,22 @@ namespace Jellyfin.Plugin.Webhook
             }
 
             return false;
+        }
+
+        private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> itemData, Type? itemType)
+            where T : BaseOption
+        {
+            if (NotifyOnItem(option, itemType))
+            {
+                try
+                {
+                    await webhookClient.SendAsync(option, itemData);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unable to send notification.");
+                }
+            }
         }
     }
 }

@@ -38,42 +38,21 @@
         </form>
     </div>
 
+    <template id="template-notification-type">
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="notificationTypeValue"/>
+            <span data-name="notificationTypeName"></span>
+        </label>
+    </template>
+
     <template id="template-base">
         <div class="inputContainer">
             <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
             <span>For linking to content. Include base url.</span>
         </div>
-        <div data-name="chkNotificationTypeGroup">
+        <div>
             <label>Notification Type:</label>
-            <div class="selectContainer">
-                <label class="checkboxContainer">
-                    <input is="emby-checkbox" type="checkbox" data-value="ItemAdded"/>
-                    <span>Item Added</span>
-                </label>
-            </div>
-            <div class="selectContainer">
-                <label class="checkboxContainer">
-                    <input is="emby-checkbox" type="checkbox" data-value="Generic"/>
-                    <span>Generic</span>
-                </label>
-            </div>
-            <div class="selectContainer">
-                <label class="checkboxContainer">
-                    <input is="emby-checkbox" type="checkbox" data-value="PlaybackStart"/>
-                    <span>Playback Start</span>
-                </label>
-            </div>
-            <div class="selectContainer">
-                <label class="checkboxContainer">
-                    <input is="emby-checkbox" type="checkbox" data-value="PlaybackProgress"/>
-                    <span>Playback Progress</span>
-                </label>
-            </div>
-            <div class="selectContainer">
-                <label class="checkboxContainer">
-                    <input is="emby-checkbox" type="checkbox" data-value="PlaybackStop"/>
-                    <span>Playback Stop</span>
-                </label>
+            <div data-name="notificationTypeContainer">
             </div>
         </div>
         <div>

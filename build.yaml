@@ -13,4 +13,4 @@ artifacts:
 - "Jellyfin.Plugin.Webhook.dll"
 - "Handlebars.dll"
 changelog: >
-  Initial release
+  Add more notification types

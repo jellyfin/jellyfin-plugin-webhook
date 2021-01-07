@@ -14,16 +14,16 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
     public class PlaybackProgressNotifier : IEventConsumer<PlaybackProgressEventArgs>
     {
         private readonly IApplicationHost _applicationHost;
-        private readonly WebhookSender _webhookSender;
+        private readonly IWebhookSender _webhookSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaybackProgressNotifier"/> class.
         /// </summary>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        /// <param name="webhookSender">Instance of the <see cref="WebhookSender"/>.</param>
+        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
         public PlaybackProgressNotifier(
             IApplicationHost applicationHost,
-            WebhookSender webhookSender)
+            IWebhookSender webhookSender)
         {
             _applicationHost = applicationHost;
             _webhookSender = webhookSender;
@@ -34,7 +34,6 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         {
             if (eventArgs.Item == null)
             {
-                // No item.
                 return;
             }
 
@@ -63,7 +62,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     ["UserId"] = user.Id
                 };
 
-                await _webhookSender.SendItemNotification(NotificationType.PlaybackProgress, userDataObject, eventArgs.Item.GetType());
+                await _webhookSender.SendNotification(NotificationType.PlaybackProgress, userDataObject, eventArgs.Item.GetType());
             }
         }
     }

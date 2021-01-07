@@ -13,15 +13,15 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
     /// </summary>
     public class GenericNotifier : INotificationService
     {
-        private readonly WebhookSender _webhookSender;
+        private readonly IWebhookSender _webhookSender;
         private readonly IApplicationHost _applicationHost;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericNotifier"/> class.
         /// </summary>
-        /// <param name="webhookSender">Instance of the <see cref="WebhookSender"/>.</param>
+        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        public GenericNotifier(WebhookSender webhookSender, IApplicationHost applicationHost)
+        public GenericNotifier(IWebhookSender webhookSender, IApplicationHost applicationHost)
         {
             _webhookSender = webhookSender;
             _applicationHost = applicationHost;
@@ -43,7 +43,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             dataObject[nameof(request.User.Username)] = request.User.Username;
             dataObject["UserId"] = request.User.Id;
 
-            await _webhookSender.SendGenericNotification(NotificationType.Generic, dataObject);
+            await _webhookSender.SendNotification(NotificationType.Generic, dataObject);
         }
 
         /// <inheritdoc />

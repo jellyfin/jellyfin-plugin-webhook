@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Common;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Session;
+using MediaBrowser.Model.Dto;
+using MediaBrowser.Model.Updates;
 
 namespace Jellyfin.Plugin.Webhook.Helpers
 {
@@ -127,6 +131,90 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             dataObject[nameof(playbackProgressEventArgs.DeviceId)] = playbackProgressEventArgs.DeviceId;
             dataObject[nameof(playbackProgressEventArgs.DeviceName)] = playbackProgressEventArgs.DeviceName;
             dataObject[nameof(playbackProgressEventArgs.ClientName)] = playbackProgressEventArgs.ClientName;
+
+            return dataObject;
+        }
+
+        /// <summary>
+        /// Add user data.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="user">The user to add.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, UserDto user)
+        {
+            dataObject["Username"] = user.Name;
+            dataObject["UserId"] = user.Id;
+            dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
+            dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
+
+            return dataObject;
+        }
+
+        /// <summary>
+        /// Add user data.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="user">The user to add.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, User user)
+        {
+            dataObject["Username"] = user.Username;
+            dataObject["UserId"] = user.Id;
+            dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
+            dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
+
+            return dataObject;
+        }
+
+        /// <summary>
+        /// Add session info data.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="sessionInfo">The session info to add.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddSessionInfoData(this Dictionary<string, object> dataObject, SessionInfo sessionInfo)
+        {
+            dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
+            dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
+            dataObject[nameof(sessionInfo.UserName)] = sessionInfo.UserName;
+            dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client;
+            dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
+            dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
+            dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName;
+            dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
+
+            return dataObject;
+        }
+
+        /// <summary>
+        /// Add plugin installation info.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="installationInfo">The plugin installation info to add.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddPluginInstallationInfo(this Dictionary<string, object> dataObject, InstallationInfo installationInfo)
+        {
+            dataObject["PluginId"] = installationInfo.Id;
+            dataObject["PluginName"] = installationInfo.Name;
+            dataObject["PluginVersion"] = installationInfo.Version;
+            dataObject["PluginChangelog"] = installationInfo.Changelog;
+            dataObject["PluginChecksum"] = installationInfo.Checksum;
+            dataObject["PluginSourceUrl"] = installationInfo.SourceUrl;
+
+            return dataObject;
+        }
+
+        /// <summary>
+        /// Add exception info.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="exception">The exception to add.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddExceptionInfo(this Dictionary<string, object> dataObject, Exception exception)
+        {
+            dataObject["ExceptionMessage"] = exception.Message;
+            dataObject["ExceptionMessageInner"] = exception.InnerException?.Message ?? string.Empty;
 
             return dataObject;
         }

@@ -21,7 +21,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         private readonly ILogger<ItemAddedNotifier> _logger;
         private readonly ILibraryManager _libraryManager;
         private readonly IApplicationHost _applicationHost;
-        private readonly WebhookSender _webhookSender;
+        private readonly IWebhookSender _webhookSender;
 
         private readonly ConcurrentDictionary<Guid, QueuedItemContainer> _itemProcessQueue;
         private CancellationTokenSource? _cancellationTokenSource;
@@ -33,12 +33,12 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <param name="logger">Instance of the <see cref="ILogger{EventNotifier}"/> interface.</param>
         /// <param name="libraryManager">Instance of the <see cref="ILibraryManager"/> interface.</param>
         /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        /// <param name="webhookSender">Instance of the <see cref="WebhookSender"/>.</param>
+        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
         public ItemAddedNotifier(
             ILogger<ItemAddedNotifier> logger,
             ILibraryManager libraryManager,
             IApplicationHost applicationHost,
-            WebhookSender webhookSender)
+            IWebhookSender webhookSender)
         {
             _logger = logger;
             _libraryManager = libraryManager ?? throw new ArgumentNullException(nameof(libraryManager));
@@ -133,7 +133,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     .AddBaseItemData(item);
 
                 var itemType = item.GetType();
-                await _webhookSender.SendItemNotification(NotificationType.ItemAdded, dataObject, itemType);
+                await _webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType);
 
                 // Remove item from queue.
                 _itemProcessQueue.TryRemove(key, out _);

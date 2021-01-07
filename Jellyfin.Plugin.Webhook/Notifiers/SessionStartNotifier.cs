@@ -1,0 +1,47 @@
+﻿using System.Threading.Tasks;
+using Jellyfin.Plugin.Webhook.Destinations;
+using Jellyfin.Plugin.Webhook.Helpers;
+using MediaBrowser.Common;
+using MediaBrowser.Controller.Events;
+using MediaBrowser.Controller.Events.Session;
+
+namespace Jellyfin.Plugin.Webhook.Notifiers
+{
+    /// <summary>
+    /// Session start notifier.
+    /// </summary>
+    public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
+    {
+        private readonly IApplicationHost _applicationHost;
+        private readonly IWebhookSender _webhookSender;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionStartNotifier"/> class.
+        /// </summary>
+        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
+        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
+        public SessionStartNotifier(
+            IApplicationHost applicationHost,
+            IWebhookSender webhookSender)
+        {
+            _applicationHost = applicationHost;
+            _webhookSender = webhookSender;
+        }
+
+        /// <inheritdoc />
+        public async Task OnEvent(SessionStartedEventArgs eventArgs)
+        {
+            if (eventArgs.Argument == null)
+            {
+                return;
+            }
+
+            var dataObject = DataObjectHelpers
+                .GetBaseDataObject(_applicationHost, NotificationType.SessionStart)
+                .AddSessionInfoData(eventArgs.Argument)
+                .AddBaseItemData(eventArgs.Argument.FullNowPlayingItem);
+
+            await _webhookSender.SendNotification(NotificationType.SessionStart, dataObject);
+        }
+    }
+}
