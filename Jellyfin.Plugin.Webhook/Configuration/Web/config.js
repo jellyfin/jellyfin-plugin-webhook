@@ -32,7 +32,7 @@
     }
 
     const Webhook = {
-        pluginId: "529397D0-A0AA-43DB-9537-7CFDE936C1E3",
+        pluginId: "71552A5A-5C5C-4350-A2AE-EBE451A30173",
 
         configurationWrapper: document.querySelector("#configurationWrapper"),
 
