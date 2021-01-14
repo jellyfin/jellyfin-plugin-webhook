@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Webhook
     /// </summary>
     public class WebhookPlugin : BasePlugin<PluginConfiguration>, IHasWebPages
     {
-        private readonly Guid _id = new Guid("529397D0-A0AA-43DB-9537-7CFDE936C1E3");
+        private readonly Guid _id = new Guid("71552A5A-5C5C-4350-A2AE-EBE451A30173");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookPlugin"/> class.
