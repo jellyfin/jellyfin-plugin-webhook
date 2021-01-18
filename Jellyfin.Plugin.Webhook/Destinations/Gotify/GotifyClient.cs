@@ -39,7 +39,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
                 data["Priority"] = options.Priority;
 
                 var body = options.GetCompiledTemplate()(data);
-                _logger.LogDebug("SendAsync Body: {@body}", body);
+                _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClient.PostAsync(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}", content);
                 if (!response.IsSuccessStatusCode)
@@ -50,7 +50,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
             }
             catch (HttpRequestException e)
             {
-                _logger.LogWarning(e, "Error sending notification.");
+                _logger.LogWarning(e, "Error sending notification");
             }
         }
     }

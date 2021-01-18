@@ -44,7 +44,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 }
 
                 var body = options.GetCompiledTemplate()(data);
-                _logger.LogDebug("SendAsync Body: {@body}", body);
+                _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
                 var contentType = MediaTypeNames.Text.Plain;
                 foreach (var header in options.Headers)
@@ -76,7 +76,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
             }
             catch (HttpRequestException e)
             {
-                _logger.LogWarning(e, "Error sending notification.");
+                _logger.LogWarning(e, "Error sending notification");
             }
         }
     }

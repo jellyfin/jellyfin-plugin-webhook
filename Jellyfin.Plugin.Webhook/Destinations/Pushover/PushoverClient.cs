@@ -62,7 +62,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                 }
 
                 var body = options.GetCompiledTemplate()(data);
-                _logger.LogDebug("SendAsync Body: {body}", body);
+                _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClient
                     .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : options.WebhookUri, content);
@@ -74,7 +74,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
             }
             catch (HttpRequestException e)
             {
-                _logger.LogWarning(e, "Error sending notification.");
+                _logger.LogWarning(e, "Error sending notification");
             }
         }
     }

@@ -126,7 +126,7 @@ namespace Jellyfin.Plugin.Webhook
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unable to send notification.");
+                    _logger.LogError(e, "Unable to send notification");
                 }
             }
         }
