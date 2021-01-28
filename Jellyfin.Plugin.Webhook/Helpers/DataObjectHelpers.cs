@@ -28,7 +28,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         {
             var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             dataObject["ServerId"] = applicationHost.SystemId;
-            dataObject["ServerName"] = applicationHost.Name;
+            dataObject["ServerName"] = applicationHost.Name.Escape();
             dataObject["ServerVersion"] = applicationHost.ApplicationVersionString;
             dataObject["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096";
             dataObject[nameof(NotificationType)] = notificationType.ToString();
@@ -47,9 +47,9 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             dataObject["Timestamp"] = DateTime.Now;
             dataObject["UtcTimestamp"] = DateTime.UtcNow;
             dataObject["Name"] = item.Name;
-            dataObject["Overview"] = item.Overview;
+            dataObject["Overview"] = item.Overview.Escape();
             dataObject["ItemId"] = item.Id;
-            dataObject["ItemType"] = item.GetType().Name;
+            dataObject["ItemType"] = item.GetType().Name.Escape();
             dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
             dataObject["RunTime"] = TimeSpan.FromTicks(item.RunTimeTicks ?? 0).ToString(@"hh\:mm\:ss");
 
@@ -63,7 +63,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 case Season:
                     if (!string.IsNullOrEmpty(item.Parent?.Name))
                     {
-                        dataObject["SeriesName"] = item.Parent.Name;
+                        dataObject["SeriesName"] = item.Parent.Name.Escape();
                     }
 
                     if (item.Parent?.ProductionYear != null)
@@ -82,7 +82,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 case Episode:
                     if (!string.IsNullOrEmpty(item.Parent?.Parent?.Name))
                     {
-                        dataObject["SeriesName"] = item.Parent.Parent.Name;
+                        dataObject["SeriesName"] = item.Parent.Parent.Name.Escape();
                     }
 
                     if (item.Parent?.IndexNumber != null)
@@ -143,7 +143,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The modified data object.</returns>
         public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, UserDto user)
         {
-            dataObject["Username"] = user.Name;
+            dataObject["Username"] = user.Name.Escape();
             dataObject["UserId"] = user.Id;
             dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
             dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -159,7 +159,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The modified data object.</returns>
         public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, User user)
         {
-            dataObject["Username"] = user.Username;
+            dataObject["Username"] = user.Username.Escape();
             dataObject["UserId"] = user.Id;
             dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
             dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -177,11 +177,11 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         {
             dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
             dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
-            dataObject[nameof(sessionInfo.UserName)] = sessionInfo.UserName;
-            dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client;
+            dataObject[nameof(sessionInfo.UserName)] = sessionInfo.UserName.Escape();
+            dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
             dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
             dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
-            dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName;
+            dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
             dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
 
             return dataObject;
@@ -196,9 +196,9 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         public static Dictionary<string, object> AddPluginInstallationInfo(this Dictionary<string, object> dataObject, InstallationInfo installationInfo)
         {
             dataObject["PluginId"] = installationInfo.Id;
-            dataObject["PluginName"] = installationInfo.Name;
+            dataObject["PluginName"] = installationInfo.Name.Escape();
             dataObject["PluginVersion"] = installationInfo.Version;
-            dataObject["PluginChangelog"] = installationInfo.Changelog;
+            dataObject["PluginChangelog"] = installationInfo.Changelog.Escape();
             dataObject["PluginChecksum"] = installationInfo.Checksum;
             dataObject["PluginSourceUrl"] = installationInfo.SourceUrl;
 
@@ -213,10 +213,18 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The modified data object.</returns>
         public static Dictionary<string, object> AddExceptionInfo(this Dictionary<string, object> dataObject, Exception exception)
         {
-            dataObject["ExceptionMessage"] = exception.Message;
+            dataObject["ExceptionMessage"] = exception.Message.Escape();
             dataObject["ExceptionMessageInner"] = exception.InnerException?.Message ?? string.Empty;
 
             return dataObject;
         }
+
+        /// <summary>
+        /// Escape quotes for proper json.
+        /// </summary>
+        /// <param name="input">Input string.</param>
+        /// <returns>Escaped string.</returns>
+        private static string Escape(this string input)
+            => input.Replace("\"", "\\\"");
     }
 }
