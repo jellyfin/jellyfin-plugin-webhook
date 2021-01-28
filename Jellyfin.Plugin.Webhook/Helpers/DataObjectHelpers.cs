@@ -224,7 +224,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// </summary>
         /// <param name="input">Input string.</param>
         /// <returns>Escaped string.</returns>
-        private static string Escape(this string input)
-            => input.Replace("\"", "\\\"");
+        private static string Escape(this string? input)
+            => input?.Replace("\"", "\\\"") ?? string.Empty;
     }
 }
