@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         {
             if (arguments.Length != 1)
             {
-                throw new HandlebarsException("{{if_equals}} helper must have exactly one argument");
+                throw new HandlebarsException("{{if_exist}} helper must have exactly one argument");
             }
 
             var arg = arguments[0] as string;

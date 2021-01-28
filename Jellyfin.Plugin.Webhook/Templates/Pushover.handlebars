@@ -2,18 +2,18 @@
     "token": "{{Token}}",
     "user": "{{UserToken}}",
     "device": "{{Device}}",
-    "title": "{{Title}}",
+    "title": "{{{Title}}}",
     "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
-    "url_title": "{{MessageUrlTitle}}",
+    "url_title": "{{{MessageUrlTitle}}}",
     "priority": {{MessagePriority}},
     "sound": "{{NotificationSound}}",
-    {{if_equals ItemType 'Season'}}
-        "message": "{{SeriesName}} {{Name}} has been added to {{ServerName}}"
+    {{#if_equals ItemType 'Season'}}
+        "message": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}"
     {{else}}
-        {{if_equals ItemType 'Episode'}}
-            "message": "{{SeriesName}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{Name}} has been added to {{ServerName}}"
+        {{#if_equals ItemType 'Episode'}}
+            "message": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}"
         {{else}}
-            "message": "{{Name}} ({{Year}}) has been added to {{ServerName}}"
+            "message": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}"
         {{/if_equals}}
     {{/if_equals}}
 }
