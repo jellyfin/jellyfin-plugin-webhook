@@ -118,7 +118,7 @@
                 element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || true;
                 element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || true;
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
-                element.querySelector("[data-name=txtTemplate]").value = atob(config.Template || "");
+                element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
 
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
@@ -134,7 +134,7 @@
                 config.EnableAlbums = element.querySelector("[data-name=chkEnableAlbums]").checked || false;
                 config.EnableSongs = element.querySelector("[data-name=chkEnableSongs]").checked || false;
                 config.WebhookUri = element.querySelector("[data-name=txtWebhookUri]").value || "";
-                config.Template = btoa(element.querySelector("[data-name=txtTemplate]").value || "");
+                config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];
                 config.NotificationTypes = Webhook.notificationType.get(element);
@@ -339,7 +339,6 @@
                 element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },
-
         init: function () {
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
@@ -410,6 +409,22 @@
             });
 
             Dashboard.hideLoadingMsg()
+        },
+        /**
+         * ASCII to Unicode (decode Base64 to original data)
+         * @param {string} b64
+         * @return {string}
+         */
+        atou: function (b64) {
+            return decodeURIComponent(escape(atob(b64)));
+        },
+        /**
+         * Unicode to ASCII (encode data to Base64)
+         * @param {string} data
+         * @return {string}
+         */
+        utoa: function (data) {
+            return btoa(unescape(encodeURIComponent(data)));
         }
     }
 
