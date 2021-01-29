@@ -42,16 +42,20 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <param name="dataObject">The existing data object.</param>
         /// <param name="item">Instance of the <see cref="BaseItem"/>.</param>
         /// <returns>The data object.</returns>
-        public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, BaseItem item)
+        public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, BaseItem? item)
         {
+            if (item == null)
+            {
+                return dataObject;
+            }
+
             dataObject["Timestamp"] = DateTime.Now;
             dataObject["UtcTimestamp"] = DateTime.UtcNow;
-            dataObject["Name"] = item.Name;
+            dataObject["Name"] = item.Name.Escape();
             dataObject["Overview"] = item.Overview.Escape();
             dataObject["ItemId"] = item.Id;
             dataObject["ItemType"] = item.GetType().Name.Escape();
             dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
-            dataObject["RunTime"] = TimeSpan.FromTicks(item.RunTimeTicks ?? 0).ToString(@"hh\:mm\:ss");
 
             if (item.ProductionYear.HasValue)
             {

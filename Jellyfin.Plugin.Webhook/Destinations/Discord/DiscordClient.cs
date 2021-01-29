@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Discord
@@ -12,17 +13,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
     public class DiscordClient : IWebhookClient<DiscordOption>
     {
         private readonly ILogger<DiscordClient> _logger;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordClient"/> class.
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger{DiscordDestination}"/> interface.</param>
-        /// <param name="httpClient">Instance of the <see cref="HttpClient"/>.</param>
-        public DiscordClient(ILogger<DiscordClient> logger, HttpClient httpClient)
+        /// <param name="httpClientFactory">Instance of the<see cref="IHttpClientFactory"/> interface.</param>
+        public DiscordClient(ILogger<DiscordClient> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <inheritdoc />
@@ -50,7 +51,9 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-                using var response = await _httpClient.PostAsync(options.WebhookUri, content);
+                using var response = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
+                    .PostAsync(options.WebhookUri, content);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseStr = await response.Content.ReadAsStringAsync();

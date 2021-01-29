@@ -1,4 +1,5 @@
-﻿using Jellyfin.Data.Events;
+﻿using System.Net.Http.Headers;
+using Jellyfin.Data.Events;
 using Jellyfin.Data.Events.System;
 using Jellyfin.Data.Events.Users;
 using Jellyfin.Plugin.Webhook.Destinations;
@@ -7,6 +8,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Notifiers;
+using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Common.Updates;
@@ -30,14 +32,10 @@ namespace Jellyfin.Plugin.Webhook
         /// <inheritdoc />
         public void RegisterServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddHttpClient<IWebhookClient<DiscordOption>, DiscordClient>()
-                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
-            serviceCollection.AddHttpClient<IWebhookClient<GotifyOption>, GotifyClient>()
-                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
-            serviceCollection.AddHttpClient<IWebhookClient<PushoverOption>, PushoverClient>()
-                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
-            serviceCollection.AddHttpClient<IWebhookClient<GenericOption>, GenericClient>()
-                .ConfigurePrimaryHttpMessageHandler(_ => new DefaultHttpClientHandler());
+            serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
+            serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
+            serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
+            serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
 
             // Register sender.
             serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
@@ -45,6 +43,7 @@ namespace Jellyfin.Plugin.Webhook
             /*-- Register event consumers. --*/
             // Library consumers.
             serviceCollection.AddScoped<IEventConsumer<SubtitleDownloadFailureEventArgs>, SubtitleDownloadFailureNotifier>();
+            serviceCollection.AddSingleton<IItemAddedManager, ItemAddedManager>();
 
             // Security consumers.
             serviceCollection.AddScoped<IEventConsumer<GenericEventArgs<AuthenticationRequest>>, AuthenticationFailureNotifier>();

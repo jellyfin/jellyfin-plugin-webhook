@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Webhook
     /// </summary>
     public class WebhookPlugin : BasePlugin<PluginConfiguration>, IHasWebPages
     {
-        private readonly Guid _id = new Guid("71552A5A-5C5C-4350-A2AE-EBE451A30173");
+        private readonly Guid _id = new ("71552A5A-5C5C-4350-A2AE-EBE451A30173");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookPlugin"/> class.
@@ -43,16 +43,17 @@ namespace Jellyfin.Plugin.Webhook
         /// <inheritdoc />
         public IEnumerable<PluginPageInfo> GetPages()
         {
+            var prefix = GetType().Namespace;
             yield return new PluginPageInfo
             {
                 Name = Name,
-                EmbeddedResourcePath = GetType().Namespace + ".Configuration.Web.config.html"
+                EmbeddedResourcePath = prefix + ".Configuration.Web.config.html"
             };
 
             yield return new PluginPageInfo
             {
                 Name = $"{Name}.js",
-                EmbeddedResourcePath = GetType().Namespace + ".Configuration.Web.config.js"
+                EmbeddedResourcePath = prefix + ".Configuration.Web.config.js"
             };
         }
     }

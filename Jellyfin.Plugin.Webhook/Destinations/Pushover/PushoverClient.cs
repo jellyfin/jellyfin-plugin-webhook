@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
@@ -11,17 +12,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
     public class PushoverClient : IWebhookClient<PushoverOption>
     {
         private readonly ILogger<PushoverClient> _logger;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PushoverClient"/> class.
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger{PushoverClient}"/> interface.</param>
-        /// <param name="httpClient">Instance of the <see cref="HttpClient"/>.</param>
-        public PushoverClient(ILogger<PushoverClient> logger, HttpClient httpClient)
+        /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/>.</param>
+        public PushoverClient(ILogger<PushoverClient> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <inheritdoc />
@@ -64,7 +65,8 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                 var body = options.GetCompiledTemplate()(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-                using var response = await _httpClient
+                using var response = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
                     .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : options.WebhookUri, content);
                 if (!response.IsSuccessStatusCode)
                 {

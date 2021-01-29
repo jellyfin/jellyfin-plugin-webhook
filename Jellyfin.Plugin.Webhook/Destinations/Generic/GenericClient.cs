@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
@@ -12,19 +13,19 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
     /// <inheritdoc />
     public class GenericClient : IWebhookClient<GenericOption>
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<GenericClient> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericClient"/> class.
         /// </summary>
-        /// <param name="httpClient">Instance of the <see cref="HttpClient"/>.</param>
+        /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/>.</param>
         /// <param name="logger">Instance of the <see cref="ILogger{GenericClient}"/> interface.</param>
         public GenericClient(
-            HttpClient httpClient,
+            IHttpClientFactory httpClientFactory,
             ILogger<GenericClient> logger)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
@@ -67,7 +68,9 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 }
 
                 httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
-                using var response = await _httpClient.SendAsync(httpRequestMessage);
+                using var response = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
+                    .SendAsync(httpRequestMessage);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseStr = await response.Content.ReadAsStringAsync();
