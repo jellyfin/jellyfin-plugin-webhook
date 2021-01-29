@@ -51,6 +51,13 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier
             foreach (var (key, container) in currentItems)
             {
                 var item = _libraryManager.GetItemById(key);
+                if (item == null)
+                {
+                    // Remove item from queue.
+                    _itemProcessQueue.TryRemove(key, out _);
+                    return;
+                }
+
                 _logger.LogDebug("Item {ItemName}", item.Name);
 
                 // Metadata not refreshed yet and under retry limit.
