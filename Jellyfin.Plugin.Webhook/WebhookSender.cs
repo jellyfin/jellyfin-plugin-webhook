@@ -8,6 +8,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
@@ -23,6 +24,7 @@ namespace Jellyfin.Plugin.Webhook
         private readonly IWebhookClient<GotifyOption> _gotifyClient;
         private readonly IWebhookClient<PushoverOption> _pushoverClient;
         private readonly IWebhookClient<GenericOption> _genericClient;
+        private readonly IWebhookClient<SmtpOption> _smtpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookSender"/> class.
@@ -30,20 +32,23 @@ namespace Jellyfin.Plugin.Webhook
         /// <param name="logger">Instance of the <see cref="ILogger{WebhookSender}"/> interface.</param>
         /// <param name="discordClient">Instance of <see cref="IWebhookClient{DiscordOption}"/>.</param>
         /// <param name="gotifyClient">Instance of <see cref="IWebhookClient{GotifyOption}"/>.</param>
-        /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverClient}"/>.</param>
-        /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericClient}"/>.</param>
+        /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverOption}"/>.</param>
+        /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericOption}"/>.</param>
+        /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
         public WebhookSender(
             ILogger<WebhookSender> logger,
             IWebhookClient<DiscordOption> discordClient,
             IWebhookClient<GotifyOption> gotifyClient,
             IWebhookClient<PushoverOption> pushoverClient,
-            IWebhookClient<GenericOption> genericClient)
+            IWebhookClient<GenericOption> genericClient,
+            IWebhookClient<SmtpOption> smtpClient)
         {
             _logger = logger;
             _discordClient = discordClient;
             _gotifyClient = gotifyClient;
             _pushoverClient = pushoverClient;
             _genericClient = genericClient;
+            _smtpClient = smtpClient;
         }
 
         private static PluginConfiguration Configuration =>
@@ -71,6 +76,11 @@ namespace Jellyfin.Plugin.Webhook
             foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_genericClient, option, itemData, itemType);
+            }
+
+            foreach (var option in Configuration.SmtpOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_smtpClient, option, itemData, itemType);
             }
         }
 

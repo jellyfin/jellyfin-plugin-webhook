@@ -100,6 +100,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - Username
 - Gotify
     - Priority
+- Pushbullet
 - Pushover
     - Token
     - UserToken
@@ -109,6 +110,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - MessageUrlTitle
     - MessagePriority
     - NotificationSound
+- SMTP
 
 Future events can be created
 from https://github.com/jellyfin/jellyfin/blob/master/Jellyfin.Server.Implementations/Events/EventingServiceCollectionExtensions.cs

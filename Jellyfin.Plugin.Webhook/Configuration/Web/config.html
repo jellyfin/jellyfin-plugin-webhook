@@ -29,6 +29,9 @@
             <button id="btnAddGeneric" is="emby-button" type="button" class="raised button block">
                 <span>Add Generic Destination</span>
             </button>
+            <button id="btnAddSmtp" is="emby-button" type="button" class="raised button block">
+                <span>Add SMTP Destionation</span>
+            </button>
             <br/>
             <div id="configurationWrapper"></div>
             <br/>
@@ -195,6 +198,45 @@
             <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
             <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>
         </div>
+    </template>
+    
+    <template id="template-smtp">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtSenderAddress" label="Sender Address:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtReceiverAddress" label="Receiver Address:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtSmtpServer" label="SMTP Server Address:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="number" data-name="txtSmtpPort" label="SMTP Port:"/>
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials"/>
+            <span>Use Credentials</span>
+        </label>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUsername" label="Username:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtPassword" label="Password:"/>
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseSsl"/>
+            <span>Use SSL</span>
+        </label>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkIsHtml"/>
+            <span>Is Html Body</span>
+        </label>
+        <div class="inputContainer">
+            <label>Subject Template:</label>
+            <div>
+                <textarea data-name="txtSubjectTemplate" style="width: 100%; height: 400px"></textarea>
+            </div>
+        </div>        
     </template>
 
     <style>

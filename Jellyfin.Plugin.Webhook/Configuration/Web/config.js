@@ -339,12 +339,56 @@
                 element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },
+        smtp: {
+            btnAdd: document.querySelector("#btnAddSmtp"),
+            template: document.querySelector("#template-smtp"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "smtp";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.smtp.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "SMTP");
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration 
+                Webhook.smtp.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtSenderAddress]").value = config.SenderAddress || "";
+                element.querySelector("[data-name=txtReceiverAddress]").value = config.ReceiverAddress || "";
+                element.querySelector("[data-name=txtSmtpServer]").value = config.SmtpServer || "";
+                element.querySelector("[data-name=txtSmtpPort]").value = config.SmtpPort || "";
+                element.querySelector("[data-name=chkUseCredentials]").checked = config.UseCredentials || false;
+                element.querySelector("[data-name=txtUsername]").value = config.Username || "";
+                element.querySelector("[data-name=txtPassword]").value = config.Password || "";
+                element.querySelector("[data-name=chkUseSsl]").checked = config.UseSsl || false;
+                element.querySelector("[data-name=chkIsHtml]").checked = config.IsHtml || false;
+                element.querySelector("[data-name=txtSubjectTemplate]").value = Webhook.atou(config.SubjectTemplate || "");
+            },
+            getConfig: function (element) {
+                const config = Webhook.baseConfig.getConfig(element);
+                config.SenderAddress = element.querySelector("[data-name=txtSenderAddress]").value || "";
+                config.ReceiverAddress = element.querySelector("[data-name=txtReceiverAddress]").value || "";
+                config.SmtpServer = element.querySelector("[data-name=txtSmtpServer]").value || "";
+                config.SmtpPort = element.querySelector("[data-name=txtSmtpPort]").value || "";
+                config.UseCredentials = element.querySelector("[data-name=chkUseCredentials]").checked || false;
+                config.Username = element.querySelector("[data-name=txtUsername]").value || "";
+                config.Password = element.querySelector("[data-name=txtPassword]").value || "";
+                config.UseSsl = element.querySelector("[data-name=chkUseSsl]").checked || false;
+                config.IsHtml = element.querySelector("[data-name=chkIsHtml]").checked || false;
+                config.SubjectTemplate = Webhook.utoa(element.querySelector("[data-name=txtSubjectTemplate]").value || "");
+                return config;
+            }
+        },
         init: function () {
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
             Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
             Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
+            Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
             Webhook.loadConfig();
@@ -384,6 +428,12 @@
                 config.GenericOptions.push(Webhook.generic.getConfig(genericConfigs[i]));
             }
 
+            config.SmtpOptions = [];
+            const smtpConfigs = document.querySelectorAll("[data-type=smtp]");
+            for (let i = 0; i < smtpConfigs.length; i++) {
+                config.SmtpOptions.push(Webhook.smtp.getConfig(smtpConfigs[i]));
+            }
+
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
         loadConfig: function () {
@@ -405,6 +455,10 @@
 
                 for (let i = 0; i < config.GenericOptions.length; i++) {
                     Webhook.generic.addConfig(config.GenericOptions[i]);
+                }
+
+                for (let i = 0; i < config.SmtpOptions.length; i++) {
+                    Webhook.smtp.addConfig(config.SmtpOptions[i]);
                 }
             });
 

@@ -3,6 +3,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Model.Plugins;
 
 namespace Jellyfin.Plugin.Webhook.Configuration
@@ -22,6 +23,7 @@ namespace Jellyfin.Plugin.Webhook.Configuration
             GotifyOptions = Array.Empty<GotifyOption>();
             PushoverOptions = Array.Empty<PushoverOption>();
             GenericOptions = Array.Empty<GenericOption>();
+            SmtpOptions = Array.Empty<SmtpOption>();
         }
 
         /// <summary>
@@ -48,5 +50,10 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         /// Gets or sets the generic options.
         /// </summary>
         public GenericOption[] GenericOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the smtp options.
+        /// </summary>
+        public SmtpOption[] SmtpOptions { get; set; }
     }
 }

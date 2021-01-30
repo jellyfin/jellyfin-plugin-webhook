@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using Jellyfin.Data.Events;
+﻿using Jellyfin.Data.Events;
 using Jellyfin.Data.Events.System;
 using Jellyfin.Data.Events.Users;
 using Jellyfin.Plugin.Webhook.Destinations;
@@ -7,9 +6,9 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
-using MediaBrowser.Common.Net;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Common.Updates;
 using MediaBrowser.Controller.Authentication;
@@ -36,6 +35,7 @@ namespace Jellyfin.Plugin.Webhook
             serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
             serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
             serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
+            serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
 
             // Register sender.
             serviceCollection.AddScoped<IWebhookSender, WebhookSender>();

@@ -12,5 +12,8 @@ category: "Notifications"
 artifacts:
 - "Jellyfin.Plugin.Webhook.dll"
 - "Handlebars.dll"
+- "MailKit.dll"
+- "MimeKit.dll"
+- "BouncyCastle.Crypto.dll"
 changelog: >
-  Add more notification types
+  Add SMTP and Pushullet clients
