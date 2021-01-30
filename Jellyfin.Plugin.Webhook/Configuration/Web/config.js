@@ -184,72 +184,6 @@
                 return config;
             }
         },
-        gotify: {
-            btnAdd: document.querySelector("#btnAddGotify"),
-            template: document.querySelector("#template-gotify"),
-            addConfig: function (config) {
-                const template = document.createElement("div");
-                template.dataset.type = "gotify";
-                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
-                template.appendChild(Webhook.gotify.template.cloneNode(true).content);
-
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Gotify");
-                Webhook.configurationWrapper.appendChild(baseConfig);
-
-                // Load configuration.
-                Webhook.gotify.setConfig(config, baseConfig);
-            },
-            setConfig: function (config, element) {
-                Webhook.baseConfig.setConfig(config, element);
-                element.querySelector("[data-name=txtToken]").value = config.Token || "";
-                element.querySelector("[data-name=txtPriority]").value = config.Priority || 0;
-            },
-            getConfig: function (e) {
-                const config = Webhook.baseConfig.getConfig(e);
-                config.Token = e.querySelector("[data-name=txtToken]").value || "";
-                config.Priority = e.querySelector("[data-name=txtPriority]").value || 0;
-                return config;
-            }
-        },
-        pushover: {
-            btnAdd: document.querySelector("#btnAddPushover"),
-            template: document.querySelector("#template-pushover"),
-            addConfig: function (config) {
-                const template = document.createElement("div");
-                template.dataset.type = "pushover";
-                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
-                template.appendChild(Webhook.pushover.template.cloneNode(true).content);
-
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushover");
-                Webhook.configurationWrapper.appendChild(baseConfig);
-
-                // Load configuration
-                Webhook.pushover.setConfig(config, baseConfig);
-            },
-            setConfig: function (config, element) {
-                Webhook.baseConfig.setConfig(config, element);
-                element.querySelector("[data-name=txtToken]").value = config.Token || "";
-                element.querySelector("[data-name=txtUserToken]").value = config.UserToken || "";
-                element.querySelector("[data-name=txtDevice]").value = config.Device || "";
-                element.querySelector("[data-name=txtTitle]").value = config.Title || "";
-                element.querySelector("[data-name=txtMessageUrl]").value = config.MessageUrl || "";
-                element.querySelector("[data-name=txtMessageUrlTitle]").value = config.MessageUrlTitle || "";
-                element.querySelector("[data-name=ddlMessagePriority]").value = config.MessagePriority || "";
-                element.querySelector("[data-name=ddlNotificationSound]").value = config.NotificationSound || "";
-            },
-            getConfig: function (e) {
-                const config = Webhook.baseConfig.getConfig(e);
-                config.Token = e.querySelector("[data-name=txtToken]").value || "";
-                config.UserToken = e.querySelector("[data-name=txtUserToken]").value || "";
-                config.Device = e.querySelector("[data-name=txtDevice]").value || "";
-                config.Title = e.querySelector("[data-name=txtTitle]").value || "";
-                config.MessageUrl = e.querySelector("[data-name=txtMessageUrl]").value || "";
-                config.MessageUrlTitle = e.querySelector("[data-name=txtMessageUrlTitle]").value || "";
-                config.MessagePriority = e.querySelector("[data-name=ddlMessagePriority]").value || 0;
-                config.NotificationSound = e.querySelector("[data-name=ddlNotificationSound]").value || "";
-                return config;
-            }
-        },
         generic: {
             btnAdd: document.querySelector("#btnAddGeneric"),
             template: document.querySelector("#template-generic"),
@@ -339,6 +273,102 @@
                 element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },
+        gotify: {
+            btnAdd: document.querySelector("#btnAddGotify"),
+            template: document.querySelector("#template-gotify"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "gotify";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.gotify.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Gotify");
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration.
+                Webhook.gotify.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtToken]").value = config.Token || "";
+                element.querySelector("[data-name=txtPriority]").value = config.Priority || 0;
+            },
+            getConfig: function (e) {
+                const config = Webhook.baseConfig.getConfig(e);
+                config.Token = e.querySelector("[data-name=txtToken]").value || "";
+                config.Priority = e.querySelector("[data-name=txtPriority]").value || 0;
+                return config;
+            }
+        },
+        pushbullet: {
+            btnAdd: document.querySelector("#btnAddPushbullet"),
+            template: document.querySelector("#template-pushbullet"),
+            addConfig: function (config) {
+                console.log(config);
+                const template = document.createElement("div");
+                template.dataset.type = "pushbullet";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.pushbullet.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushbullet");
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration.
+                Webhook.pushbullet.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtToken]").value = config.Token || "";
+                element.querySelector("[data-name=txtDeviceId]").value = config.DeviceId || "";
+                element.querySelector("[data-name=txtChannel]").value = config.Channel || "";
+            },
+            getConfig: function (e) {
+                const config = Webhook.baseConfig.getConfig(e);
+                config.Token = e.querySelector("[data-name=txtToken]").value || "";
+                config.DeviceId = e.querySelector("[data-name=txtDeviceId]").value || "";
+                config.Channel = e.querySelector("[data-name=txtChannel]").value || "";
+                return config;
+            }
+        },
+        pushover: {
+            btnAdd: document.querySelector("#btnAddPushover"),
+            template: document.querySelector("#template-pushover"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "pushover";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.pushover.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushover");
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration
+                Webhook.pushover.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtToken]").value = config.Token || "";
+                element.querySelector("[data-name=txtUserToken]").value = config.UserToken || "";
+                element.querySelector("[data-name=txtDevice]").value = config.Device || "";
+                element.querySelector("[data-name=txtTitle]").value = config.Title || "";
+                element.querySelector("[data-name=txtMessageUrl]").value = config.MessageUrl || "";
+                element.querySelector("[data-name=txtMessageUrlTitle]").value = config.MessageUrlTitle || "";
+                element.querySelector("[data-name=ddlMessagePriority]").value = config.MessagePriority || "";
+                element.querySelector("[data-name=ddlNotificationSound]").value = config.NotificationSound || "";
+            },
+            getConfig: function (e) {
+                const config = Webhook.baseConfig.getConfig(e);
+                config.Token = e.querySelector("[data-name=txtToken]").value || "";
+                config.UserToken = e.querySelector("[data-name=txtUserToken]").value || "";
+                config.Device = e.querySelector("[data-name=txtDevice]").value || "";
+                config.Title = e.querySelector("[data-name=txtTitle]").value || "";
+                config.MessageUrl = e.querySelector("[data-name=txtMessageUrl]").value || "";
+                config.MessageUrlTitle = e.querySelector("[data-name=txtMessageUrlTitle]").value || "";
+                config.MessagePriority = e.querySelector("[data-name=ddlMessagePriority]").value || 0;
+                config.NotificationSound = e.querySelector("[data-name=ddlNotificationSound]").value || "";
+                return config;
+            }
+        },
         smtp: {
             btnAdd: document.querySelector("#btnAddSmtp"),
             template: document.querySelector("#template-smtp"),
@@ -385,9 +415,10 @@
         init: function () {
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
-            Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
-            Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
+            Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
+            Webhook.pushbullet.btnAdd.addEventListener("click", Webhook.pushbullet.addConfig);
+            Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
@@ -410,22 +441,28 @@
                 config.DiscordOptions.push(Webhook.discord.getConfig(discordConfigs[i]));
             }
 
+            config.GenericOptions = [];
+            const genericConfigs = document.querySelectorAll("[data-type=generic]");
+            for (let i = 0; i < genericConfigs.length; i++) {
+                config.GenericOptions.push(Webhook.generic.getConfig(genericConfigs[i]));
+            }
+
             config.GotifyOptions = [];
             const gotifyConfigs = document.querySelectorAll("[data-type=gotify]");
             for (let i = 0; i < gotifyConfigs.length; i++) {
                 config.GotifyOptions.push(Webhook.gotify.getConfig(gotifyConfigs[i]));
             }
 
+            config.PushbulletOptions = [];
+            const pushbulletConfigs = document.querySelectorAll("[data-type=pushbullet]");
+            for (let i = 0; i < pushbulletConfigs.length; i++) {
+                config.PushbulletOptions.push(Webhook.pushbullet.getConfig(pushbulletConfigs[i]));
+            }
+
             config.PushoverOptions = [];
             const pushoverConfigs = document.querySelectorAll("[data-type=pushover]");
             for (let i = 0; i < pushoverConfigs.length; i++) {
                 config.PushoverOptions.push(Webhook.pushover.getConfig(pushoverConfigs[i]));
-            }
-
-            config.GenericOptions = [];
-            const genericConfigs = document.querySelectorAll("[data-type=generic]");
-            for (let i = 0; i < genericConfigs.length; i++) {
-                config.GenericOptions.push(Webhook.generic.getConfig(genericConfigs[i]));
             }
 
             config.SmtpOptions = [];
@@ -445,16 +482,20 @@
                     Webhook.discord.addConfig(config.DiscordOptions[i]);
                 }
 
+                for (let i = 0; i < config.GenericOptions.length; i++) {
+                    Webhook.generic.addConfig(config.GenericOptions[i]);
+                }
+
                 for (let i = 0; i < config.GotifyOptions.length; i++) {
                     Webhook.gotify.addConfig(config.GotifyOptions[i]);
                 }
 
-                for (let i = 0; i < config.PushoverOptions.length; i++) {
-                    Webhook.pushover.addConfig(config.PushoverOptions[i]);
+                for (let i = 0; i < config.PushbulletOptions.length; i++) {
+                    Webhook.pushbullet.addConfig(config.PushbulletOptions[i]);
                 }
 
-                for (let i = 0; i < config.GenericOptions.length; i++) {
-                    Webhook.generic.addConfig(config.GenericOptions[i]);
+                for (let i = 0; i < config.PushoverOptions.length; i++) {
+                    Webhook.pushover.addConfig(config.PushoverOptions[i]);
                 }
 
                 for (let i = 0; i < config.SmtpOptions.length; i++) {

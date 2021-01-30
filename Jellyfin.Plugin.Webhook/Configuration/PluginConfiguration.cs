@@ -2,6 +2,7 @@
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Model.Plugins;
@@ -20,9 +21,10 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         {
             ServerUrl = string.Empty;
             DiscordOptions = Array.Empty<DiscordOption>();
-            GotifyOptions = Array.Empty<GotifyOption>();
-            PushoverOptions = Array.Empty<PushoverOption>();
             GenericOptions = Array.Empty<GenericOption>();
+            GotifyOptions = Array.Empty<GotifyOption>();
+            PushbulletOptions = Array.Empty<PushbulletOption>();
+            PushoverOptions = Array.Empty<PushoverOption>();
             SmtpOptions = Array.Empty<SmtpOption>();
         }
 
@@ -37,19 +39,24 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         public DiscordOption[] DiscordOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets the generic options.
+        /// </summary>
+        public GenericOption[] GenericOptions { get; set; }
+
+        /// <summary>
         /// Gets or sets the gotify options.
         /// </summary>
         public GotifyOption[] GotifyOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets the pushbullet options.
+        /// </summary>
+        public PushbulletOption[] PushbulletOptions { get; set; }
+
+        /// <summary>
         /// Gets or sets the pushover options.
         /// </summary>
         public PushoverOption[] PushoverOptions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the generic options.
-        /// </summary>
-        public GenericOption[] GenericOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the smtp options.

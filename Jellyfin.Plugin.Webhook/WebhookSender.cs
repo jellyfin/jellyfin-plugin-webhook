@@ -7,6 +7,7 @@ using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Controller.Entities.Audio;
@@ -21,9 +22,10 @@ namespace Jellyfin.Plugin.Webhook
     {
         private readonly ILogger<WebhookSender> _logger;
         private readonly IWebhookClient<DiscordOption> _discordClient;
-        private readonly IWebhookClient<GotifyOption> _gotifyClient;
-        private readonly IWebhookClient<PushoverOption> _pushoverClient;
         private readonly IWebhookClient<GenericOption> _genericClient;
+        private readonly IWebhookClient<GotifyOption> _gotifyClient;
+        private readonly IWebhookClient<PushbulletOption> _pushbulletClient;
+        private readonly IWebhookClient<PushoverOption> _pushoverClient;
         private readonly IWebhookClient<SmtpOption> _smtpClient;
 
         /// <summary>
@@ -31,23 +33,26 @@ namespace Jellyfin.Plugin.Webhook
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger{WebhookSender}"/> interface.</param>
         /// <param name="discordClient">Instance of <see cref="IWebhookClient{DiscordOption}"/>.</param>
+        /// /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericOption}"/>.</param>
         /// <param name="gotifyClient">Instance of <see cref="IWebhookClient{GotifyOption}"/>.</param>
+        /// <param name="pushbulletClient">Instance of the <see cref="IWebhookClient{PushbulletOption}"/>.</param>
         /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverOption}"/>.</param>
-        /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericOption}"/>.</param>
         /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
         public WebhookSender(
             ILogger<WebhookSender> logger,
             IWebhookClient<DiscordOption> discordClient,
-            IWebhookClient<GotifyOption> gotifyClient,
-            IWebhookClient<PushoverOption> pushoverClient,
             IWebhookClient<GenericOption> genericClient,
+            IWebhookClient<GotifyOption> gotifyClient,
+            IWebhookClient<PushbulletOption> pushbulletClient,
+            IWebhookClient<PushoverOption> pushoverClient,
             IWebhookClient<SmtpOption> smtpClient)
         {
             _logger = logger;
             _discordClient = discordClient;
-            _gotifyClient = gotifyClient;
-            _pushoverClient = pushoverClient;
             _genericClient = genericClient;
+            _gotifyClient = gotifyClient;
+            _pushbulletClient = pushbulletClient;
+            _pushoverClient = pushoverClient;
             _smtpClient = smtpClient;
         }
 
@@ -63,19 +68,24 @@ namespace Jellyfin.Plugin.Webhook
                 await SendNotification(_discordClient, option, itemData, itemType);
             }
 
+            foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_genericClient, option, itemData, itemType);
+            }
+
             foreach (var option in Configuration.GotifyOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_gotifyClient, option, itemData, itemType);
             }
 
+            foreach (var option in Configuration.PushbulletOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_pushbulletClient, option, itemData, itemType);
+            }
+
             foreach (var option in Configuration.PushoverOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_pushoverClient, option, itemData, itemType);
-            }
-
-            foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
-            {
-                await SendNotification(_genericClient, option, itemData, itemType);
             }
 
             foreach (var option in Configuration.SmtpOptions.Where(o => o.NotificationTypes.Contains(notificationType)))

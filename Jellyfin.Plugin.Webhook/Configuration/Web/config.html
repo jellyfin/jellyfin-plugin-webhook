@@ -20,14 +20,17 @@
             <button id="btnAddDiscord" is="emby-button" type="button" class="raised button block">
                 <span>Add Discord Destination</span>
             </button>
+            <button id="btnAddGeneric" is="emby-button" type="button" class="raised button block">
+                <span>Add Generic Destination</span>
+            </button>
             <button id="btnAddGotify" is="emby-button" type="button" class="raised button block">
                 <span>Add Gotify Destination</span>
             </button>
+            <button id="btnAddPushbullet" is="emby-button" type="button" class="raised button block">
+                <span>Add Pushbullet Destination</span>
+            </button>
             <button id="btnAddPushover" is="emby-button" type="button" class="raised button block">
                 <span>Add Pushover Destination</span>
-            </button>
-            <button id="btnAddGeneric" is="emby-button" type="button" class="raised button block">
-                <span>Add Generic Destination</span>
             </button>
             <button id="btnAddSmtp" is="emby-button" type="button" class="raised button block">
                 <span>Add SMTP Destionation</span>
@@ -239,6 +242,18 @@
         </div>        
     </template>
 
+    <template id="template-pushbullet">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtDeviceId" label="Device Id:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtChannel" label="Channel:"/>
+        </div>
+    </template>
+    
     <style>
         .checkboxContainer {
             max-width: fit-content;

@@ -5,6 +5,7 @@ using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Notifiers;
@@ -34,6 +35,7 @@ namespace Jellyfin.Plugin.Webhook
             serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
             serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
             serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
+            serviceCollection.AddScoped<IWebhookClient<PushbulletOption>, PushbulletClient>();
             serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
             serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
 
