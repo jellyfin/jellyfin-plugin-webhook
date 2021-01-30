@@ -7,6 +7,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
@@ -37,6 +38,7 @@ namespace Jellyfin.Plugin.Webhook
             serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
             serviceCollection.AddScoped<IWebhookClient<PushbulletOption>, PushbulletClient>();
             serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
+            serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
             serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
 
             // Register sender.

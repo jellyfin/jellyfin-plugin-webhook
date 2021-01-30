@@ -304,7 +304,6 @@
             btnAdd: document.querySelector("#btnAddPushbullet"),
             template: document.querySelector("#template-pushbullet"),
             addConfig: function (config) {
-                console.log(config);
                 const template = document.createElement("div");
                 template.dataset.type = "pushbullet";
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
@@ -369,6 +368,33 @@
                 return config;
             }
         },
+        slack: {
+            btnAdd: document.querySelector("#btnAddSlack"),
+            template: document.querySelector("#template-slack"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "slack";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.slack.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Slack");
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration.
+                Webhook.slack.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtUsername]").value = config.Username || "";
+                element.querySelector("[data-name=txtIconUrl]").value = config.IconUrl || "";
+            },
+            getConfig: function (e) {
+                const config = Webhook.baseConfig.getConfig(e);
+                config.Username = e.querySelector("[data-name=txtUsername]").value || "";
+                config.IconUrl = e.querySelector("[data-name=txtIconUrl]").value || "";
+                return config;
+            }
+        },
         smtp: {
             btnAdd: document.querySelector("#btnAddSmtp"),
             template: document.querySelector("#template-smtp"),
@@ -419,6 +445,7 @@
             Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
             Webhook.pushbullet.btnAdd.addEventListener("click", Webhook.pushbullet.addConfig);
             Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
+            Webhook.slack.btnAdd.addEventListener("click", Webhook.slack.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
@@ -465,6 +492,12 @@
                 config.PushoverOptions.push(Webhook.pushover.getConfig(pushoverConfigs[i]));
             }
 
+            config.SlackOptions = [];
+            const slackConfigs = document.querySelectorAll("[data-type=slack]");
+            for (let i = 0; i < slackConfigs.length; i++) {
+                config.SlackOptions.push(Webhook.slack.getConfig(slackConfigs[i]));
+            }
+
             config.SmtpOptions = [];
             const smtpConfigs = document.querySelectorAll("[data-type=smtp]");
             for (let i = 0; i < smtpConfigs.length; i++) {
@@ -496,6 +529,10 @@
 
                 for (let i = 0; i < config.PushoverOptions.length; i++) {
                     Webhook.pushover.addConfig(config.PushoverOptions[i]);
+                }
+
+                for (let i = 0; i < config.SlackOptions.length; i++) {
+                    Webhook.slack.addConfig(config.SlackOptions[i]);
                 }
 
                 for (let i = 0; i < config.SmtpOptions.length; i++) {

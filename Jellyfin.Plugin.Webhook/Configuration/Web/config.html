@@ -32,8 +32,11 @@
             <button id="btnAddPushover" is="emby-button" type="button" class="raised button block">
                 <span>Add Pushover Destination</span>
             </button>
+            <button id="btnAddSlack" is="emby-button" type="button" class="raised button block">
+                <span>Add Slack Destination</span>
+            </button>
             <button id="btnAddSmtp" is="emby-button" type="button" class="raised button block">
-                <span>Add SMTP Destionation</span>
+                <span>Add SMTP Destination</span>
             </button>
             <br/>
             <div id="configurationWrapper"></div>
@@ -251,6 +254,15 @@
         </div>
         <div class="inputContainer">
             <input is="emby-input" type="text" data-name="txtChannel" label="Channel:"/>
+        </div>
+    </template>
+
+    <template id="template-slack">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUsername" label="Display Name:"/>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtIconUrl" label="Icon Url:"/>
         </div>
     </template>
     

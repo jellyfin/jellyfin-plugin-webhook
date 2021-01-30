@@ -9,6 +9,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.Movies;
@@ -26,6 +27,7 @@ namespace Jellyfin.Plugin.Webhook
         private readonly IWebhookClient<GotifyOption> _gotifyClient;
         private readonly IWebhookClient<PushbulletOption> _pushbulletClient;
         private readonly IWebhookClient<PushoverOption> _pushoverClient;
+        private readonly IWebhookClient<SlackOption> _slackClient;
         private readonly IWebhookClient<SmtpOption> _smtpClient;
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace Jellyfin.Plugin.Webhook
         /// <param name="gotifyClient">Instance of <see cref="IWebhookClient{GotifyOption}"/>.</param>
         /// <param name="pushbulletClient">Instance of the <see cref="IWebhookClient{PushbulletOption}"/>.</param>
         /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverOption}"/>.</param>
+        /// <param name="slackClient">Instance of the <see cref="IWebhookClient{SlackOption}"/>.</param>
         /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
         public WebhookSender(
             ILogger<WebhookSender> logger,
@@ -45,6 +48,7 @@ namespace Jellyfin.Plugin.Webhook
             IWebhookClient<GotifyOption> gotifyClient,
             IWebhookClient<PushbulletOption> pushbulletClient,
             IWebhookClient<PushoverOption> pushoverClient,
+            IWebhookClient<SlackOption> slackClient,
             IWebhookClient<SmtpOption> smtpClient)
         {
             _logger = logger;
@@ -53,6 +57,7 @@ namespace Jellyfin.Plugin.Webhook
             _gotifyClient = gotifyClient;
             _pushbulletClient = pushbulletClient;
             _pushoverClient = pushoverClient;
+            _slackClient = slackClient;
             _smtpClient = smtpClient;
         }
 
@@ -86,6 +91,11 @@ namespace Jellyfin.Plugin.Webhook
             foreach (var option in Configuration.PushoverOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_pushoverClient, option, itemData, itemType);
+            }
+
+            foreach (var option in Configuration.SlackOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_slackClient, option, itemData, itemType);
             }
 
             foreach (var option in Configuration.SmtpOptions.Where(o => o.NotificationTypes.Contains(notificationType)))

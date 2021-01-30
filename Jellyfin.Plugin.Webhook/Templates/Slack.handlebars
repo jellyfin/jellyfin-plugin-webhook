@@ -1,0 +1,17 @@
+﻿{
+    {{#if_exist SlackUsername}}
+        "username": "{{SlackUsername}}",
+    {{/if_exist}}
+    {{#if_exist SlackIconUrl}}
+        "icon_url": "{{SlackIconUrl}}",
+    {{/if_exist}}
+    {{#if_equals ItemType 'Season'}}
+        "text": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}",
+    {{else}}
+        {{#if_equals ItemType 'Episode'}}
+            "text": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}",
+        {{else}}
+            "text": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}",
+        {{/if_equals}}
+    {{/if_equals}}
+}

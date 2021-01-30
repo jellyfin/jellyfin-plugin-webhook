@@ -16,4 +16,4 @@ artifacts:
 - "MimeKit.dll"
 - "BouncyCastle.Crypto.dll"
 changelog: >
-  Add SMTP and Pushullet clients
+  Add SMTP, Pushullet, Slack clients

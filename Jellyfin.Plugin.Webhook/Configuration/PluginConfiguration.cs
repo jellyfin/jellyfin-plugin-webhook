@@ -4,6 +4,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
+using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using MediaBrowser.Model.Plugins;
 
@@ -25,6 +26,7 @@ namespace Jellyfin.Plugin.Webhook.Configuration
             GotifyOptions = Array.Empty<GotifyOption>();
             PushbulletOptions = Array.Empty<PushbulletOption>();
             PushoverOptions = Array.Empty<PushoverOption>();
+            SlackOptions = Array.Empty<SlackOption>();
             SmtpOptions = Array.Empty<SmtpOption>();
         }
 
@@ -57,6 +59,11 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         /// Gets or sets the pushover options.
         /// </summary>
         public PushoverOption[] PushoverOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the slack options.
+        /// </summary>
+        public SlackOption[] SlackOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the smtp options.
