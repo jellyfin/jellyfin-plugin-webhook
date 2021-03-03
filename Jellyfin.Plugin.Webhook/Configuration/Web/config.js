@@ -50,7 +50,7 @@
                 "SessionStart": "Session Start",
                 "PendingRestart": "Pending Restart",
                 "TaskCompleted": "Task Completed",
-                "PluginInstallationCanceled": "Plugin Installation Cancelled",
+                "PluginInstallationCancelled": "Plugin Installation Cancelled",
                 "PluginInstallationFailed": "Plugin Installation Failed",
                 "PluginInstalled": "Plugin Installed",
                 "PluginInstalling": "Plugin Installing",
