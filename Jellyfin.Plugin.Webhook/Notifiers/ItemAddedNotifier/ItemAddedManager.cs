@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Configuration;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Models;

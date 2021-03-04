@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
@@ -27,19 +26,19 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(SlackOption option, Dictionary<string, object> data)
+        public async Task SendAsync(SlackOption options, Dictionary<string, object> data)
         {
             try
             {
-                data["SlackUsername"] = option.Username;
-                data["SlackIconUrl"] = option.IconUrl;
+                data["SlackUsername"] = options.Username;
+                data["SlackIconUrl"] = options.IconUrl;
 
-                var body = option.GetCompiledTemplate()(data);
+                var body = options.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(option.WebhookUri, content);
+                    .PostAsync(options.WebhookUri, content);
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseStr = await response.Content.ReadAsStringAsync();

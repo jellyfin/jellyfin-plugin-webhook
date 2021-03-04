@@ -11,7 +11,7 @@
 
     <ItemGroup>
       <PackageReference Include="Handlebars.Net" Version="2.0.4" />
-      <PackageReference Include="Jellyfin.Controller" Version="10.*-*" />
+      <PackageReference Include="Jellyfin.Controller" Version="10.7.0-rc4" />
     </ItemGroup>
 
     <ItemGroup>

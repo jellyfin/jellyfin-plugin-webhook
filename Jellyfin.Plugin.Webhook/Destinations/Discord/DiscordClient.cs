@@ -48,7 +48,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                     data["Username"] = options.Username;
                 }
 
-                var body = options.GetCompiledTemplate()(data);
+                var body = options.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory

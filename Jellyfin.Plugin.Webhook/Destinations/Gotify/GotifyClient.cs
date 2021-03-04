@@ -39,7 +39,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
                 // Add gotify specific properties.
                 data["Priority"] = options.Priority;
 
-                var body = options.GetCompiledTemplate()(data);
+                var body = options.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory

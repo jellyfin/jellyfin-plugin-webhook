@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using HandlebarsDotNet;
 using Jellyfin.Plugin.Webhook.Helpers;
+using MediaBrowser.Common.Json;
 
 namespace Jellyfin.Plugin.Webhook.Destinations
 {
@@ -52,6 +55,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         public bool EnableSongs { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to send all possible properties.
+        /// </summary>
+        public bool SendAllProperties { get; set; }
+
+        /// <summary>
         /// Gets or sets the handlebars template.
         /// </summary>
         public string? Template { get; set; }
@@ -63,6 +71,18 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         public HandlebarsTemplate<object, string> GetCompiledTemplate()
         {
             return _compiledTemplate ??= Handlebars.Compile(HandlebarsFunctionHelpers.Base64Decode(Template));
+        }
+
+        /// <summary>
+        /// Gets the message body.
+        /// </summary>
+        /// <param name="data">The notification body.</param>
+        /// <returns>The string message body.</returns>
+        public string GetMessageBody(Dictionary<string, object> data)
+        {
+            return SendAllProperties
+                ? JsonSerializer.Serialize(data, JsonDefaults.GetOptions())
+                : GetCompiledTemplate()(data);
         }
     }
 }
