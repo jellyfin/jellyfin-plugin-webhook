@@ -44,7 +44,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                     data[field.Key] = field.Value;
                 }
 
-                var body = options.GetCompiledTemplate()(data);
+                var body = options.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
                 var contentType = MediaTypeNames.Text.Plain;

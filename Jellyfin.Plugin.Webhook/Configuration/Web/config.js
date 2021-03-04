@@ -118,6 +118,7 @@
                 element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || true;
                 element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || true;
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
+                element.querySelector("[data-name=chkSendAllProperties]").checked = config.SendAllProperties || false;
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
 
 
@@ -134,6 +135,7 @@
                 config.EnableAlbums = element.querySelector("[data-name=chkEnableAlbums]").checked || false;
                 config.EnableSongs = element.querySelector("[data-name=chkEnableSongs]").checked || false;
                 config.WebhookUri = element.querySelector("[data-name=txtWebhookUri]").value || "";
+                config.SendAllProperties = element.querySelector("[data-name=chkSendAllProperties]").checked || false;
                 config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];

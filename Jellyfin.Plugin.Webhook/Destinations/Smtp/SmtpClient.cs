@@ -32,7 +32,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
                 message.Subject = options.GetSubjectTemplate()(data);
                 message.Body = new TextPart(options.IsHtml ? "html" : "plain")
                 {
-                    Text = options.GetCompiledTemplate()(data)
+                    Text = options.GetMessageBody(data)
                 };
 
                 using var smtpClient = new MailKit.Net.Smtp.SmtpClient();

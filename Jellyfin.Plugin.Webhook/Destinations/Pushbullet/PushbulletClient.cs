@@ -36,7 +36,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
                 data["PushbulletDeviceId"] = options.DeviceId;
                 data["PushbulletChannel"] = options.Channel;
 
-                var body = options.GetCompiledTemplate()(data);
+                var body = options.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
 
                 using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(options.WebhookUri) ? PushbulletOption.ApiUrl : options.WebhookUri);
