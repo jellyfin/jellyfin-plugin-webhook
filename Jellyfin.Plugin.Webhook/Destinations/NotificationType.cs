@@ -6,6 +6,11 @@
     public enum NotificationType
     {
         /// <summary>
+        /// No notification type.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// Item added notification.
         /// </summary>
         ItemAdded = 1,

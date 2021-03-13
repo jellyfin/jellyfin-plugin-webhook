@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -30,6 +31,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
         {
             try
             {
+                if (string.IsNullOrEmpty(options.WebhookUri))
+                {
+                    throw new ArgumentException(nameof(options.WebhookUri));
+                }
+
                 data["SlackUsername"] = options.Username;
                 data["SlackIconUrl"] = options.IconUrl;
 
@@ -38,10 +44,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(options.WebhookUri, content);
+                    .PostAsync(new Uri(options.WebhookUri), content)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }

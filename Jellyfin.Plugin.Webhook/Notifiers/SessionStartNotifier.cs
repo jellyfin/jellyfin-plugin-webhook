@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <inheritdoc />
         public async Task OnEvent(SessionStartedEventArgs eventArgs)
         {
-            if (eventArgs.Argument == null)
+            if (eventArgs.Argument is null)
             {
                 return;
             }
@@ -41,7 +41,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .AddSessionInfoData(eventArgs.Argument)
                 .AddBaseItemData(eventArgs.Argument.FullNowPlayingItem);
 
-            await _webhookSender.SendNotification(NotificationType.SessionStart, dataObject);
+            await _webhookSender.SendNotification(NotificationType.SessionStart, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

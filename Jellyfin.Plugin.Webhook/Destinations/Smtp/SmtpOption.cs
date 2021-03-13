@@ -64,7 +64,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
         /// Gets the compiled handlebars subject template.
         /// </summary>
         /// <returns>The compiled handlebars subject template.</returns>
-        public HandlebarsTemplate<object, string> GetSubjectTemplate()
+        public HandlebarsTemplate<object, string> GetCompiledSubjectTemplate()
         {
             return _compiledSubjectTemplate ??= Handlebars.Compile(HandlebarsFunctionHelpers.Base64Decode(SubjectTemplate));
         }

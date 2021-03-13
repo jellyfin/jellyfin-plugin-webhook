@@ -47,7 +47,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             dataObject["ResultErrorMessage"] = eventArgs.Result.ErrorMessage;
             dataObject["ResultLongErrorMessage"] = eventArgs.Result.LongErrorMessage;
 
-            await _webhookSender.SendNotification(NotificationType.TaskCompleted, dataObject);
+            await _webhookSender.SendNotification(NotificationType.TaskCompleted, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

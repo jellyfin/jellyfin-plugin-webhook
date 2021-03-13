@@ -36,7 +36,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .AddPluginInstallationInfo(eventArgs.InstallationInfo)
                 .AddExceptionInfo(eventArgs.Exception);
 
-            await _webhookSender.SendNotification(NotificationType.PluginInstallationFailed, dataObject);
+            await _webhookSender.SendNotification(NotificationType.PluginInstallationFailed, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

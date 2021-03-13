@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -52,7 +53,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                     data["MessageUrlTitle"] = options.MessageUrlTitle;
                 }
 
-                if (options.MessagePriority.HasValue)
+                if (options.MessagePriority is not null)
                 {
                     data["MessagePriority"] = options.MessagePriority;
                 }
@@ -67,10 +68,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : options.WebhookUri, content);
+                    .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : new Uri(options.WebhookUri), content)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }

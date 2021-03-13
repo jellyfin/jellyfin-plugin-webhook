@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Configuration;
 using Jellyfin.Plugin.Webhook.Destinations;
@@ -62,52 +63,58 @@ namespace Jellyfin.Plugin.Webhook
         }
 
         private static PluginConfiguration Configuration =>
-            WebhookPlugin.Instance?.Configuration
-            ?? throw new NullReferenceException(nameof(WebhookPlugin.Instance.Configuration));
+            WebhookPlugin.Instance!.Configuration;
 
         /// <inheritdoc />
         public async Task SendNotification(NotificationType notificationType, Dictionary<string, object> itemData, Type? itemType = null)
         {
             foreach (var option in Configuration.DiscordOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_discordClient, option, itemData, itemType);
+                await SendNotification(_discordClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_genericClient, option, itemData, itemType);
+                await SendNotification(_genericClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.GotifyOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_gotifyClient, option, itemData, itemType);
+                await SendNotification(_gotifyClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.PushbulletOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_pushbulletClient, option, itemData, itemType);
+                await SendNotification(_pushbulletClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.PushoverOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_pushoverClient, option, itemData, itemType);
+                await SendNotification(_pushoverClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.SlackOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_slackClient, option, itemData, itemType);
+                await SendNotification(_slackClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
 
             foreach (var option in Configuration.SmtpOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
-                await SendNotification(_smtpClient, option, itemData, itemType);
+                await SendNotification(_smtpClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
             }
         }
 
         private static bool NotifyOnItem<T>(T baseOptions, Type? itemType)
             where T : BaseOption
         {
-            if (itemType == null)
+            if (itemType is null)
             {
                 return true;
             }
@@ -152,7 +159,8 @@ namespace Jellyfin.Plugin.Webhook
             {
                 try
                 {
-                    await webhookClient.SendAsync(option, itemData);
+                    await webhookClient.SendAsync(option, itemData)
+                        .ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

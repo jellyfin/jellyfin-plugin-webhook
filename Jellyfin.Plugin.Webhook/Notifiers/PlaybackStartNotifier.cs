@@ -32,7 +32,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <inheritdoc />
         public async Task OnEvent(PlaybackStartEventArgs eventArgs)
         {
-            if (eventArgs.Item == null)
+            if (eventArgs.Item is null)
             {
                 return;
             }
@@ -62,7 +62,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     ["UserId"] = user.Id
                 };
 
-                await _webhookSender.SendNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType());
+                await _webhookSender.SendNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType())
+                    .ConfigureAwait(false);
             }
         }
     }

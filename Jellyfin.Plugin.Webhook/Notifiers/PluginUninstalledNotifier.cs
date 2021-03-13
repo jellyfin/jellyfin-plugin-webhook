@@ -39,7 +39,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             dataObject["PluginVersion"] = eventArgs.Argument.Version;
             dataObject["PluginStatus"] = eventArgs.Argument.Status;
 
-            await _webhookSender.SendNotification(NotificationType.PluginUninstalled, dataObject);
+            await _webhookSender.SendNotification(NotificationType.PluginUninstalled, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

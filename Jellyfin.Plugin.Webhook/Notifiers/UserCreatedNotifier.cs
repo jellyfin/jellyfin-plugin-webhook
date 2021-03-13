@@ -35,7 +35,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .GetBaseDataObject(_applicationHost, NotificationType.UserCreated)
                 .AddUserData(eventArgs.Argument);
 
-            await _webhookSender.SendNotification(NotificationType.UserCreated, dataObject);
+            await _webhookSender.SendNotification(NotificationType.UserCreated, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

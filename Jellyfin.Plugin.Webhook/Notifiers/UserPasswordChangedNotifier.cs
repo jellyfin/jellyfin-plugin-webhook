@@ -35,7 +35,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .GetBaseDataObject(_applicationHost, NotificationType.UserPasswordChanged)
                 .AddUserData(eventArgs.Argument);
 
-            await _webhookSender.SendNotification(NotificationType.UserPasswordChanged, dataObject);
+            await _webhookSender.SendNotification(NotificationType.UserPasswordChanged, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

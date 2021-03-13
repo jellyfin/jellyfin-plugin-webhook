@@ -45,10 +45,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
 
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .SendAsync(requestOptions);
+                    .SendAsync(requestOptions)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }

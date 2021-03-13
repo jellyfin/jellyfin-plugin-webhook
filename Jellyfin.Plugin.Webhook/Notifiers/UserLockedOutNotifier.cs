@@ -35,7 +35,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .GetBaseDataObject(_applicationHost, NotificationType.UserLockedOut)
                 .AddUserData(eventArgs.Argument);
 
-            await _webhookSender.SendNotification(NotificationType.UserLockedOut, dataObject);
+            await _webhookSender.SendNotification(NotificationType.UserLockedOut, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

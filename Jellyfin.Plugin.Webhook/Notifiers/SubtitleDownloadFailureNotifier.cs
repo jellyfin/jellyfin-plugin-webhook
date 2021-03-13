@@ -31,7 +31,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <inheritdoc />
         public async Task OnEvent(SubtitleDownloadFailureEventArgs eventArgs)
         {
-            if (eventArgs.Item == null)
+            if (eventArgs.Item is null)
             {
                 return;
             }
@@ -39,7 +39,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             var dataObject = DataObjectHelpers
                 .GetBaseDataObject(_applicationHost, NotificationType.SubtitleDownloadFailure)
                 .AddBaseItemData(eventArgs.Item);
-            await _webhookSender.SendNotification(NotificationType.SubtitleDownloadFailure, dataObject, eventArgs.Item.GetType());
+            await _webhookSender.SendNotification(NotificationType.SubtitleDownloadFailure, dataObject, eventArgs.Item.GetType())
+                .ConfigureAwait(false);
         }
     }
 }
