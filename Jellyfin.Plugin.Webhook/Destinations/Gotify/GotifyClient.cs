@@ -33,7 +33,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
             {
                 if (string.IsNullOrEmpty(options.WebhookUri))
                 {
-                    throw new NullReferenceException(nameof(options.WebhookUri));
+                    throw new ArgumentException(nameof(options.WebhookUri));
                 }
 
                 // Add gotify specific properties.
@@ -44,10 +44,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}", content);
+                    .PostAsync(new Uri(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}"), content)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }

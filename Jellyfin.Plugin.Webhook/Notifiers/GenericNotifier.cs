@@ -43,7 +43,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             dataObject[nameof(request.User.Username)] = request.User.Username;
             dataObject["UserId"] = request.User.Id;
 
-            await _webhookSender.SendNotification(NotificationType.Generic, dataObject);
+            await _webhookSender.SendNotification(NotificationType.Generic, dataObject)
+                .ConfigureAwait(false);
         }
 
         /// <inheritdoc />

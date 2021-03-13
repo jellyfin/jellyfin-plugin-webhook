@@ -76,7 +76,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier
                     .AddBaseItemData(item);
 
                 var itemType = item.GetType();
-                await _webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType);
+                await _webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType)
+                    .ConfigureAwait(false);
 
                 // Remove item from queue.
                 _itemProcessQueue.TryRemove(key, out _);

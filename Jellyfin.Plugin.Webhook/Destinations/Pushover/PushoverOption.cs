@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
 {
@@ -11,7 +12,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         /// The webhook endpoint.
         /// </summary>
         [JsonIgnore]
-        public const string ApiUrl = "https://api.pushover.net/1/messages.json";
+        public static readonly Uri ApiUrl = new Uri("https://api.pushover.net/1/messages.json");
 
         /// <summary>
         /// Gets or sets the pushover token.

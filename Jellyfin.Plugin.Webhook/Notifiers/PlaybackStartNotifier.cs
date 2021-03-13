@@ -62,7 +62,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                     ["UserId"] = user.Id
                 };
 
-                await _webhookSender.SendNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType());
+                await _webhookSender.SendNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType())
+                    .ConfigureAwait(false);
             }
         }
     }

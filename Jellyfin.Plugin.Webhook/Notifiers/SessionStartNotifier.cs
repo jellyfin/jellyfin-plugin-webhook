@@ -41,7 +41,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .AddSessionInfoData(eventArgs.Argument)
                 .AddBaseItemData(eventArgs.Argument.FullNowPlayingItem);
 
-            await _webhookSender.SendNotification(NotificationType.SessionStart, dataObject);
+            await _webhookSender.SendNotification(NotificationType.SessionStart, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

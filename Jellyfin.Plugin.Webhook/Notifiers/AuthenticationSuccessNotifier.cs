@@ -41,7 +41,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .GetBaseDataObject(_applicationHost, NotificationType.AuthenticationSuccess)
                 .AddUserData(eventArgs.Argument.User);
 
-            await _webhookSender.SendNotification(NotificationType.AuthenticationSuccess, dataObject);
+            await _webhookSender.SendNotification(NotificationType.AuthenticationSuccess, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

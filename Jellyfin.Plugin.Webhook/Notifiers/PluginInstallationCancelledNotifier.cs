@@ -35,7 +35,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
                 .GetBaseDataObject(_applicationHost, NotificationType.PluginInstallationCancelled)
                 .AddPluginInstallationInfo(eventArgs.Argument);
 
-            await _webhookSender.SendNotification(NotificationType.PluginInstallationCancelled, dataObject);
+            await _webhookSender.SendNotification(NotificationType.PluginInstallationCancelled, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

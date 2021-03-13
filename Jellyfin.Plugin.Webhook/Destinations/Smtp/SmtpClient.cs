@@ -29,20 +29,23 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
                 message.From.Add(new MailboxAddress(options.SenderAddress, options.SenderAddress));
                 message.To.Add(new MailboxAddress(options.ReceiverAddress, options.ReceiverAddress));
 
-                message.Subject = options.GetSubjectTemplate()(data);
+                message.Subject = options.GetCompiledSubjectTemplate()(data);
                 message.Body = new TextPart(options.IsHtml ? "html" : "plain")
                 {
                     Text = options.GetMessageBody(data)
                 };
 
                 using var smtpClient = new MailKit.Net.Smtp.SmtpClient();
-                await smtpClient.ConnectAsync(options.SmtpServer, options.SmtpPort, options.UseSsl);
+                await smtpClient.ConnectAsync(options.SmtpServer, options.SmtpPort, options.UseSsl)
+                    .ConfigureAwait(false);
                 if (options.UseCredentials)
                 {
-                    await smtpClient.AuthenticateAsync(options.Username, options.Password);
+                    await smtpClient.AuthenticateAsync(options.Username, options.Password)
+                        .ConfigureAwait(false);
                 }
 
-                await smtpClient.SendAsync(message);
+                await smtpClient.SendAsync(message)
+                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {

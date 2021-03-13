@@ -46,7 +46,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             dataObject[nameof(eventArgs.Argument.DeviceId)] = eventArgs.Argument.DeviceId;
             dataObject[nameof(eventArgs.Argument.DeviceName)] = eventArgs.Argument.DeviceName;
 
-            await _webhookSender.SendNotification(NotificationType.AuthenticationFailure, dataObject);
+            await _webhookSender.SendNotification(NotificationType.AuthenticationFailure, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -34,7 +34,8 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             var dataObject = DataObjectHelpers
                 .GetBaseDataObject(_applicationHost, NotificationType.PendingRestart);
 
-            await _webhookSender.SendNotification(NotificationType.PendingRestart, dataObject);
+            await _webhookSender.SendNotification(NotificationType.PendingRestart, dataObject)
+                .ConfigureAwait(false);
         }
     }
 }

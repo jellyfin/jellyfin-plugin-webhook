@@ -70,10 +70,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .SendAsync(httpRequestMessage);
+                    .SendAsync(httpRequestMessage)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }

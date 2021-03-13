@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Mime;
@@ -31,6 +32,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
         {
             try
             {
+                if (string.IsNullOrEmpty(options.WebhookUri))
+                {
+                    throw new ArgumentException(nameof(options.WebhookUri));
+                }
+
                 // Add discord specific properties.
                 data["MentionType"] = GetMentionType(options.MentionType);
                 if (!string.IsNullOrEmpty(options.EmbedColor))
@@ -53,10 +59,12 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(options.WebhookUri, content);
+                    .PostAsync(new Uri(options.WebhookUri), content)
+                    .ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
-                    var responseStr = await response.Content.ReadAsStringAsync();
+                    var responseStr = await response.Content.ReadAsStringAsync()
+                        .ConfigureAwait(false);
                     _logger.LogWarning("Error sending notification: {Response}", responseStr);
                 }
             }
