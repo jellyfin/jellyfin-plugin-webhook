@@ -5,6 +5,7 @@ using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Common;
 using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Session;
@@ -44,7 +45,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The data object.</returns>
         public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, BaseItem? item)
         {
-            if (item == null)
+            if (item is null)
             {
                 return dataObject;
             }
@@ -56,56 +57,96 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             dataObject["ItemId"] = item.Id;
             dataObject["ItemType"] = item.GetType().Name.Escape();
             dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
+            dataObject["RunTime"] = TimeSpan.FromTicks(item.RunTimeTicks ?? 0).ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
 
-            if (item.ProductionYear.HasValue)
+            if (item.ProductionYear is not null)
             {
                 dataObject["Year"] = item.ProductionYear;
             }
 
             switch (item)
             {
-                case Season:
-                    if (!string.IsNullOrEmpty(item.Parent?.Name))
+                case Season season:
+                    if (!string.IsNullOrEmpty(season.Series?.Name))
                     {
-                        dataObject["SeriesName"] = item.Parent.Name.Escape();
+                        dataObject["SeriesName"] = season.Series.Name.Escape();
                     }
 
-                    if (item.Parent?.ProductionYear != null)
+                    if (season.Series?.ProductionYear is not null)
                     {
-                        dataObject["Year"] = item.Parent.ProductionYear;
+                        dataObject["Year"] = season.Series.ProductionYear;
                     }
 
-                    if (item.IndexNumber.HasValue)
+                    if (season.IndexNumber is not null)
                     {
-                        dataObject["SeasonNumber"] = item.IndexNumber;
-                        dataObject["SeasonNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        dataObject["SeasonNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber"] = season.IndexNumber;
+                        dataObject["SeasonNumber00"] = season.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber000"] = season.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
                     break;
-                case Episode:
-                    if (!string.IsNullOrEmpty(item.Parent?.Parent?.Name))
+                case Episode episode:
+                    if (!string.IsNullOrEmpty(episode.Series?.Name))
                     {
-                        dataObject["SeriesName"] = item.Parent.Parent.Name.Escape();
+                        dataObject["SeriesName"] = episode.Series.Name.Escape();
                     }
 
-                    if (item.Parent?.IndexNumber != null)
+                    if (episode.Season?.IndexNumber is not null)
                     {
-                        dataObject["SeasonNumber"] = item.Parent.IndexNumber;
-                        dataObject["SeasonNumber00"] = item.Parent.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        dataObject["SeasonNumber000"] = item.Parent.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber"] = episode.Season.IndexNumber;
+                        dataObject["SeasonNumber00"] = episode.Season.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["SeasonNumber000"] = episode.Season.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
-                    if (item.IndexNumber.HasValue)
+                    if (episode.IndexNumber is not null)
                     {
-                        dataObject["EpisodeNumber"] = item.IndexNumber;
-                        dataObject["EpisodeNumber00"] = item.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
-                        dataObject["EpisodeNumber000"] = item.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
+                        dataObject["EpisodeNumber"] = episode.IndexNumber;
+                        dataObject["EpisodeNumber00"] = episode.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["EpisodeNumber000"] = episode.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                     }
 
-                    if (item.Parent?.Parent?.ProductionYear != null)
+                    if (episode.IndexNumberEnd is not null)
                     {
-                        dataObject["Year"] = item.Parent.Parent.ProductionYear;
+                        dataObject["EpisodeNumberEnd"] = episode.IndexNumberEnd;
+                        dataObject["EpisodeNumberEnd00"] = episode.IndexNumberEnd.Value.ToString("00", CultureInfo.InvariantCulture);
+                        dataObject["EpisodeNumberEnd000"] = episode.IndexNumberEnd.Value.ToString("000", CultureInfo.InvariantCulture);
+                    }
+
+                    if (episode.Series?.ProductionYear is not null)
+                    {
+                        dataObject["Year"] = episode.Series.ProductionYear;
+                    }
+
+                    break;
+                case Audio audio:
+                    if (!string.IsNullOrEmpty(audio.Album))
+                    {
+                        dataObject["Album"] = audio.Album;
+                    }
+
+                    if (audio.Artists.Count != 0)
+                    {
+                        // Should all artists be sent?
+                        dataObject["Artist"] = audio.Artists[0];
+                    }
+
+                    if (audio.ProductionYear is not null)
+                    {
+                        dataObject["Year"] = audio.ProductionYear;
+                    }
+
+                    break;
+
+                case MusicAlbum album:
+                    if (album.Artists.Count != 0)
+                    {
+                        // Should all artists be sent?
+                        dataObject["Artist"] = album.Artists[0];
+                    }
+
+                    if (album.ProductionYear is not null)
+                    {
+                        dataObject["Year"] = album.ProductionYear;
                     }
 
                     break;
@@ -128,7 +169,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         public static Dictionary<string, object> AddPlaybackProgressData(this Dictionary<string, object> dataObject, PlaybackProgressEventArgs playbackProgressEventArgs)
         {
             dataObject[nameof(playbackProgressEventArgs.PlaybackPositionTicks)] = playbackProgressEventArgs.PlaybackPositionTicks ?? 0;
-            dataObject["PlaybackPosition"] = TimeSpan.FromTicks(playbackProgressEventArgs.PlaybackPositionTicks ?? 0).ToString(@"hh\:mm\:ss");
+            dataObject["PlaybackPosition"] = TimeSpan.FromTicks(playbackProgressEventArgs.PlaybackPositionTicks ?? 0).ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
             dataObject[nameof(playbackProgressEventArgs.MediaSourceId)] = playbackProgressEventArgs.MediaSourceId;
             dataObject[nameof(playbackProgressEventArgs.IsPaused)] = playbackProgressEventArgs.IsPaused;
             dataObject[nameof(playbackProgressEventArgs.IsAutomated)] = playbackProgressEventArgs.IsAutomated;
@@ -229,6 +270,6 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <param name="input">Input string.</param>
         /// <returns>Escaped string.</returns>
         private static string Escape(this string? input)
-            => input?.Replace("\"", "\\\"") ?? string.Empty;
+            => input?.Replace("\"", "\\\"", StringComparison.Ordinal) ?? string.Empty;
     }
 }

@@ -50,7 +50,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier
             foreach (var (key, container) in currentItems)
             {
                 var item = _libraryManager.GetItemById(key);
-                if (item == null)
+                if (item is null)
                 {
                     // Remove item from queue.
                     _itemProcessQueue.TryRemove(key, out _);

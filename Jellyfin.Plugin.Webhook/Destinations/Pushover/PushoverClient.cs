@@ -53,7 +53,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
                     data["MessageUrlTitle"] = options.MessageUrlTitle;
                 }
 
-                if (options.MessagePriority.HasValue)
+                if (options.MessagePriority is not null)
                 {
                     data["MessagePriority"] = options.MessagePriority;
                 }

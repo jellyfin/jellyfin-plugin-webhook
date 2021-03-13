@@ -32,7 +32,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <inheritdoc />
         public async Task OnEvent(PlaybackStopEventArgs eventArgs)
         {
-            if (eventArgs.Item == null)
+            if (eventArgs.Item is null)
             {
                 return;
             }

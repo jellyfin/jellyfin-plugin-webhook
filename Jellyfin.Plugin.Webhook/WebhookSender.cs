@@ -114,7 +114,7 @@ namespace Jellyfin.Plugin.Webhook
         private static bool NotifyOnItem<T>(T baseOptions, Type? itemType)
             where T : BaseOption
         {
-            if (itemType == null)
+            if (itemType is null)
             {
                 return true;
             }

@@ -32,7 +32,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
         /// <inheritdoc />
         public async Task OnEvent(GenericEventArgs<AuthenticationResult> eventArgs)
         {
-            if (eventArgs.Argument == null)
+            if (eventArgs.Argument is null)
             {
                 return;
             }
