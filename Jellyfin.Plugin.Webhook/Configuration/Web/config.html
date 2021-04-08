@@ -56,6 +56,10 @@
 
     <template id="template-base">
         <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtWebhookName" required="required" label="Webhook Name:"/>
+            <span>The webhook name (for display only)</span>
+        </div>
+        <div class="inputContainer">
             <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
             <span>The webhook destination url</span>
         </div>
