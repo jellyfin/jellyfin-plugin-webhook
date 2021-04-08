@@ -87,10 +87,15 @@
         },
         baseConfig: {
             template: document.querySelector("#template-base"),
-            addConfig: function (template, name) {
+            addConfig: function (template, destinationType, destinationName) {
                 const collapse = document.createElement("div");
                 collapse.setAttribute("is", "emby-collapse");
-                collapse.setAttribute("title", name);
+
+                if (destinationName) {
+                    collapse.setAttribute("title", `${destinationName} - ${destinationType}`);
+                } else {
+                    collapse.setAttribute("title", destinationType);
+                }
                 collapse.dataset.configWrapper = "1";
                 const collapseContent = document.createElement("div");
                 collapseContent.classList.add("collapseContent");
@@ -117,6 +122,7 @@
                 element.querySelector("[data-name=chkEnableSeries]").checked = config.EnableSeries || true;
                 element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || true;
                 element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || true;
+                element.querySelector("[data-name=txtWebhookName]").value = config.WebhookName || "";
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
                 element.querySelector("[data-name=chkSendAllProperties]").checked = config.SendAllProperties || false;
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
@@ -134,6 +140,7 @@
                 config.EnableSeries = element.querySelector("[data-name=chkEnableSeries]").checked || false;
                 config.EnableAlbums = element.querySelector("[data-name=chkEnableAlbums]").checked || false;
                 config.EnableSongs = element.querySelector("[data-name=chkEnableSongs]").checked || false;
+                config.WebhookName = element.querySelector("[data-name=txtWebhookName]").value || "";
                 config.WebhookUri = element.querySelector("[data-name=txtWebhookUri]").value || "";
                 config.SendAllProperties = element.querySelector("[data-name=chkSendAllProperties]").checked || false;
                 config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
@@ -163,7 +170,7 @@
                     txtColor.value = value;
                 });
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Discord");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Discord", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration.
@@ -196,7 +203,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.generic.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Generic");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Generic", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
                 template.querySelector("[data-name=btnAddHeader]").addEventListener("click", function () {
                     Webhook.generic.addHeader(baseConfig, {});
@@ -284,7 +291,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.gotify.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Gotify");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Gotify", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration.
@@ -311,7 +318,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.pushbullet.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushbullet");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushbullet", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration.
@@ -340,7 +347,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.pushover.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushover");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Pushover", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration
@@ -379,7 +386,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.slack.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "Slack");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Slack", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration.
@@ -406,7 +413,7 @@
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
                 template.appendChild(Webhook.smtp.template.cloneNode(true).content);
 
-                const baseConfig = Webhook.baseConfig.addConfig(template, "SMTP");
+                const baseConfig = Webhook.baseConfig.addConfig(template, "SMTP", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration 

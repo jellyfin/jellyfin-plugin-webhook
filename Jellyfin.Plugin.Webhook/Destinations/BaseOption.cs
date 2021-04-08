@@ -20,6 +20,14 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         public NotificationType[] NotificationTypes { get; set; } = Array.Empty<NotificationType>();
 
         /// <summary>
+        /// Gets or sets the webhook name.
+        /// </summary>
+        /// <remarks>
+        /// Only used for display.
+        /// </remarks>
+        public string? WebhookName { get; set; }
+
+        /// <summary>
         /// Gets or sets the webhook uri.
         /// </summary>
         public string? WebhookUri { get; set; }
