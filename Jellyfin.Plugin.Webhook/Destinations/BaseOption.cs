@@ -73,6 +73,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations
         public string? Template { get; set; }
 
         /// <summary>
+        /// Gets or sets the webhook user filter.
+        /// </summary>
+        public Guid[] UserFilter { get; set; } = Array.Empty<Guid>();
+
+        /// <summary>
         /// Gets the compiled handlebars template.
         /// </summary>
         /// <returns>The compiled handlebars template.</returns>

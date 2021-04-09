@@ -36,6 +36,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
                     throw new ArgumentException(nameof(options.WebhookUri));
                 }
 
+                if (options.UserFilter.Length != 0
+                    && data.TryGetValue("UserId", out var userIdObj)
+                    && userIdObj is Guid userId)
+                {
+                    if (Array.IndexOf(options.UserFilter, userId) == -1)
+                    {
+                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
+                        return;
+                    }
+                }
+
                 data["SlackUsername"] = options.Username;
                 data["SlackIconUrl"] = options.IconUrl;
 

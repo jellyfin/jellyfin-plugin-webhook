@@ -53,6 +53,13 @@
             <span data-name="notificationTypeName"></span>
         </label>
     </template>
+    
+    <template id="template-user-filter">
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="userFilterValue"/>
+            <span data-name="userFilterName"></span>
+        </label>
+    </template>
 
     <template id="template-base">
         <div class="inputContainer">
@@ -66,6 +73,11 @@
         <div>
             <label>Notification Type:</label>
             <div data-name="notificationTypeContainer">
+            </div>
+        </div>
+        <div>
+            <label>User Filter:</label>
+            <div data-name="userFilterContainer">
             </div>
         </div>
         <div>
