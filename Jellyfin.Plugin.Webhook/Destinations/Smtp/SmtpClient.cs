@@ -25,6 +25,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
         {
             try
             {
+                if (options.UserFilter.Length != 0
+                    && data.TryGetValue("UserId", out var userIdObj)
+                    && userIdObj is Guid userId)
+                {
+                    if (Array.IndexOf(options.UserFilter, userId) == -1)
+                    {
+                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
+                        return;
+                    }
+                }
+
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(options.SenderAddress, options.SenderAddress));
                 message.To.Add(new MailboxAddress(options.ReceiverAddress, options.ReceiverAddress));

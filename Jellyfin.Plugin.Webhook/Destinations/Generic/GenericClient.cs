@@ -34,6 +34,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         {
             try
             {
+                if (options.UserFilter.Length != 0
+                    && data.TryGetValue("UserId", out var userIdObj)
+                    && userIdObj is Guid userId)
+                {
+                    if (Array.IndexOf(options.UserFilter, userId) == -1)
+                    {
+                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
+                        return;
+                    }
+                }
+
                 foreach (var field in options.Fields)
                 {
                     if (string.IsNullOrEmpty(field.Key) || string.IsNullOrEmpty(field.Value))

@@ -78,11 +78,47 @@
             },
             get: function (container) {
                 const notificationTypes = [];
-                const checkboxes = container.querySelectorAll('[data-name=notificationTypeValue]:checked')
+                const checkboxes = container.querySelectorAll('[data-name=notificationTypeValue]:checked');
                 for (const checkbox of checkboxes) {
                     notificationTypes.push(checkbox.dataset.value);
                 }
                 return notificationTypes;
+            }
+        },
+        userFilter: {
+            template: document.querySelector("#template-user-filter"),
+            users: [],
+            populate: async function () {
+                const users = await window.ApiClient.getUsers();
+
+                Webhook.userFilter.users = [];
+                for (const user of users) {
+                    Webhook.userFilter.users.push({
+                        id: user.Id,
+                        name: user.Name
+                    });
+                }
+            },
+            create: function (container, selected = []) {
+                for (const user of Webhook.userFilter.users) {
+                    const template = Webhook.userFilter.template.cloneNode(true).content;
+                    const name = template.querySelector("[data-name=userFilterName]");
+                    const value = template.querySelector("[data-name=userFilterValue]");
+
+                    name.innerText = user.name;
+                    value.dataset.value = user.id;
+                    value.checked = selected.includes(user.id);
+
+                    container.appendChild(template);
+                }
+            },
+            get: function (container) {
+                const userFilter = [];
+                const checkboxes = container.querySelectorAll('[data-name=userFilterValue]:checked');
+                for (const checkbox of checkboxes) {
+                    userFilter.push(checkbox.dataset.value);
+                }
+                return userFilter;
             }
         },
         baseConfig: {
@@ -130,6 +166,9 @@
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
                 Webhook.notificationType.create(notificationTypeContainer, config.NotificationTypes);
+
+                const userFilterContainer = element.querySelector("[data-name=userFilterContainer]");
+                Webhook.userFilter.create(userFilterContainer, config.UserFilter);
             },
             getConfig: function (element) {
                 const config = {};
@@ -147,7 +186,9 @@
 
                 config.NotificationTypes = [];
                 config.NotificationTypes = Webhook.notificationType.get(element);
-                console.log(config.NotificationTypes);
+
+                config.UserFilter = [];
+                config.UserFilter = Webhook.userFilter.get(element);
                 return config;
             }
         },
@@ -447,7 +488,7 @@
                 return config;
             }
         },
-        init: function () {
+        init: async function () {
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
@@ -458,6 +499,7 @@
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
+            await Webhook.userFilter.populate();
             Webhook.loadConfig();
         },
         removeConfig: function (e) {
@@ -569,7 +611,7 @@
         }
     }
 
-    view.addEventListener("viewshow", function (e) {
-        Webhook.init();
+    view.addEventListener("viewshow", async function () {
+        await Webhook.init();
     });
 }

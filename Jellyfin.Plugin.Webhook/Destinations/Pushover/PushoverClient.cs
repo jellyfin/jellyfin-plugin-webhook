@@ -31,6 +31,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         {
             try
             {
+                if (options.UserFilter.Length != 0
+                    && data.TryGetValue("UserId", out var userIdObj)
+                    && userIdObj is Guid userId)
+                {
+                    if (Array.IndexOf(options.UserFilter, userId) == -1)
+                    {
+                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
+                        return;
+                    }
+                }
+
                 data["Token"] = options.Token;
                 data["UserToken"] = options.UserToken;
                 if (!string.IsNullOrEmpty(options.Device))

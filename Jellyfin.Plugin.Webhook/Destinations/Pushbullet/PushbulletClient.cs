@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -32,6 +33,17 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
         {
             try
             {
+                if (options.UserFilter.Length != 0
+                    && data.TryGetValue("UserId", out var userIdObj)
+                    && userIdObj is Guid userId)
+                {
+                    if (Array.IndexOf(options.UserFilter, userId) == -1)
+                    {
+                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
+                        return;
+                    }
+                }
+
                 data["PushbulletToken"] = options.Token;
                 data["PushbulletDeviceId"] = options.DeviceId;
                 data["PushbulletChannel"] = options.Channel;
