@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Handlebars.Net" Version="2.0.4" />
+      <PackageReference Include="Handlebars.Net" Version="2.0.7" />
       <PackageReference Include="Jellyfin.Controller" Version="10.7-*" />
     </ItemGroup>
 
