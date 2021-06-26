@@ -10,6 +10,7 @@ using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Session;
 using MediaBrowser.Model.Dto;
+using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Updates;
 
 namespace Jellyfin.Plugin.Webhook.Helpers
@@ -155,6 +156,65 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             foreach (var (providerKey, providerValue) in item.ProviderIds)
             {
                 dataObject[$"Provider_{providerKey.ToLowerInvariant()}"] = providerValue;
+            }
+
+            var itemMediaStreams = item.GetMediaStreams();
+            if (itemMediaStreams is not null)
+            {
+                var streamCounter = new Dictionary<MediaStreamType, int>();
+                foreach (var mediaStream in itemMediaStreams)
+                {
+                    streamCounter.TryGetValue(mediaStream.Type, out var count);
+                    streamCounter[mediaStream.Type] = count + 1;
+                    var baseKey = $"{mediaStream.Type}_{count}";
+
+                    switch (mediaStream.Type)
+                    {
+                        case MediaStreamType.Audio:
+                        {
+                            dataObject[baseKey + "_Title"] = mediaStream.DisplayTitle;
+                            dataObject[baseKey + "_Type"] = mediaStream.Type.ToString();
+                            dataObject[baseKey + "_Language"] = mediaStream.Language;
+                            dataObject[baseKey + "_Codec"] = mediaStream.Codec;
+                            dataObject[baseKey + "_Channels"] = mediaStream.Channels ?? 0;
+                            dataObject[baseKey + "_Bitrate"] = mediaStream.BitRate ?? 0;
+                            dataObject[baseKey + "_SampleRate"] = mediaStream.SampleRate ?? 0;
+                            dataObject[baseKey + "_Default"] = mediaStream.IsDefault;
+                            break;
+                        }
+
+                        case MediaStreamType.Video:
+                        {
+                            dataObject[baseKey + "_Title"] = mediaStream.DisplayTitle;
+                            dataObject[baseKey + "_Type"] = mediaStream.Type.ToString();
+                            dataObject[baseKey + "_Codec"] = mediaStream.Codec;
+                            dataObject[baseKey + "_Profile"] = mediaStream.Profile;
+                            dataObject[baseKey + "_Level"] = mediaStream.Level ?? 0;
+                            dataObject[baseKey + "_Height"] = mediaStream.Height ?? 0;
+                            dataObject[baseKey + "_Width"] = mediaStream.Width ?? 0;
+                            dataObject[baseKey + "_AspectRatio"] = mediaStream.AspectRatio;
+                            dataObject[baseKey + "_Interlaced"] = mediaStream.IsInterlaced;
+                            dataObject[baseKey + "_FrameRate"] = mediaStream.RealFrameRate ?? 0;
+                            dataObject[baseKey + "_VideoRange"] = mediaStream.VideoRange;
+                            dataObject[baseKey + "_ColorSpace"] = mediaStream.ColorSpace;
+                            dataObject[baseKey + "_ColorTransfer"] = mediaStream.ColorTransfer;
+                            dataObject[baseKey + "_ColorPrimaries"] = mediaStream.ColorPrimaries;
+                            dataObject[baseKey + "_PixelFormat"] = mediaStream.PixelFormat;
+                            dataObject[baseKey + "_RefFrames"] = mediaStream.RefFrames ?? 0;
+                            break;
+                        }
+
+                        case MediaStreamType.Subtitle:
+                            dataObject[baseKey + "_Title"] = mediaStream.DisplayTitle;
+                            dataObject[baseKey + "_Type"] = mediaStream.Type.ToString();
+                            dataObject[baseKey + "_Language"] = mediaStream.Language;
+                            dataObject[baseKey + "_Codec"] = mediaStream.Codec;
+                            dataObject[baseKey + "_Default"] = mediaStream.IsDefault;
+                            dataObject[baseKey + "_Forced"] = mediaStream.IsForced;
+                            dataObject[baseKey + "_External"] = mediaStream.IsExternal;
+                            break;
+                    }
+                }
             }
 
             return dataObject;
