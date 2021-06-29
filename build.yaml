@@ -1,20 +1,30 @@
----
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "2.0.0.0"
+version: "untagged-77a4969f1d85b201d8c3"
 targetAbi: "10.7.0.0"
 framework: "net5.0"
 owner: "jellyfin"
 overview: "Sends notifications."
 description: >
   Sends notifications to destinations via webhooks.
+
 category: "Notifications"
 artifacts:
-- "Jellyfin.Plugin.Webhook.dll"
-- "Handlebars.dll"
-- "MailKit.dll"
-- "MimeKit.dll"
-- "BouncyCastle.Crypto.dll"
-changelog: >
-  --
+  - "Jellyfin.Plugin.Webhook.dll"
+  - "Handlebars.dll"
+  - "MailKit.dll"
+  - "MimeKit.dll"
+  - "BouncyCastle.Crypto.dll"
+changelog: |-
+  - Add media stream information (#38) @crobibero
+  - Add user filter per webhook (#23) @crobibero
+  - Allow user to set webhook name (#22) @crobibero
+  - Analyze! (#15) @crobibero
+  - Add option to send all properties (#14) @crobibero
+  - Fix saving Plugin Installation Cancelled (#13) @crobibero
+  - Fix guid change (#7) @Atakku
+
+  ### Dependency updates ###
+  - chore(deps): bump MailKit from 2.12.0 to 2.13.0 (#36) @dependabot
+  - chore(deps): bump Handlebars.Net from 2.0.7 to 2.0.8 (#34) @dependabot
