@@ -18,12 +18,12 @@ jobs:
         uses: release-drafter/release-drafter@v5.15.0
         id: draft
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Setup YQ
         uses: chrisdickinson/setup-yq@latest
         with:
-          yq-version: v4.9.1
+          yq-version: v4.9.6
 
       - name: Parse changelog
         run: |
@@ -57,6 +57,7 @@ jobs:
           git checkout -b prepare-${{ env.VERSION }}
           git commit -am "Bump version to ${{ env.VERSION }}"
           git push -f origin prepare-${{ env.VERSION }}
+
       - name: Create or Update PR
         uses: k3rnels-actions/pr-update@v1
         with:
