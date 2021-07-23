@@ -152,17 +152,16 @@
                 return collapse;
             },
             setConfig: function (config, element) {
-                element.querySelector("[data-name=chkEnableMovies]").checked = config.EnableMovies || true;
-                element.querySelector("[data-name=chkEnableEpisodes]").checked = config.EnableEpisodes || true;
-                element.querySelector("[data-name=chkEnableSeasons]").checked = config.EnableSeasons || true;
-                element.querySelector("[data-name=chkEnableSeries]").checked = config.EnableSeries || true;
-                element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || true;
-                element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || true;
+                element.querySelector("[data-name=chkEnableMovies]").checked = config.EnableMovies || (typeof config.EnableMovies == "undefined");
+                element.querySelector("[data-name=chkEnableEpisodes]").checked = config.EnableEpisodes || (typeof config.EnableEpisodes == "undefined");
+                element.querySelector("[data-name=chkEnableSeasons]").checked = config.EnableSeasons || (typeof config.EnableSeasons == "undefined");
+                element.querySelector("[data-name=chkEnableSeries]").checked = config.EnableSeries || (typeof config.EnableSeries == "undefined");
+                element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || (typeof config.EnableAlbums == "undefined");
+                element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || (typeof config.EnableSongs == "undefined");
                 element.querySelector("[data-name=txtWebhookName]").value = config.WebhookName || "";
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
                 element.querySelector("[data-name=chkSendAllProperties]").checked = config.SendAllProperties || false;
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
-
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
                 Webhook.notificationType.create(notificationTypeContainer, config.NotificationTypes);
