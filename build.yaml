@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "3"
+version: "4"
 targetAbi: "10.7.0.0"
 framework: "net5.0"
 owner: "jellyfin"
@@ -17,4 +17,20 @@ artifacts:
   - "MimeKit.dll"
   - "BouncyCastle.Crypto.dll"
 changelog: |-
-  - No changes
+  - Update ci (#42) @h1dden-da3m0n
+
+  ### New features and improvements ###
+  - Improve HTTP Request Error Logging (#51) @mark-monteiro
+
+  ### Bug Fixes ###
+  - Fix loading of selected media types (#46) @crobibero
+
+  ### Dependency updates ###
+  - chore(deps): bump MailKit from 2.14.0 to 2.15.0 (#50) @dependabot
+  - chore(deps): bump Handlebars.Net from 2.0.8 to 2.0.9 (#49) @dependabot
+  - chore(deps): bump MailKit from 2.13.0 to 2.14.0 (#48) @dependabot
+
+  ### Code or Repo Maintenance ###
+  - chore(deps): bump MailKit from 2.14.0 to 2.15.0 (#50) @dependabot
+  - chore(deps): bump Handlebars.Net from 2.0.8 to 2.0.9 (#49) @dependabot
+  - chore(deps): bump MailKit from 2.13.0 to 2.14.0 (#48) @dependabot
