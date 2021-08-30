@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+
+using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
@@ -57,12 +59,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
                     .CreateClient(NamedClient.Default)
                     .PostAsync(new Uri(options.WebhookUri), content)
                     .ConfigureAwait(false);
-                if (!response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync()
-                        .ConfigureAwait(false);
-                    _logger.LogWarning("Error sending notification: {Response}", responseStr);
-                }
+                await response.LogIfFailed(_logger).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
