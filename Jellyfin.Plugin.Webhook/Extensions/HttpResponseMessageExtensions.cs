@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +15,7 @@ namespace Jellyfin.Plugin.Webhook.Extensions
         /// <param name="response">The HTTP response to log if failed.</param>
         /// <param name="logger">The logger to use to log the warning.</param>
         /// <returns>A task representing the async operation.</returns>
-        public static async Task LogIfFailed(this HttpResponseMessage response, ILogger logger)
+        public static async Task LogIfFailedAsync(this HttpResponseMessage response, ILogger logger)
         {
             // Don't log anything for successful responses
             if (response.IsSuccessStatusCode)

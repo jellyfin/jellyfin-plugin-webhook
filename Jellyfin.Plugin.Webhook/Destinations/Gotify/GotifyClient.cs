@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
@@ -59,7 +58,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
                     .CreateClient(NamedClient.Default)
                     .PostAsync(new Uri(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}"), content)
                     .ConfigureAwait(false);
-                await response.LogIfFailed(_logger).ConfigureAwait(false);
+                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {

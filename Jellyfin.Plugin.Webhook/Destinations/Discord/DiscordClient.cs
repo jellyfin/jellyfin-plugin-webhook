@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
@@ -74,7 +73,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                     .CreateClient(NamedClient.Default)
                     .PostAsync(new Uri(options.WebhookUri), content)
                     .ConfigureAwait(false);
-                await response.LogIfFailed(_logger).ConfigureAwait(false);
+                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
