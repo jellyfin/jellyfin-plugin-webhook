@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types:
-      - rebase-command
+      - update-prep-command
 
 jobs:
   update_release_draft:

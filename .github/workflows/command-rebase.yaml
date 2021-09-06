@@ -24,7 +24,7 @@ jobs:
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reaction-type: hooray
 
-      - name: Add Failiur Reaction
+      - name: Add Failure Reaction
         if: ${{ steps.rebase.outputs.rebased-count == 0 || failure() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
