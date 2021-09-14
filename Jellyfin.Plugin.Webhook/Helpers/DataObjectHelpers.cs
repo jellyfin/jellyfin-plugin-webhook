@@ -248,7 +248,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The modified data object.</returns>
         public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, UserDto user)
         {
-            dataObject["Username"] = user.Name.Escape();
+            dataObject["NotificationUsername"] = user.Name.Escape();
             dataObject["UserId"] = user.Id;
             dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
             dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -264,7 +264,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <returns>The modified data object.</returns>
         public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, User user)
         {
-            dataObject["Username"] = user.Username.Escape();
+            dataObject["NotificationUsername"] = user.Username.Escape();
             dataObject["UserId"] = user.Id;
             dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
             dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -282,7 +282,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         {
             dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
             dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
-            dataObject[nameof(sessionInfo.UserName)] = sessionInfo.UserName.Escape();
+            dataObject["NotificationUsername"] = sessionInfo.UserName.Escape();
             dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
             dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
             dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;

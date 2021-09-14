@@ -49,6 +49,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
                 }
 
                 data["SlackUsername"] = options.Username;
+                data["BotUsername"] = options.Username;
                 data["SlackIconUrl"] = options.IconUrl;
 
                 var body = options.GetMessageBody(data);

@@ -64,6 +64,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
                 if (!string.IsNullOrEmpty(options.Username))
                 {
                     data["Username"] = options.Username;
+                    data["BotUsername"] = options.Username;
                 }
 
                 var body = options.GetMessageBody(data);
