@@ -58,7 +58,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
             {
                 var userDataObject = new Dictionary<string, object>(dataObject)
                 {
-                    ["Username"] = user.Username,
+                    ["NotificationUsername"] = user.Username,
                     ["UserId"] = user.Id
                 };
 
