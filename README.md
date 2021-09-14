@@ -96,7 +96,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Playback device name
     - ClientName
         - Playback client name
-    - Username
+    - NotificationUsername
         - User playing item. Note: multiple notifications will be sent if there are multiple users in a session
     - UserId
         - The user Id
@@ -109,7 +109,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - MentionType
     - EmbedColor
     - AvatarUrl
-    - Username
+    - BotUsername
 - Gotify
     - Priority
 - Pushbullet
@@ -123,6 +123,9 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - MessagePriority
     - NotificationSound
 - SMTP
+- Slack
+    - BotUsername
+    - SlackIconUrl
 
 Future events can be created
 from https://github.com/jellyfin/jellyfin/blob/master/Jellyfin.Server.Implementations/Events/EventingServiceCollectionExtensions.cs
