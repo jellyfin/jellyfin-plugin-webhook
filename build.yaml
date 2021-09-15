@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "5"
+version: "6"
 targetAbi: "10.7.7.0"
 framework: "net5.0"
 owner: "jellyfin"
@@ -18,7 +18,5 @@ artifacts:
   - "BouncyCastle.Crypto.dll"
 changelog: |2-
   ### Bug Fixes ###
-  - Update Username parameter to be NotificationUsername (#57) @crobibero
-
-  ### CI & build changes ###
-  - ci: set ABI version and more repo automation (#52) @h1dden-da3m0n
+  - Fix string conversion in HandlebarsFunctionHelpers (#61) @crobibero
+  - Actually fix sending username (#58) @crobibero
