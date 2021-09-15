@@ -15,8 +15,8 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 throw new HandlebarsException("{{if_equals}} helper must have exactly two arguments");
             }
 
-            var left = arguments[0] as string;
-            var right = arguments[1] as string;
+            var left = Convert.ToString(arguments[0]);
+            var right = Convert.ToString(arguments[1]);
             if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase))
             {
                 options.Template(output, context);
@@ -34,7 +34,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 throw new HandlebarsException("{{if_exist}} helper must have exactly one argument");
             }
 
-            var arg = arguments[0] as string;
+            var arg = Convert.ToString(arguments[0]);
             if (string.IsNullOrEmpty(arg))
             {
                 options.Inverse(output, context);
