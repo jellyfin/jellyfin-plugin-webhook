@@ -7,7 +7,7 @@
             "color": "{{EmbedColor}}",
             "footer": {
                 "text": "From {{{ServerName}}}",
-                "iconUrl": "{{AvatarUrl}}"
+                "icon_url": "{{AvatarUrl}}"
             },
             {{#if_equals ItemType 'Season'}}
                 "title": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}",
@@ -35,7 +35,7 @@
             {{~#if_exist Provider_musicbrainzartist~}}
                 [MusicBrainz](https://musicbrainz.org/artist/{{Provider_musicbrainzartist}})\n
             {{~/if_exist~}}
-            {{#if_exist Provider_audiodbartist}}
+            {{~#if_exist Provider_audiodbartist~}}
                 [AudioDb](https://theaudiodb.com/artist/{{Provider_audiodbartist}})\n
             {{~/if_exist~}}
             {{~#if_exist Provider_musicbrainztrack~}}
