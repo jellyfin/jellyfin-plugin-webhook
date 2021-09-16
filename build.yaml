@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "6"
+version: "7"
 targetAbi: "10.7.7.0"
 framework: "net5.0"
 owner: "jellyfin"
@@ -17,6 +17,10 @@ artifacts:
   - "MimeKit.dll"
   - "BouncyCastle.Crypto.dll"
 changelog: |2-
+  ### New features and improvements ###
+  - Add tagline as available parameter (#68) @crobibero
+  - Add Form Post support (#65) @crobibero
+
   ### Bug Fixes ###
-  - Fix string conversion in HandlebarsFunctionHelpers (#61) @crobibero
-  - Actually fix sending username (#58) @crobibero
+  - Fix Discord.handlebars template (#66) @crobibero
+  - Fix string conversion for unbound properties (#62) @crobibero
