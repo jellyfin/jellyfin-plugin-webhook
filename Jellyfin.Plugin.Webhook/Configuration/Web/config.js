@@ -305,7 +305,6 @@
                 const template = document.createElement("div");
                 template.appendChild(Webhook.generic.templateGenericValue.cloneNode(true).content);
 
-                console.log(config);
                 template.querySelector("[data-name=txtKey]").value = config.Key || "";
                 template.querySelector("[data-name=txtValue]").value = config.Value || "";
 
@@ -315,7 +314,93 @@
                 const template = document.createElement("div");
                 template.appendChild(Webhook.generic.templateGenericValue.cloneNode(true).content);
 
-                console.log(config);
+                template.querySelector("[data-name=txtKey]").value = config.Key || "";
+                template.querySelector("[data-name=txtValue]").value = config.Value || "";
+
+                element.querySelector("[data-name=field-wrapper]").appendChild(template);
+            }
+        },
+        genericForm: {
+            btnAdd: document.querySelector("#btnAddGenericForm"),
+            template: document.querySelector("#template-generic-form"),
+            templateGenericValue: document.querySelector("#template-generic-form-value"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "generic-form";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.genericForm.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "GenericForm", config.WebhookName);
+                Webhook.configurationWrapper.appendChild(baseConfig);
+                template.querySelector("[data-name=btnAddHeader]").addEventListener("click", function () {
+                    Webhook.genericForm.addHeader(baseConfig, {});
+                });
+                template.querySelector("[data-name=btnAddField]").addEventListener("click", function () {
+                    Webhook.genericForm.addField(baseConfig, {});
+                });
+
+                // Load configuration
+                Webhook.genericForm.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                if (config.Headers) {
+                    for (let i = 0; i < config.Headers.length; i++) {
+                        Webhook.genericForm.addHeader(element, config.Headers[i]);
+                    }
+                }
+
+                if (config.Fields) {
+                    for (let i = 0; i < config.Fields.length; i++) {
+                        Webhook.genericForm.addField(element, config.Fields[i]);
+                    }
+                }
+            },
+            getConfig: function (e) {
+                const config = Webhook.baseConfig.getConfig(e);
+
+                config.Fields = [];
+                const fieldValues = e.querySelector("[data-name=field-wrapper]")
+                    .querySelectorAll("[data-name=value]");
+                for (let i = 0; i < fieldValues.length; i++) {
+                    const field = {
+                        Key: fieldValues[i].querySelector("[data-name=txtKey]").value,
+                        Value: fieldValues[i].querySelector("[data-name=txtValue]").value
+                    };
+
+                    if (field.Key !== "" && field.Value !== "") {
+                        config.Fields.push(field);
+                    }
+                }
+
+                config.Headers = [];
+                const headerValues = e.querySelector("[data-name=header-wrapper]")
+                    .querySelectorAll("[data-name=value]");
+                for (let i = 0; i < headerValues.length; i++) {
+                    const header = {
+                        Key: headerValues[i].querySelector("[data-name=txtKey]").value,
+                        Value: headerValues[i].querySelector("[data-name=txtValue]").value
+                    };
+                    if (header.Key !== "" && header.Value !== "") {
+                        config.Headers.push(header);
+                    }
+                }
+
+                return config;
+            },
+            addHeader: function (element, config) {
+                const template = document.createElement("div");
+                template.appendChild(Webhook.genericForm.templateGenericValue.cloneNode(true).content);
+
+                template.querySelector("[data-name=txtKey]").value = config.Key || "";
+                template.querySelector("[data-name=txtValue]").value = config.Value || "";
+
+                element.querySelector("[data-name=header-wrapper]").appendChild(template);
+            },
+            addField: function (element, config) {
+                const template = document.createElement("div");
+                template.appendChild(Webhook.genericForm.templateGenericValue.cloneNode(true).content);
+
                 template.querySelector("[data-name=txtKey]").value = config.Key || "";
                 template.querySelector("[data-name=txtValue]").value = config.Value || "";
 
@@ -491,6 +576,7 @@
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
+            Webhook.genericForm.btnAdd.addEventListener("click", Webhook.genericForm.addConfig);
             Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
             Webhook.pushbullet.btnAdd.addEventListener("click", Webhook.pushbullet.addConfig);
             Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
@@ -522,6 +608,12 @@
             const genericConfigs = document.querySelectorAll("[data-type=generic]");
             for (let i = 0; i < genericConfigs.length; i++) {
                 config.GenericOptions.push(Webhook.generic.getConfig(genericConfigs[i]));
+            }
+
+            config.GenericFormOptions = [];
+            const genericFormConfigs = document.querySelectorAll("[data-type=generic-form]");
+            for (let i = 0; i < genericFormConfigs.length; i++) {
+                config.GenericFormOptions.push(Webhook.genericForm.getConfig(genericFormConfigs[i]));
             }
 
             config.GotifyOptions = [];
@@ -567,6 +659,10 @@
 
                 for (let i = 0; i < config.GenericOptions.length; i++) {
                     Webhook.generic.addConfig(config.GenericOptions[i]);
+                }
+
+                for (let i = 0; i < config.GenericFormOptions.length; i++) {
+                    Webhook.genericForm.addConfig(config.GenericFormOptions[i]);
                 }
 
                 for (let i = 0; i < config.GotifyOptions.length; i++) {

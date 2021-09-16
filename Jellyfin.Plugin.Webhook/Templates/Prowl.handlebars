@@ -1,0 +1,51 @@
+{
+    "apikey": "{{ApiKey}}",
+    "application": "{{ServerName}}",
+    "event": "{{NotificationType}}",
+    "priority": "0",
+    "description": "
+{{~#if_equals ItemType 'Season'~}}
+    {{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}\n
+{{~else~}}
+    {{~#if_equals ItemType 'Episode'~}}
+        {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}\n
+    {{~else~}}
+        {{{Name}}} ({{Year}}) has been added to {{{ServerName}}}\n
+    {{~/if_equals~}}
+{{~/if_equals~}}
+\nExternal Links:\n
+{{~#if_exist Provider_imdb~}}
+    [IMDb](https://www.imdb.com/title/{{Provider_imdb}}/)\n
+{{~/if_exist~}}
+{{~#if_exist Provider_tmdb~}}
+    {{~#if_equals ItemType 'Movie'~}}
+        [TMDb](https://www.themoviedb.org/movie/{{Provider_tmdb}})\n
+        {{~else~}}
+        [TMDb](https://www.themoviedb.org/tv/{{Provider_tmdb}})\n
+    {{~/if_equals~}}
+{{~/if_exist~}}
+{{~#if_exist Provider_musicbrainzartist~}}
+    [MusicBrainz](https://musicbrainz.org/artist/{{Provider_musicbrainzartist}})\n
+{{~/if_exist~}}
+{{~#if_exist Provider_audiodbartist~}}
+    [AudioDb](https://theaudiodb.com/artist/{{Provider_audiodbartist}})\n
+{{~/if_exist~}}
+{{~#if_exist Provider_musicbrainztrack~}}
+    [MusicBrainz Track](https://musicbrainz.org/track/{{Provider_musicbrainztrack}})\n
+{{~/if_exist~}}
+{{~#if_exist Provider_musicbrainzalbum~}}
+    [MusicBrainz Album](https://musicbrainz.org/release/{{Provider_musicbrainzalbum}})\n
+{{~/if_exist~}}
+{{~#if_exist Provider_theaudiodbalbum~}}
+    [TADb Album](https://theaudiodb.com/album/{{Provider_theaudiodbalbum}})\n
+{{~/if_exist~}}
+{{~#if_exist Provider_tvmaze~}}
+    {{~#if_equals ItemType 'Episode'~}}
+        [TVMaze](https://www.tvmaze.com/episodes/{{Provider_tvmaze}})\n
+    {{~/if_equals~}}
+    {{~#if_equals ItemType 'Series'~}}
+        [TVMaze](https://www.tvmaze.com/shows/{{Provider_tvmaze}})\n
+    {{~/if_equals~}}
+{{~/if_exist~}}",
+    "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+}

@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
 {
-    /// <inheritdoc />
+    /// <inheritdoc />/// <summary>
+    /// Client for the <see cref="PushbulletOption"/>.
+    /// </summary>
     public class PushbulletClient : IWebhookClient<PushbulletOption>
     {
         private readonly ILogger<PushbulletClient> _logger;

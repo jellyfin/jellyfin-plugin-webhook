@@ -1,6 +1,7 @@
 ﻿using System;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
+using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
@@ -23,6 +24,7 @@ namespace Jellyfin.Plugin.Webhook.Configuration
             ServerUrl = string.Empty;
             DiscordOptions = Array.Empty<DiscordOption>();
             GenericOptions = Array.Empty<GenericOption>();
+            GenericFormOptions = Array.Empty<GenericFormOption>();
             GotifyOptions = Array.Empty<GotifyOption>();
             PushbulletOptions = Array.Empty<PushbulletOption>();
             PushoverOptions = Array.Empty<PushoverOption>();
@@ -44,6 +46,11 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         /// Gets or sets the generic options.
         /// </summary>
         public GenericOption[] GenericOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the generic form options.
+        /// </summary>
+        public GenericFormOption[] GenericFormOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the gotify options.
