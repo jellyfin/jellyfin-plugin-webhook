@@ -15,8 +15,8 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 throw new HandlebarsException("{{if_equals}} helper must have exactly two arguments");
             }
 
-            var left = Convert.ToString(arguments[0]);
-            var right = Convert.ToString(arguments[1]);
+            var left = GetStringValue(arguments[0]);
+            var right = GetStringValue(arguments[1]);
             if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase))
             {
                 options.Template(output, context);
@@ -34,7 +34,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
                 throw new HandlebarsException("{{if_exist}} helper must have exactly one argument");
             }
 
-            var arg = Convert.ToString(arguments[0]);
+            var arg = GetStringValue(arguments[0]);
             if (string.IsNullOrEmpty(arg))
             {
                 options.Inverse(output, context);
@@ -75,6 +75,14 @@ namespace Jellyfin.Plugin.Webhook.Helpers
 
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        private static string? GetStringValue(object? input)
+        {
+            // UndefinedBindingResult means the parameter was a part of the provided dataset.
+            return input is UndefinedBindingResult or null
+                ? null
+                : Convert.ToString(input);
         }
     }
 }
