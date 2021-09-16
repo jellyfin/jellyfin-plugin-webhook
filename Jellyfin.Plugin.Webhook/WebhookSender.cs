@@ -7,6 +7,7 @@ using Jellyfin.Plugin.Webhook.Configuration;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
+using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
@@ -25,6 +26,7 @@ namespace Jellyfin.Plugin.Webhook
         private readonly ILogger<WebhookSender> _logger;
         private readonly IWebhookClient<DiscordOption> _discordClient;
         private readonly IWebhookClient<GenericOption> _genericClient;
+        private readonly IWebhookClient<GenericFormOption> _genericFormClient;
         private readonly IWebhookClient<GotifyOption> _gotifyClient;
         private readonly IWebhookClient<PushbulletOption> _pushbulletClient;
         private readonly IWebhookClient<PushoverOption> _pushoverClient;
@@ -37,6 +39,7 @@ namespace Jellyfin.Plugin.Webhook
         /// <param name="logger">Instance of the <see cref="ILogger{WebhookSender}"/> interface.</param>
         /// <param name="discordClient">Instance of <see cref="IWebhookClient{DiscordOption}"/>.</param>
         /// /// <param name="genericClient">Instance of the <see cref="IWebhookClient{GenericOption}"/>.</param>
+        /// <param name="genericFormClient">Instance of the <see cref="IWebhookClient{GenericFormOption}"/>.</param>
         /// <param name="gotifyClient">Instance of <see cref="IWebhookClient{GotifyOption}"/>.</param>
         /// <param name="pushbulletClient">Instance of the <see cref="IWebhookClient{PushbulletOption}"/>.</param>
         /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverOption}"/>.</param>
@@ -46,6 +49,7 @@ namespace Jellyfin.Plugin.Webhook
             ILogger<WebhookSender> logger,
             IWebhookClient<DiscordOption> discordClient,
             IWebhookClient<GenericOption> genericClient,
+            IWebhookClient<GenericFormOption> genericFormClient,
             IWebhookClient<GotifyOption> gotifyClient,
             IWebhookClient<PushbulletOption> pushbulletClient,
             IWebhookClient<PushoverOption> pushoverClient,
@@ -55,6 +59,7 @@ namespace Jellyfin.Plugin.Webhook
             _logger = logger;
             _discordClient = discordClient;
             _genericClient = genericClient;
+            _genericFormClient = genericFormClient;
             _gotifyClient = gotifyClient;
             _pushbulletClient = pushbulletClient;
             _pushoverClient = pushoverClient;
@@ -77,6 +82,12 @@ namespace Jellyfin.Plugin.Webhook
             foreach (var option in Configuration.GenericOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_genericClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
+            }
+
+            foreach (var option in Configuration.GenericFormOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_genericFormClient, option, itemData, itemType)
                     .ConfigureAwait(false);
             }
 

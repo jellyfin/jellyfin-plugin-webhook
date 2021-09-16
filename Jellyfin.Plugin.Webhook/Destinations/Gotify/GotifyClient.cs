@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Client for the <see cref="GotifyOption"/>.
+    /// </summary>
     public class GotifyClient : IWebhookClient<GotifyOption>
     {
         private readonly ILogger<GotifyClient> _logger;

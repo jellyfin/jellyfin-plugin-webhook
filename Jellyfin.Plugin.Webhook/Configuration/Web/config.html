@@ -23,6 +23,9 @@
             <button id="btnAddGeneric" is="emby-button" type="button" class="raised button block">
                 <span>Add Generic Destination</span>
             </button>
+            <button id="btnAddGenericForm" is="emby-button" type="button" class="raised button block">
+                <span>Add Generic Form Destination</span>
+            </button>
             <button id="btnAddGotify" is="emby-button" type="button" class="raised button block">
                 <span>Add Gotify Destination</span>
             </button>
@@ -219,7 +222,26 @@
         <div data-name="field-wrapper"></div>
     </template>
 
+    <template id="template-generic-form">
+        <button data-name="btnAddHeader" is="emby-button" type="button" class="raised button block">
+            <span>Add Request Header</span>
+        </button>
+        <div data-name="header-wrapper"></div>
+
+        <button data-name="btnAddField" is="emby-button" type="button" class="raised button block">
+            <span>Add Field</span>
+        </button>
+        <div data-name="field-wrapper"></div>
+    </template>
+
     <template id="template-generic-value">
+        <div class="inputContainer" data-name="value">
+            <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
+            <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>
+        </div>
+    </template>
+
+    <template id="template-generic-form-value">
         <div class="inputContainer" data-name="value">
             <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
             <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>

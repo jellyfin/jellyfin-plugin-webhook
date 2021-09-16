@@ -1,39 +1,37 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 
-namespace Jellyfin.Plugin.Webhook.Destinations.Generic
+namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
 {
     /// <summary>
-    /// Client for the <see cref="GenericOption"/>.
+    /// Client for the <see cref="GenericFormOption"/>.
     /// </summary>
-    public class GenericClient : IWebhookClient<GenericOption>
+    public class GenericFormClient : IWebhookClient<GenericFormOption>
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<GenericClient> _logger;
+        private readonly ILogger<GenericFormClient> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericClient"/> class.
+        /// Initializes a new instance of the <see cref="GenericFormClient"/> class.
         /// </summary>
         /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/>.</param>
-        /// <param name="logger">Instance of the <see cref="ILogger{GenericClient}"/> interface.</param>
-        public GenericClient(
+        /// <param name="logger">Instance of the <see cref="ILogger{GenericFormClient}"/> interface.</param>
+        public GenericFormClient(
             IHttpClientFactory httpClientFactory,
-            ILogger<GenericClient> logger)
+            ILogger<GenericFormClient> logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(GenericOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GenericFormOption options, Dictionary<string, object> data)
         {
             try
             {
@@ -59,9 +57,15 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                 }
 
                 var body = options.GetMessageBody(data);
+                var dictionaryBody = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
+                if (dictionaryBody is null)
+                {
+                    _logger.LogWarning("Body is null, unable to send webhook");
+                    return;
+                }
+
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
-                var contentType = MediaTypeNames.Text.Plain;
                 foreach (var header in options.Headers)
                 {
                     if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
@@ -69,19 +73,10 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                         continue;
                     }
 
-                    // Content-Type cannot be set manually, must be set on the content.
-                    if (string.Equals(HeaderNames.ContentType, header.Key, StringComparison.OrdinalIgnoreCase)
-                        && !string.IsNullOrEmpty(header.Value))
-                    {
-                        contentType = header.Value;
-                    }
-                    else
-                    {
-                        httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                    }
+                    httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
 
-                httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
+                httpRequestMessage.Content = new FormUrlEncodedContent(dictionaryBody!);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .SendAsync(httpRequestMessage)

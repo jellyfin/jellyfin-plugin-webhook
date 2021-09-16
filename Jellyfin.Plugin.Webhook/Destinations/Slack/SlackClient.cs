@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Slack
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Client for the <see cref="SlackOption"/>.
+    /// </summary>
     public class SlackClient : IWebhookClient<SlackOption>
     {
         private readonly ILogger<SlackClient> _logger;

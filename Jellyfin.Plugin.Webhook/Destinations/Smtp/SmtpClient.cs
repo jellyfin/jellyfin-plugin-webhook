@@ -6,7 +6,9 @@ using MimeKit;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Client for the <see cref="SmtpOption"/>.
+    /// </summary>
     public class SmtpClient : IWebhookClient<SmtpOption>
     {
         private readonly ILogger<SmtpClient> _logger;

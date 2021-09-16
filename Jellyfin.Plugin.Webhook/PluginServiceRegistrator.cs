@@ -4,6 +4,7 @@ using Jellyfin.Data.Events.Users;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
+using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
@@ -35,6 +36,7 @@ namespace Jellyfin.Plugin.Webhook
         {
             serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
             serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
+            serviceCollection.AddScoped<IWebhookClient<GenericFormOption>, GenericFormClient>();
             serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
             serviceCollection.AddScoped<IWebhookClient<PushbulletOption>, PushbulletClient>();
             serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();

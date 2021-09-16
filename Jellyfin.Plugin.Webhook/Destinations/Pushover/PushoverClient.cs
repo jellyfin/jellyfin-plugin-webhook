@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Client for the <see cref="PushoverOption"/>.
+    /// </summary>
     public class PushoverClient : IWebhookClient<PushoverOption>
     {
         private readonly ILogger<PushoverClient> _logger;
