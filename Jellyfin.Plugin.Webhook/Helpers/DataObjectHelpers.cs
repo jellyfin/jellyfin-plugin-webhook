@@ -55,6 +55,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             dataObject["UtcTimestamp"] = DateTime.UtcNow;
             dataObject["Name"] = item.Name.Escape();
             dataObject["Overview"] = item.Overview.Escape();
+            dataObject["Tagline"] = item.Tagline.Escape();
             dataObject["ItemId"] = item.Id;
             dataObject["ItemType"] = item.GetType().Name.Escape();
             dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;

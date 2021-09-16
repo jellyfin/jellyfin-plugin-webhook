@@ -50,6 +50,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Item name
     - Overview
         - Item overview
+    - Tagline
+        - Item tagline
     - ItemId
         - Item id
     - ItemType
