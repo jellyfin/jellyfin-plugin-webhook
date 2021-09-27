@@ -60,7 +60,8 @@
                 "UserDeleted": "User Deleted",
                 "UserLockedOut": "User Locked Out",
                 "UserPasswordChanged": "User Password Changed",
-                "UserUpdated": "User Updated"
+                "UserUpdated": "User Updated",
+                "UserDataSaved": "User Data Saved"
             },
             create: function (container, selected = []) {
                 const notificationTypeKeys = Object.keys(Webhook.notificationType.values).sort();
