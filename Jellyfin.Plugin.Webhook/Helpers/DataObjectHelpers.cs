@@ -326,6 +326,31 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         }
 
         /// <summary>
+        /// Add user item data.
+        /// </summary>
+        /// <param name="dataObject">The data object.</param>
+        /// <param name="userItemData">The user item data.</param>
+        /// <returns>The modified data object.</returns>
+        public static Dictionary<string, object> AddUserItemData(this Dictionary<string, object> dataObject, UserItemData userItemData)
+        {
+            dataObject["Likes"] = userItemData.Likes ?? false;
+            dataObject["Rating"] = userItemData.Rating ?? 0;
+            dataObject["PlaybackPositionTicks"] = userItemData.PlaybackPositionTicks;
+            dataObject["PlaybackPosition"] = TimeSpan.FromTicks(userItemData.PlaybackPositionTicks).ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
+            dataObject["PlayCount"] = userItemData.PlayCount;
+            dataObject["Favorite"] = userItemData.IsFavorite;
+            dataObject["Played"] = userItemData.Played;
+            dataObject["AudioStreamIndex"] = userItemData.AudioStreamIndex ?? -1;
+            dataObject["SubtitleStreamIndex"] = userItemData.SubtitleStreamIndex ?? -1;
+            if (userItemData.LastPlayedDate.HasValue)
+            {
+                dataObject["LastPlayedDate"] = userItemData.LastPlayedDate;
+            }
+
+            return dataObject;
+        }
+
+        /// <summary>
         /// Escape quotes for proper json.
         /// </summary>
         /// <param name="input">Input string.</param>

@@ -118,6 +118,11 @@
         /// <summary>
         /// User updated.
         /// </summary>
-        UserUpdated = 22
+        UserUpdated = 22,
+
+        /// <summary>
+        /// User data saved.
+        /// </summary>
+        UserDataSaved = 23
     }
 }
