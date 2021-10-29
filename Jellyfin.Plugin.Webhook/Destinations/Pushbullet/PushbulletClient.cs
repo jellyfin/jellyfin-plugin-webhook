@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -10,10 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
 {
-    /// <inheritdoc />/// <summary>
+    /// <summary>
     /// Client for the <see cref="PushbulletOption"/>.
     /// </summary>
-    public class PushbulletClient : IWebhookClient<PushbulletOption>
+    public class PushbulletClient : BaseClient, IWebhookClient<PushbulletOption>
     {
         private readonly ILogger<PushbulletClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -32,30 +31,24 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(PushbulletOption options, Dictionary<string, object> data)
+        public async Task SendAsync(PushbulletOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
-                data["PushbulletToken"] = options.Token;
-                data["PushbulletDeviceId"] = options.DeviceId;
-                data["PushbulletChannel"] = options.Channel;
+                data["PushbulletToken"] = option.Token;
+                data["PushbulletDeviceId"] = option.DeviceId;
+                data["PushbulletChannel"] = option.Channel;
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
 
-                using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(options.WebhookUri) ? PushbulletOption.ApiUrl : options.WebhookUri);
-                requestOptions.Headers.TryAddWithoutValidation("Access-Token", options.Token);
+                using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(option.WebhookUri) ? PushbulletOption.ApiUrl : option.WebhookUri);
+                requestOptions.Headers.TryAddWithoutValidation("Access-Token", option.Token);
                 requestOptions.Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
 
                 using var response = await _httpClientFactory

@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
     /// <summary>
     /// Client for the <see cref="GotifyOption"/>.
     /// </summary>
-    public class GotifyClient : IWebhookClient<GotifyOption>
+    public class GotifyClient : BaseClient, IWebhookClient<GotifyOption>
     {
         private readonly ILogger<GotifyClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -30,35 +30,29 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Gotify
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(GotifyOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GotifyOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (string.IsNullOrEmpty(options.WebhookUri))
+                if (string.IsNullOrEmpty(option.WebhookUri))
                 {
-                    throw new ArgumentException(nameof(options.WebhookUri));
+                    throw new ArgumentException(nameof(option.WebhookUri));
                 }
 
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
                 // Add gotify specific properties.
-                data["Priority"] = options.Priority;
+                data["Priority"] = option.Priority;
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(options.WebhookUri.TrimEnd() + $"/message?token={options.Token}"), content)
+                    .PostAsync(new Uri(option.WebhookUri.TrimEnd() + $"/message?token={option.Token}"), content)
                     .ConfigureAwait(false);
                 await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }

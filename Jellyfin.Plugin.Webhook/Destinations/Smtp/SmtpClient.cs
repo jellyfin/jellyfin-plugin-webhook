@@ -9,7 +9,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
     /// <summary>
     /// Client for the <see cref="SmtpOption"/>.
     /// </summary>
-    public class SmtpClient : IWebhookClient<SmtpOption>
+    public class SmtpClient : BaseClient, IWebhookClient<SmtpOption>
     {
         private readonly ILogger<SmtpClient> _logger;
 
@@ -23,37 +23,31 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Smtp
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(SmtpOption options, Dictionary<string, object> data)
+        public async Task SendAsync(SmtpOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(options.SenderAddress, options.SenderAddress));
-                message.To.Add(new MailboxAddress(options.ReceiverAddress, options.ReceiverAddress));
+                message.From.Add(new MailboxAddress(option.SenderAddress, option.SenderAddress));
+                message.To.Add(new MailboxAddress(option.ReceiverAddress, option.ReceiverAddress));
 
-                message.Subject = options.GetCompiledSubjectTemplate()(data);
-                message.Body = new TextPart(options.IsHtml ? "html" : "plain")
+                message.Subject = option.GetCompiledSubjectTemplate()(data);
+                message.Body = new TextPart(option.IsHtml ? "html" : "plain")
                 {
-                    Text = options.GetMessageBody(data)
+                    Text = option.GetMessageBody(data)
                 };
 
                 using var smtpClient = new MailKit.Net.Smtp.SmtpClient();
-                await smtpClient.ConnectAsync(options.SmtpServer, options.SmtpPort, options.UseSsl)
+                await smtpClient.ConnectAsync(option.SmtpServer, option.SmtpPort, option.UseSsl)
                     .ConfigureAwait(false);
-                if (options.UseCredentials)
+                if (option.UseCredentials)
                 {
-                    await smtpClient.AuthenticateAsync(options.Username, options.Password)
+                    await smtpClient.AuthenticateAsync(option.Username, option.Password)
                         .ConfigureAwait(false);
                 }
 

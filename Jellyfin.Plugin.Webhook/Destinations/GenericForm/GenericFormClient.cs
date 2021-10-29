@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -12,7 +11,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
     /// <summary>
     /// Client for the <see cref="GenericFormOption"/>.
     /// </summary>
-    public class GenericFormClient : IWebhookClient<GenericFormOption>
+    public class GenericFormClient : BaseClient, IWebhookClient<GenericFormOption>
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<GenericFormClient> _logger;
@@ -31,22 +30,16 @@ namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(GenericFormOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GenericFormOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
-                foreach (var field in options.Fields)
+                foreach (var field in option.Fields)
                 {
                     if (string.IsNullOrEmpty(field.Key) || string.IsNullOrEmpty(field.Value))
                     {
@@ -56,7 +49,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
                     data[field.Key] = field.Value;
                 }
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 var dictionaryBody = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
                 if (dictionaryBody is null)
                 {
@@ -65,8 +58,8 @@ namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
                 }
 
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
-                using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
-                foreach (var header in options.Headers)
+                using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);
+                foreach (var header in option.Headers)
                 {
                     if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
                     {
