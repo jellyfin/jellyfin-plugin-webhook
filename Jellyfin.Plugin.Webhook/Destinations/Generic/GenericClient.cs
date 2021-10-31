@@ -14,7 +14,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
     /// <summary>
     /// Client for the <see cref="GenericOption"/>.
     /// </summary>
-    public class GenericClient : IWebhookClient<GenericOption>
+    public class GenericClient : BaseClient, IWebhookClient<GenericOption>
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<GenericClient> _logger;
@@ -33,22 +33,16 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(GenericOption options, Dictionary<string, object> data)
+        public async Task SendAsync(GenericOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
-                foreach (var field in options.Fields)
+                foreach (var field in option.Fields)
                 {
                     if (string.IsNullOrEmpty(field.Key) || string.IsNullOrEmpty(field.Value))
                     {
@@ -58,11 +52,11 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Generic
                     data[field.Key] = field.Value;
                 }
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
-                using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, options.WebhookUri);
+                using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);
                 var contentType = MediaTypeNames.Text.Plain;
-                foreach (var header in options.Headers)
+                foreach (var header in option.Headers)
                 {
                     if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
                     {

@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
     /// <summary>
     /// Client for the <see cref="SlackOption"/>.
     /// </summary>
-    public class SlackClient : IWebhookClient<SlackOption>
+    public class SlackClient : BaseClient, IWebhookClient<SlackOption>
     {
         private readonly ILogger<SlackClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -30,36 +30,30 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Slack
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(SlackOption options, Dictionary<string, object> data)
+        public async Task SendAsync(SlackOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (string.IsNullOrEmpty(options.WebhookUri))
+                if (string.IsNullOrEmpty(option.WebhookUri))
                 {
-                    throw new ArgumentException(nameof(options.WebhookUri));
+                    throw new ArgumentException(nameof(option.WebhookUri));
                 }
 
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
-                data["SlackUsername"] = options.Username;
-                data["BotUsername"] = options.Username;
-                data["SlackIconUrl"] = options.IconUrl;
+                data["SlackUsername"] = option.Username;
+                data["BotUsername"] = option.Username;
+                data["SlackIconUrl"] = option.IconUrl;
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(options.WebhookUri), content)
+                    .PostAsync(new Uri(option.WebhookUri), content)
                     .ConfigureAwait(false);
                 await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }

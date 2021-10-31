@@ -11,8 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Discord
 {
-    /// <inheritdoc />
-    public class DiscordClient : IWebhookClient<DiscordOption>
+    /// <summary>
+    /// Client for the <see cref="DiscordOption"/>.
+    /// </summary>
+    public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
     {
         private readonly ILogger<DiscordClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -29,50 +31,44 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(DiscordOption options, Dictionary<string, object> data)
+        public async Task SendAsync(DiscordOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (string.IsNullOrEmpty(options.WebhookUri))
+                if (string.IsNullOrEmpty(option.WebhookUri))
                 {
-                    throw new ArgumentException(nameof(options.WebhookUri));
+                    throw new ArgumentException(nameof(option.WebhookUri));
                 }
 
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
                 // Add discord specific properties.
-                data["MentionType"] = GetMentionType(options.MentionType);
-                if (!string.IsNullOrEmpty(options.EmbedColor))
+                data["MentionType"] = GetMentionType(option.MentionType);
+                if (!string.IsNullOrEmpty(option.EmbedColor))
                 {
-                    data["EmbedColor"] = FormatColorCode(options.EmbedColor);
+                    data["EmbedColor"] = FormatColorCode(option.EmbedColor);
                 }
 
-                if (!string.IsNullOrEmpty(options.AvatarUrl))
+                if (!string.IsNullOrEmpty(option.AvatarUrl))
                 {
-                    data["AvatarUrl"] = options.AvatarUrl;
+                    data["AvatarUrl"] = option.AvatarUrl;
                 }
 
-                if (!string.IsNullOrEmpty(options.Username))
+                if (!string.IsNullOrEmpty(option.Username))
                 {
-                    data["Username"] = options.Username;
-                    data["BotUsername"] = options.Username;
+                    data["Username"] = option.Username;
+                    data["BotUsername"] = option.Username;
                 }
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(options.WebhookUri), content)
+                    .PostAsync(new Uri(option.WebhookUri), content)
                     .ConfigureAwait(false);
                 await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }

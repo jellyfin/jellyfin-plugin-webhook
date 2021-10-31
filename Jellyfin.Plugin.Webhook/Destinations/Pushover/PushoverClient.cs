@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
     /// <summary>
     /// Client for the <see cref="PushoverOption"/>.
     /// </summary>
-    public class PushoverClient : IWebhookClient<PushoverOption>
+    public class PushoverClient : BaseClient, IWebhookClient<PushoverOption>
     {
         private readonly ILogger<PushoverClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -30,59 +30,53 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Pushover
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(PushoverOption options, Dictionary<string, object> data)
+        public async Task SendAsync(PushoverOption option, Dictionary<string, object> data)
         {
             try
             {
-                if (options.UserFilter.Length != 0
-                    && data.TryGetValue("UserId", out var userIdObj)
-                    && userIdObj is Guid userId)
+                if (!SendWebhook(_logger, option, data))
                 {
-                    if (Array.IndexOf(options.UserFilter, userId) == -1)
-                    {
-                        _logger.LogDebug("UserId {UserId} not found in user filter, ignoring event", userId);
-                        return;
-                    }
+                    return;
                 }
 
-                data["Token"] = options.Token;
-                data["UserToken"] = options.UserToken;
-                if (!string.IsNullOrEmpty(options.Device))
+                data["Token"] = option.Token;
+                data["UserToken"] = option.UserToken;
+                if (!string.IsNullOrEmpty(option.Device))
                 {
-                    data["Device"] = options.Device;
+                    data["Device"] = option.Device;
                 }
 
-                if (!string.IsNullOrEmpty(options.Title))
+                if (!string.IsNullOrEmpty(option.Title))
                 {
-                    data["Title"] = options.Title;
+                    data["Title"] = option.Title;
                 }
 
-                if (!string.IsNullOrEmpty(options.MessageUrl))
+                if (!string.IsNullOrEmpty(option.MessageUrl))
                 {
-                    data["MessageUrl"] = options.MessageUrl;
+                    data["MessageUrl"] = option.MessageUrl;
                 }
 
-                if (!string.IsNullOrEmpty(options.MessageUrlTitle))
+                if (!string.IsNullOrEmpty(option.MessageUrlTitle))
                 {
-                    data["MessageUrlTitle"] = options.MessageUrlTitle;
+                    data["MessageUrlTitle"] = option.MessageUrlTitle;
                 }
 
-                if (options.MessagePriority is not null)
+                if (option.MessagePriority is not null)
                 {
-                    data["MessagePriority"] = options.MessagePriority;
+                    data["MessagePriority"] = option.MessagePriority;
                 }
 
-                if (!string.IsNullOrEmpty(options.NotificationSound))
+                if (!string.IsNullOrEmpty(option.NotificationSound))
                 {
-                    data["NotificationSound"] = options.NotificationSound;
+                    data["NotificationSound"] = option.NotificationSound;
                 }
 
-                var body = options.GetMessageBody(data);
+                var body = option.GetMessageBody(data);
                 _logger.LogDebug("SendAsync Body: {@Body}", body);
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .PostAsync(string.IsNullOrEmpty(options.WebhookUri) ? PushoverOption.ApiUrl : new Uri(options.WebhookUri), content)
+                    .PostAsync(string.IsNullOrEmpty(option.WebhookUri) ? PushoverOption.ApiUrl : new Uri(option.WebhookUri), content)
                     .ConfigureAwait(false);
                 await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }
