@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <FileVersion>2.0.0.0</FileVersion>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -19,7 +19,6 @@
 
     <ItemGroup>
         <PackageReference Include="MailKit" Version="2.15.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.*" PrivateAssets="All" />
         <PackageReference Include="SerilogAnalyzer" Version="0.15.0" PrivateAssets="All" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
         <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" PrivateAssets="All" />
