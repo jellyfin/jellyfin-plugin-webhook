@@ -24,5 +24,10 @@
         /// Gets or sets the mention type.
         /// </summary>
         public DiscordMentionType MentionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fake property.
+        /// </summary>
+        public int Fake { get; set; }
     }
 }
