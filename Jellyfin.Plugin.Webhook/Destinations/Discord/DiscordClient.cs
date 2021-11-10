@@ -80,7 +80,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Discord
 
         private static int FormatColorCode(string hexCode)
         {
-            return int.Parse(hexCode.Substring(1, 6), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            return int.Parse(hexCode[1..6], NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
         private static string GetMentionType(DiscordMentionType mentionType)
