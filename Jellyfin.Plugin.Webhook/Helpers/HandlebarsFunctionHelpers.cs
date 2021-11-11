@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using HandlebarsDotNet;
 
 namespace Jellyfin.Plugin.Webhook.Helpers
@@ -82,7 +83,7 @@ namespace Jellyfin.Plugin.Webhook.Helpers
             // UndefinedBindingResult means the parameter was a part of the provided dataset.
             return input is UndefinedBindingResult or null
                 ? null
-                : Convert.ToString(input);
+                : Convert.ToString(input, CultureInfo.InvariantCulture);
         }
     }
 }
