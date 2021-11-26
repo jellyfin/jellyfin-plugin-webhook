@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
-using MediaBrowser.Common;
+using MediaBrowser.Controller;
 using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Events.Session;
 
@@ -12,16 +12,16 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
     /// </summary>
     public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
     {
-        private readonly IApplicationHost _applicationHost;
+        private readonly IServerApplicationHost _applicationHost;
         private readonly IWebhookSender _webhookSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionStartNotifier"/> class.
         /// </summary>
-        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
+        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
         /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
         public SessionStartNotifier(
-            IApplicationHost applicationHost,
+            IServerApplicationHost applicationHost,
             IWebhookSender webhookSender)
         {
             _applicationHost = applicationHost;

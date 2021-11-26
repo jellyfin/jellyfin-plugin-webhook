@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
-using MediaBrowser.Common;
+using MediaBrowser.Controller;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Plugins;
 using Microsoft.Extensions.Logging;
@@ -15,7 +15,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier
     public class UserDataSavedNotifierEntryPoint : IServerEntryPoint
     {
         private readonly IWebhookSender _webhookSender;
-        private readonly IApplicationHost _applicationHost;
+        private readonly IServerApplicationHost _applicationHost;
         private readonly IUserDataManager _userDataManager;
         private readonly IUserManager _userManager;
         private readonly ILogger<UserDataSavedNotifierEntryPoint> _logger;
@@ -25,12 +25,12 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier
         /// </summary>
         /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
         /// <param name="userDataManager">Instance of the <see cref="IUserDataManager"/> interface.</param>
-        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
+        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
         /// <param name="logger">Instance of the <see cref="ILogger{UserDataChangedNotifierEntryPoint}"/> interface.</param>
         /// <param name="userManager">Instance of the <see cref="IUserManager"/> interface.</param>
         public UserDataSavedNotifierEntryPoint(
             IWebhookSender webhookSender,
-            IApplicationHost applicationHost,
+            IServerApplicationHost applicationHost,
             IUserDataManager userDataManager,
             ILogger<UserDataSavedNotifierEntryPoint> logger,
             IUserManager userManager)

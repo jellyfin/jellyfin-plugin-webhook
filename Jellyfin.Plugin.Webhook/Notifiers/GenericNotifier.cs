@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
-using MediaBrowser.Common;
+using MediaBrowser.Controller;
 using MediaBrowser.Controller.Notifications;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers
@@ -14,14 +14,14 @@ namespace Jellyfin.Plugin.Webhook.Notifiers
     public class GenericNotifier : INotificationService
     {
         private readonly IWebhookSender _webhookSender;
-        private readonly IApplicationHost _applicationHost;
+        private readonly IServerApplicationHost _applicationHost;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericNotifier"/> class.
         /// </summary>
         /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
-        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
-        public GenericNotifier(IWebhookSender webhookSender, IApplicationHost applicationHost)
+        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
+        public GenericNotifier(IWebhookSender webhookSender, IServerApplicationHost applicationHost)
         {
             _webhookSender = webhookSender;
             _applicationHost = applicationHost;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
-using MediaBrowser.Common;
+using MediaBrowser.Controller;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.TV;
@@ -23,14 +23,14 @@ namespace Jellyfin.Plugin.Webhook.Helpers
         /// <summary>
         /// Gets the default data object.
         /// </summary>
-        /// <param name="applicationHost">Instance of the <see cref="IApplicationHost"/> interface.</param>
+        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
         /// <param name="notificationType">The notification type.</param>
         /// <returns>The default data object.</returns>
-        public static Dictionary<string, object> GetBaseDataObject(IApplicationHost applicationHost, NotificationType notificationType)
+        public static Dictionary<string, object> GetBaseDataObject(IServerApplicationHost applicationHost, NotificationType notificationType)
         {
             var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             dataObject["ServerId"] = applicationHost.SystemId;
-            dataObject["ServerName"] = applicationHost.Name.Escape();
+            dataObject["ServerName"] = applicationHost.FriendlyName.Escape();
             dataObject["ServerVersion"] = applicationHost.ApplicationVersionString;
             dataObject["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096";
             dataObject[nameof(NotificationType)] = notificationType.ToString();
