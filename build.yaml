@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "9"
-targetAbi: "10.8.0.0"
+version: "10"
+targetAbi: "10.7.7.0"
 framework: "net6.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -18,8 +18,12 @@ artifacts:
   - "BouncyCastle.Crypto.dll"
 changelog: |2-
   ### Bug Fixes ###
-  - Don't filter on userId for UserCreated notification type (#76) @crobibero
+  - Pull correct ServerName (#85) @crobibero
 
   ### Code or Repo Maintenance ###
-  - Fix CI (#79) @crobibero
-  - 10.8 support (#69) @crobibero
+  - Update ruleset, fix new warnings (#82) @crobibero
+
+  ### Dependency updates ###
+  - chore(deps): update Microsoft.Extensions.Http requirement from 5.* to 6.* (#80) @dependabot
+  - chore(deps): bump Handlebars.Net from 2.0.9 to 2.0.10 (#92) @dependabot
+  - chore(deps): bump MailKit from 2.15.0 to 3.0.0 (#91) @dependabot
