@@ -1,0 +1,14 @@
+name: '🚀 Publish Plugin'
+
+on:
+  release:
+    types:
+      - released
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: jellyfin/jellyfin-meta-plugins/.github/workflows/publish.yaml@master
+    with:
+      version: ${{ github.event.release.tag_name }}
+      is-unstable: ${{ github.event.release.prerelease }}
