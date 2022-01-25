@@ -16,6 +16,25 @@
 </a>
 </p>
 
+## Debugging:
+#### My webhook isn't working!
+Change your `logging.json` file to output `debug` logs for `Jellyfin.Plugin.Webhook`. Make sure to add a comma to the end of `"System": "Warning"`
+```diff
+{
+    "Serilog": {
+        "MinimumLevel": {
+            "Default": "Information",
+            "Override": {
+                "Microsoft": "Warning",
+                "System": "Warning",
++               "Jellyfin.Plugin.Webhook": "Debug"
+            }
+        }
+
+```
+
+
+## Documentation:
 Use [Handlebars](https://handlebarsjs.com/guide/) templating engine to format notifications however you wish.
 
 See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
