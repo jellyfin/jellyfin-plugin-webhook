@@ -7,7 +7,7 @@ on:
       - created
 
 jobs:
-  dispatch:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/command-dispatch.yaml@master
     secrets:
       token: ${{ secrets.JF_BOT_TOKEN }}

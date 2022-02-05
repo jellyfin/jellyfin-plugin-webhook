@@ -12,7 +12,7 @@ on:
       - update-prep-command
 
 jobs:
-  update_release_draft:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/changelog.yaml@master
     with:
       repository-name: h1dden-da3m0n/jeff-automation-test

@@ -14,5 +14,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/build.yaml@master

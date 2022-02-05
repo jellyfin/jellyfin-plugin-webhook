@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  labels:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/sync-labels.yaml@master
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}

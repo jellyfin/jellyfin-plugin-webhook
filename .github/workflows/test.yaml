@@ -14,5 +14,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/test.yaml@master

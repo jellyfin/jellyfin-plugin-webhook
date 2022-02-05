@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/publish.yaml@master
     with:
       version: ${{ github.event.release.tag_name }}
