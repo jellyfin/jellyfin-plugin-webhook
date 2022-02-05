@@ -17,4 +17,4 @@ jobs:
     with:
       repository-name: h1dden-da3m0n/jeff-automation-test
     secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+      token: ${{ secrets.JF_BOT_TOKEN }}
