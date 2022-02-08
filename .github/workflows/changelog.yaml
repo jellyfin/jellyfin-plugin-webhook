@@ -15,6 +15,6 @@ jobs:
   call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/changelog.yaml@master
     with:
-      repository-name: h1dden-da3m0n/jeff-automation-test
+      repository-name: jellyfin/jellyfin-plugin-webhook
     secrets:
       token: ${{ secrets.JF_BOT_TOKEN }}
