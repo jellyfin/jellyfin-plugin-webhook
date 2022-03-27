@@ -51,7 +51,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier
         public bool IsLogged => false;
 
         /// <inheritdoc />
-        public Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
+        public Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
         {
             return _itemAddedManager.ProcessItemsAsync();
         }
