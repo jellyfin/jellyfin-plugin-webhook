@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "11"
+version: "12"
 targetAbi: "10.8.0.0"
 framework: "net6.0"
 owner: "jellyfin"
@@ -16,7 +16,7 @@ artifacts:
   - "MailKit.dll"
   - "MimeKit.dll"
   - "BouncyCastle.Crypto.dll"
-changelog: |2-
+changelog: |-
   ### Code or Repo Maintenance ###
   - Fix scheduled task (#106) @crobibero
   - chore(deps): bump Handlebars.Net from 2.0.10 to 2.1.0 (#101) @dependabot
