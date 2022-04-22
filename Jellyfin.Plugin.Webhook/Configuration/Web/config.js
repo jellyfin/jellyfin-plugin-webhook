@@ -542,7 +542,7 @@
                 const baseConfig = Webhook.baseConfig.addConfig(template, "SMTP", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
-                // Load configuration 
+                // Load configuration
                 Webhook.smtp.setConfig(config, baseConfig);
             },
             setConfig: function (config, element) {
@@ -574,6 +574,9 @@
             }
         },
         init: async function () {
+            // Clear any previously loaded configuration.
+            Webhook.configurationWrapper.innerHTML = "";
+
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
