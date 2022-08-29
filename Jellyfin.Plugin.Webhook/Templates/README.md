@@ -20,7 +20,7 @@ application/json
 ### Ntfy
 Webhook URL:
 ```
-https://ntf.sh
+https://ntfy.sh
 
 #or
 
