@@ -1,5 +1,5 @@
-##Templates
-####Telegram
+## Templates
+### Telegram
 Webhook URL:
 ```
 https://api.telegram.org/bot<id>:<token>/sendPhoto
@@ -17,7 +17,7 @@ Value:
 application/json
 ```
 
-####Ntfy
+### Ntfy
 Webhook URL:
 ```
 https://ntf.sh
