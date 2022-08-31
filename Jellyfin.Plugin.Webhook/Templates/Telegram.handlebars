@@ -1,0 +1,14 @@
+{"chat_id":"{{chatid}}",   
+"photo":"{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+   {{#if_equals ItemType 'Season'}}
+       "caption": "<b>{{ItemType}} Now Available</b>\n\n<b>{{{SeriesName}}} ({{Year}})</b>\n<b><em>{{{Name}}}</em></b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
+   {{else}}
+       {{#if_equals ItemType 'Episode'}}
+           "caption": "<b>Episode Now Available</b>\n\n<b>{{{SeriesName}}} ({{Year}})</b>\n<b>S{{SeasonNumber00}}E{{EpisodeNumber00}}</b> - <b><em>{{{Name}}}</em></b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
+    {{else}}
+       "caption": "<b>{{ItemType}} Now Available</b>\n\n<b>{{{Name}}} ({{Year}})</b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
+   {{/if_equals}}
+{{/if_equals}},
+"parse_mode": "html",
+"disable_notification":"true","protect_content":"true"
+}

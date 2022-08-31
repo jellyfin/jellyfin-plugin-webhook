@@ -1,0 +1,47 @@
+{        
+    "topic": "jellyfin",
+    "tags": ["octopus"],
+    {{#if_equals NotificationType 'PlaybackStart'}}    
+        "title": "{{{NotificationUsername}}} Playback Started",
+        "priority": 3,
+        "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
+            {{#if_equals ItemType 'Episode'}}
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}",
+            {{else}}
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}",
+            {{/if_equals}}   
+    {{/if_equals}}
+    
+    {{#if_equals NotificationType 'PlaybackStop'}}  
+        "title": "{{{NotificationUsername}}} Playback Stopped",
+        "priority": 3,
+        "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
+            {{#if_equals ItemType 'Episode'}}
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}",
+            {{else}}
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}",
+            {{/if_equals}}   
+    {{/if_equals}}    
+    
+    {{#if_equals NotificationType 'ItemAdded'}}  
+    "priority": 3,
+    "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",    
+        {{#if_equals ItemType 'Movie'}}
+            "title": "Movie Added",
+            "message": "{{ItemType}} Now Available\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+        {{/if_equals}}    
+        {{#if_equals ItemType 'Season'}}
+            "title": "Season Added",
+            "message": "{{ItemType}} Now Available\n\n{{{SeriesName}}} ({{Year}})\n{{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+        {{else}}
+            "title": "Episode Added",
+            "message": "Episode Now Available\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+        {{/if_equals}}
+    {{/if_equals}}
+    
+    {{#if_equals NotificationType 'PendingRestart'}}
+        "title": "Jellyfin Restart Required",
+        "priority": 4,
+        "message": "Jellyfin needs to be restarted, please restart jellyfin as soon as possible!"
+    {{/if_equals}}
+}
