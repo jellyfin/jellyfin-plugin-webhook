@@ -6,6 +6,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -19,6 +20,7 @@ using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Events.Session;
 using MediaBrowser.Controller.Events.Updates;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Plugins;
 using MediaBrowser.Controller.Session;
 using MediaBrowser.Controller.Subtitles;
 using MediaBrowser.Model.Tasks;
@@ -42,9 +44,16 @@ namespace Jellyfin.Plugin.Webhook
             serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
             serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
             serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
+            serviceCollection.AddScoped<IWebhookClient<MqttOption>, MqttClient>();
 
             // Register sender.
             serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
+
+            // Register Server Entry Point
+            serviceCollection.AddScoped<IServerEntryPoint, WebhookServerEntryPoint>();
+
+            // Register MqttClients
+            serviceCollection.AddSingleton<IMqttClients, MqttClients>();
 
             /*-- Register event consumers. --*/
             // Library consumers.

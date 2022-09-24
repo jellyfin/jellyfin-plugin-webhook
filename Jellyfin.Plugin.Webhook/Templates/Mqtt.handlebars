@@ -1,0 +1,28 @@
+﻿{
+  "DeviceId": "{{DeviceId}}",
+  "DeviceName": "{{DeviceName}}",
+  "ClientName": "{{ClientName}}",
+  "ItemId": "{{ItemId}}",
+  "RunTime": "{{RunTime}}",
+  "PlaybackPosition": "{{PlaybackPosition}}",
+{{#if_equals NotificationType 'PlaybackStart'}}
+    "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
+    "thumbnail": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+    "backdrop": "{{ServerUrl}}/Items/{{ItemId}}/Images/Backdrop",
+    "logo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Logo",
+    "Name": "{{Name}}",
+{{#if_equals ItemType 'Episode'}}
+        "SeriesName": "{{SeriesName}}",
+        "SeasonNumber": "{{SeasonNumber}}",
+        "EpisodeNumber": "{{EpisodeNumber}}"
+{{else}}
+        "Year": {{Year}}
+{{/if_equals}}
+{{/if_equals}}
+{{#if_equals NotificationType 'PlaybackStop'}}
+    "PlayedToCompletion": "{{PlayedToCompletion}}"
+{{/if_equals}}
+{{#if_equals NotificationType 'PlaybackProgress'}}
+    "IsPaused": "{{IsPaused}}"
+{{/if_equals}}
+}

@@ -3,6 +3,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -30,6 +31,7 @@ namespace Jellyfin.Plugin.Webhook.Configuration
             PushoverOptions = Array.Empty<PushoverOption>();
             SlackOptions = Array.Empty<SlackOption>();
             SmtpOptions = Array.Empty<SmtpOption>();
+            MqttOptions = Array.Empty<MqttOption>();
         }
 
         /// <summary>
@@ -76,5 +78,10 @@ namespace Jellyfin.Plugin.Webhook.Configuration
         /// Gets or sets the smtp options.
         /// </summary>
         public SmtpOption[] SmtpOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mqtt options.
+        /// </summary>
+        public MqttOption[] MqttOptions { get; set; }
     }
 }

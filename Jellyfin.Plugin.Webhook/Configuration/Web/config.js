@@ -573,6 +573,45 @@
                 return config;
             }
         },
+        mqtt: {
+            btnAdd: document.querySelector("#btnAddMqtt"),
+            template: document.querySelector("#template-mqtt"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "mqtt";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.mqtt.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "MQTT", config.WebhookName);
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration
+                Webhook.mqtt.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtMqttServer]").value = config.MqttServer || "";
+                element.querySelector("[data-name=txtMqttPort]").value = config.MqttPort || 1883;
+                element.querySelector("[data-name=txtTopic]").value = Webhook.atou(config.Topic || "");
+                element.querySelector("[data-name=chkUseCredentials]").checked = config.UseCredentials || false;
+                element.querySelector("[data-name=txtUsername]").value = config.Username || "";
+                element.querySelector("[data-name=txtPassword]").value = config.Password || "";
+                element.querySelector("[data-name=chkUseTls]").checked = config.UseTls || false;
+                element.querySelector("[data-name=ddlQosLevel]").value = config.QosLevel || "AtMostOnce";
+            },
+            getConfig: function (element) {
+                const config = Webhook.baseConfig.getConfig(element);
+                config.MqttServer = element.querySelector("[data-name=txtMqttServer]").value || "";
+                config.MqttPort = element.querySelector("[data-name=txtMqttPort]").value || 1883;
+                config.Topic = Webhook.utoa(element.querySelector("[data-name=txtTopic]").value || "");
+                config.UseCredentials = element.querySelector("[data-name=chkUseCredentials]").checked || false;
+                config.Username = element.querySelector("[data-name=txtUsername]").value || "";
+                config.Password = element.querySelector("[data-name=txtPassword]").value || "";
+                config.UseTls = element.querySelector("[data-name=chkUseTls]").checked || false;
+                config.QosLevel = element.querySelector("[data-name=ddlQosLevel]").value || "";
+                return config;
+            }
+        },
         init: async function () {
             // Clear any previously loaded configuration.
             Webhook.configurationWrapper.innerHTML = "";
@@ -586,6 +625,7 @@
             Webhook.pushover.btnAdd.addEventListener("click", Webhook.pushover.addConfig);
             Webhook.slack.btnAdd.addEventListener("click", Webhook.slack.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
+            Webhook.mqtt.btnAdd.addEventListener("click", Webhook.mqtt.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
             await Webhook.userFilter.populate();
@@ -650,6 +690,12 @@
                 config.SmtpOptions.push(Webhook.smtp.getConfig(smtpConfigs[i]));
             }
 
+            config.MqttOptions = [];
+            const mqttConfigs = document.querySelectorAll("[data-type=mqtt]");
+            for (let i = 0; i < mqttConfigs.length; i++) {
+                config.MqttOptions.push(Webhook.mqtt.getConfig(mqttConfigs[i]));
+            }
+
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
         loadConfig: function () {
@@ -687,6 +733,10 @@
 
                 for (let i = 0; i < config.SmtpOptions.length; i++) {
                     Webhook.smtp.addConfig(config.SmtpOptions[i]);
+                }
+
+                for (let i = 0; i < config.MqttOptions.length; i++) {
+                    Webhook.mqtt.addConfig(config.MqttOptions[i]);
                 }
             });
 
