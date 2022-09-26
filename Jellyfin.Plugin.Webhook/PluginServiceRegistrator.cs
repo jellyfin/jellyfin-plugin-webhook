@@ -20,7 +20,6 @@ using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Events.Session;
 using MediaBrowser.Controller.Events.Updates;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Controller.Plugins;
 using MediaBrowser.Controller.Session;
 using MediaBrowser.Controller.Subtitles;
 using MediaBrowser.Model.Tasks;
@@ -48,9 +47,6 @@ namespace Jellyfin.Plugin.Webhook
 
             // Register sender.
             serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
-
-            // Register Server Entry Point
-            serviceCollection.AddScoped<IServerEntryPoint, WebhookServerEntryPoint>();
 
             // Register MqttClients
             serviceCollection.AddSingleton<IMqttClients, MqttClients>();

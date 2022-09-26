@@ -44,9 +44,10 @@ public class WebhookServerEntryPoint : IServerEntryPoint
     /// <summary>
     /// Dispose.
     /// </summary>
-    /// <param name="disposeAll">somthing.</param>
+    /// <param name="disposeAll">Dispose of objects.</param>
     protected virtual void Dispose(bool disposeAll)
     {
+        WebhookPlugin.Instance!.ConfigurationChanged -= ConfigurationChanged;
     }
 
     /// <summary>
