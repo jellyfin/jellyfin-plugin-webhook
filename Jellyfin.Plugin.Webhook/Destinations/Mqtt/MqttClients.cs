@@ -76,7 +76,7 @@ public class MqttClients : IMqttClients, IDisposable
         }
         catch (Exception e)
         {
-            _logger.LogDebug(e, "Error adding/starting MQTT Clients");
+            _logger.LogWarning(e, "Error adding/starting MQTT Clients");
         }
     }
 
