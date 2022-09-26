@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
@@ -14,7 +15,7 @@ namespace Jellyfin.Plugin.Webhook.Destinations.Mqtt;
 public class MqttClients : IMqttClients, IDisposable
 {
     private readonly ILogger<MqttClients> _logger;
-    private readonly Dictionary<Guid, IManagedMqttClient> _managedMqttClients = new ();
+    private readonly Dictionary<Guid, IManagedMqttClient> _managedMqttClients = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MqttClients"/> class.
@@ -30,15 +31,12 @@ public class MqttClients : IMqttClients, IDisposable
     {
         try
         {
-            foreach (var client in _managedMqttClients.Values)
+            foreach (var client in _managedMqttClients.Values.Where(c => c.IsConnected))
             {
-                if (client.IsConnected)
-                {
-                    await client.StopAsync().ConfigureAwait(false);
-                    client.ConnectingFailedAsync -= Client_ConnectingFailedAsync;
-                    client.ConnectedAsync -= Client_ConnectedAsync;
-                    client.DisconnectedAsync -= Client_DisconnectedAsync;
-                }
+                await client.StopAsync().ConfigureAwait(false);
+                client.ConnectingFailedAsync -= Client_ConnectingFailedAsync;
+                client.ConnectedAsync -= Client_ConnectedAsync;
+                client.DisconnectedAsync -= Client_DisconnectedAsync;
             }
 
             _managedMqttClients.Clear();
@@ -78,27 +76,27 @@ public class MqttClients : IMqttClients, IDisposable
         }
         catch (Exception e)
         {
-            _logger.LogWarning(e, "Error adding/starting MQTT Clients");
+            _logger.LogDebug(e, "Error adding/starting MQTT Clients");
         }
     }
 
     private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
     {
         var message = arg.Reason;
-        _logger.LogWarning(arg.Exception, "MQTT Client disconnected. Exception: {@message}", message);
+        _logger.LogDebug(arg.Exception, "MQTT Client disconnected. Exception: {@message}", message);
 
         return Task.CompletedTask;
     }
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
     {
-        _logger.LogWarning("MQTT Client connected.");
+        _logger.LogDebug("MQTT Client connected.");
         return Task.CompletedTask;
     }
 
     private Task Client_ConnectingFailedAsync(ConnectingFailedEventArgs arg)
     {
-        _logger.LogWarning(arg.Exception, "MQTT Client connection failed.");
+        _logger.LogDebug(arg.Exception, "MQTT Client connection failed.");
         return Task.CompletedTask;
     }
 

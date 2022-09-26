@@ -49,9 +49,7 @@ public class MqttClient : BaseClient, IWebhookClient<MqttOption>
         }
         catch (Exception e)
         {
-            _logger.LogWarning(e, "Error sending MQTT notification");
+            _logger.LogDebug(e, "Error sending MQTT notification");
         }
-
-        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

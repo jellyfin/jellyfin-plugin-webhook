@@ -31,10 +31,6 @@
       <EmbeddedResource Include="Configuration\Web\config.js" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Destinations\Mqtt\" />
-    </ItemGroup>
-
     <PropertyGroup>
         <CodeAnalysisRuleSet>../jellyfin.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
