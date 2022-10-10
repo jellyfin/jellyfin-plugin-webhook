@@ -8,6 +8,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
 using Jellyfin.Plugin.Webhook.Destinations.Gotify;
+using Jellyfin.Plugin.Webhook.Destinations.Mqtt;
 using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
@@ -31,6 +32,7 @@ namespace Jellyfin.Plugin.Webhook
         private readonly IWebhookClient<PushoverOption> _pushoverClient;
         private readonly IWebhookClient<SlackOption> _slackClient;
         private readonly IWebhookClient<SmtpOption> _smtpClient;
+        private readonly IWebhookClient<MqttOption> _mqttClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookSender"/> class.
@@ -44,6 +46,7 @@ namespace Jellyfin.Plugin.Webhook
         /// <param name="pushoverClient">Instance of the <see cref="IWebhookClient{PushoverOption}"/>.</param>
         /// <param name="slackClient">Instance of the <see cref="IWebhookClient{SlackOption}"/>.</param>
         /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
+        /// <param name="mqttClient">Instance of the <see cref="IWebhookClient{mqttClient}"/>.</param>
         public WebhookSender(
             ILogger<WebhookSender> logger,
             IWebhookClient<DiscordOption> discordClient,
@@ -53,7 +56,8 @@ namespace Jellyfin.Plugin.Webhook
             IWebhookClient<PushbulletOption> pushbulletClient,
             IWebhookClient<PushoverOption> pushoverClient,
             IWebhookClient<SlackOption> slackClient,
-            IWebhookClient<SmtpOption> smtpClient)
+            IWebhookClient<SmtpOption> smtpClient,
+            IWebhookClient<MqttOption> mqttClient)
         {
             _logger = logger;
             _discordClient = discordClient;
@@ -64,6 +68,7 @@ namespace Jellyfin.Plugin.Webhook
             _pushoverClient = pushoverClient;
             _slackClient = slackClient;
             _smtpClient = smtpClient;
+            _mqttClient = mqttClient;
         }
 
         private static PluginConfiguration Configuration =>
@@ -117,6 +122,12 @@ namespace Jellyfin.Plugin.Webhook
             foreach (var option in Configuration.SmtpOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
             {
                 await SendNotification(_smtpClient, option, itemData, itemType)
+                    .ConfigureAwait(false);
+            }
+
+            foreach (var option in Configuration.MqttOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+            {
+                await SendNotification(_mqttClient, option, itemData, itemType)
                     .ConfigureAwait(false);
             }
         }

@@ -16,6 +16,8 @@ artifacts:
   - "MailKit.dll"
   - "MimeKit.dll"
   - "BouncyCastle.Crypto.dll"
+  - "MQTTnet.dll"
+  - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-
   ### Code or Repo Maintenance ###
   - Fix scheduled task (#106) @crobibero
