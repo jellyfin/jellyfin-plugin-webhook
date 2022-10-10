@@ -1,29 +1,28 @@
 using System;
 
-namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm
+namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm;
+
+/// <summary>
+/// Generic form webhook options.
+/// </summary>
+public class GenericFormOption : BaseOption
 {
     /// <summary>
-    /// Generic form webhook options.
+    /// Initializes a new instance of the <see cref="GenericFormOption"/> class.
     /// </summary>
-    public class GenericFormOption : BaseOption
+    public GenericFormOption()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericFormOption"/> class.
-        /// </summary>
-        public GenericFormOption()
-        {
-            Headers = Array.Empty<GenericFormOptionValue>();
-            Fields = Array.Empty<GenericFormOptionValue>();
-        }
-
-        /// <summary>
-        /// Gets or sets the headers.
-        /// </summary>
-        public GenericFormOptionValue[] Headers { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fields.
-        /// </summary>
-        public GenericFormOptionValue[] Fields { get; set; }
+        Headers = Array.Empty<GenericFormOptionValue>();
+        Fields = Array.Empty<GenericFormOptionValue>();
     }
+
+    /// <summary>
+    /// Gets or sets the headers.
+    /// </summary>
+    public GenericFormOptionValue[] Headers { get; set; }
+
+    /// <summary>
+    /// Gets or sets the fields.
+    /// </summary>
+    public GenericFormOptionValue[] Fields { get; set; }
 }

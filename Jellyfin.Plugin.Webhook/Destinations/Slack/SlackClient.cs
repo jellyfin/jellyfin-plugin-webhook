@@ -8,59 +8,58 @@ using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
-namespace Jellyfin.Plugin.Webhook.Destinations.Slack
+namespace Jellyfin.Plugin.Webhook.Destinations.Slack;
+
+/// <summary>
+/// Client for the <see cref="SlackOption"/>.
+/// </summary>
+public class SlackClient : BaseClient, IWebhookClient<SlackOption>
 {
+    private readonly ILogger<SlackClient> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+
     /// <summary>
-    /// Client for the <see cref="SlackOption"/>.
+    /// Initializes a new instance of the <see cref="SlackClient"/> class.
     /// </summary>
-    public class SlackClient : BaseClient, IWebhookClient<SlackOption>
+    /// <param name="logger">Instance of the <see cref="ILogger{SlackClient}"/> interface.</param>
+    /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/>.</param>
+    public SlackClient(ILogger<SlackClient> logger, IHttpClientFactory httpClientFactory)
     {
-        private readonly ILogger<SlackClient> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
+        _logger = logger;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SlackClient"/> class.
-        /// </summary>
-        /// <param name="logger">Instance of the <see cref="ILogger{SlackClient}"/> interface.</param>
-        /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/>.</param>
-        public SlackClient(ILogger<SlackClient> logger, IHttpClientFactory httpClientFactory)
+    /// <inheritdoc />
+    public async Task SendAsync(SlackOption option, Dictionary<string, object> data)
+    {
+        try
         {
-            _logger = logger;
-            _httpClientFactory = httpClientFactory;
+            if (string.IsNullOrEmpty(option.WebhookUri))
+            {
+                throw new ArgumentException(nameof(option.WebhookUri));
+            }
+
+            if (!SendWebhook(_logger, option, data))
+            {
+                return;
+            }
+
+            data["SlackUsername"] = option.Username;
+            data["BotUsername"] = option.Username;
+            data["SlackIconUrl"] = option.IconUrl;
+
+            var body = option.GetMessageBody(data);
+            _logger.LogDebug("SendAsync Body: {@Body}", body);
+            using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+            using var response = await _httpClientFactory
+                .CreateClient(NamedClient.Default)
+                .PostAsync(new Uri(option.WebhookUri), content)
+                .ConfigureAwait(false);
+            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
         }
-
-        /// <inheritdoc />
-        public async Task SendAsync(SlackOption option, Dictionary<string, object> data)
+        catch (HttpRequestException e)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(option.WebhookUri))
-                {
-                    throw new ArgumentException(nameof(option.WebhookUri));
-                }
-
-                if (!SendWebhook(_logger, option, data))
-                {
-                    return;
-                }
-
-                data["SlackUsername"] = option.Username;
-                data["BotUsername"] = option.Username;
-                data["SlackIconUrl"] = option.IconUrl;
-
-                var body = option.GetMessageBody(data);
-                _logger.LogDebug("SendAsync Body: {@Body}", body);
-                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-                using var response = await _httpClientFactory
-                    .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(option.WebhookUri), content)
-                    .ConfigureAwait(false);
-                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
-            }
-            catch (HttpRequestException e)
-            {
-                _logger.LogWarning(e, "Error sending notification");
-            }
+            _logger.LogWarning(e, "Error sending notification");
         }
     }
 }

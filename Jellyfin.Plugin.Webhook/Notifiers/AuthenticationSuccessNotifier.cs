@@ -6,43 +6,42 @@ using MediaBrowser.Controller;
 using MediaBrowser.Controller.Authentication;
 using MediaBrowser.Controller.Events;
 
-namespace Jellyfin.Plugin.Webhook.Notifiers
+namespace Jellyfin.Plugin.Webhook.Notifiers;
+
+/// <summary>
+/// Authentication success notifier.
+/// </summary>
+public class AuthenticationSuccessNotifier : IEventConsumer<GenericEventArgs<AuthenticationResult>>
 {
+    private readonly IServerApplicationHost _applicationHost;
+    private readonly IWebhookSender _webhookSender;
+
     /// <summary>
-    /// Authentication success notifier.
+    /// Initializes a new instance of the <see cref="AuthenticationSuccessNotifier"/> class.
     /// </summary>
-    public class AuthenticationSuccessNotifier : IEventConsumer<GenericEventArgs<AuthenticationResult>>
+    /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
+    /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
+    public AuthenticationSuccessNotifier(
+        IServerApplicationHost applicationHost,
+        IWebhookSender webhookSender)
     {
-        private readonly IServerApplicationHost _applicationHost;
-        private readonly IWebhookSender _webhookSender;
+        _applicationHost = applicationHost;
+        _webhookSender = webhookSender;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthenticationSuccessNotifier"/> class.
-        /// </summary>
-        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
-        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
-        public AuthenticationSuccessNotifier(
-            IServerApplicationHost applicationHost,
-            IWebhookSender webhookSender)
+    /// <inheritdoc />
+    public async Task OnEvent(GenericEventArgs<AuthenticationResult> eventArgs)
+    {
+        if (eventArgs.Argument is null)
         {
-            _applicationHost = applicationHost;
-            _webhookSender = webhookSender;
+            return;
         }
 
-        /// <inheritdoc />
-        public async Task OnEvent(GenericEventArgs<AuthenticationResult> eventArgs)
-        {
-            if (eventArgs.Argument is null)
-            {
-                return;
-            }
+        var dataObject = DataObjectHelpers
+            .GetBaseDataObject(_applicationHost, NotificationType.AuthenticationSuccess)
+            .AddUserData(eventArgs.Argument.User);
 
-            var dataObject = DataObjectHelpers
-                .GetBaseDataObject(_applicationHost, NotificationType.AuthenticationSuccess)
-                .AddUserData(eventArgs.Argument.User);
-
-            await _webhookSender.SendNotification(NotificationType.AuthenticationSuccess, dataObject)
-                .ConfigureAwait(false);
-        }
+        await _webhookSender.SendNotification(NotificationType.AuthenticationSuccess, dataObject)
+            .ConfigureAwait(false);
     }
 }
