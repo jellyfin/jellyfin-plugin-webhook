@@ -5,42 +5,41 @@ using MediaBrowser.Controller;
 using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Subtitles;
 
-namespace Jellyfin.Plugin.Webhook.Notifiers
+namespace Jellyfin.Plugin.Webhook.Notifiers;
+
+/// <summary>
+/// Subtitle download failure notifier.
+/// </summary>
+public class SubtitleDownloadFailureNotifier : IEventConsumer<SubtitleDownloadFailureEventArgs>
 {
+    private readonly IServerApplicationHost _applicationHost;
+    private readonly IWebhookSender _webhookSender;
+
     /// <summary>
-    /// Subtitle download failure notifier.
+    /// Initializes a new instance of the <see cref="SubtitleDownloadFailureNotifier"/> class.
     /// </summary>
-    public class SubtitleDownloadFailureNotifier : IEventConsumer<SubtitleDownloadFailureEventArgs>
+    /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
+    /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
+    public SubtitleDownloadFailureNotifier(
+        IServerApplicationHost applicationHost,
+        IWebhookSender webhookSender)
     {
-        private readonly IServerApplicationHost _applicationHost;
-        private readonly IWebhookSender _webhookSender;
+        _applicationHost = applicationHost;
+        _webhookSender = webhookSender;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SubtitleDownloadFailureNotifier"/> class.
-        /// </summary>
-        /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
-        /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
-        public SubtitleDownloadFailureNotifier(
-            IServerApplicationHost applicationHost,
-            IWebhookSender webhookSender)
+    /// <inheritdoc />
+    public async Task OnEvent(SubtitleDownloadFailureEventArgs eventArgs)
+    {
+        if (eventArgs.Item is null)
         {
-            _applicationHost = applicationHost;
-            _webhookSender = webhookSender;
+            return;
         }
 
-        /// <inheritdoc />
-        public async Task OnEvent(SubtitleDownloadFailureEventArgs eventArgs)
-        {
-            if (eventArgs.Item is null)
-            {
-                return;
-            }
-
-            var dataObject = DataObjectHelpers
-                .GetBaseDataObject(_applicationHost, NotificationType.SubtitleDownloadFailure)
-                .AddBaseItemData(eventArgs.Item);
-            await _webhookSender.SendNotification(NotificationType.SubtitleDownloadFailure, dataObject, eventArgs.Item.GetType())
-                .ConfigureAwait(false);
-        }
+        var dataObject = DataObjectHelpers
+            .GetBaseDataObject(_applicationHost, NotificationType.SubtitleDownloadFailure)
+            .AddBaseItemData(eventArgs.Item);
+        await _webhookSender.SendNotification(NotificationType.SubtitleDownloadFailure, dataObject, eventArgs.Item.GetType())
+            .ConfigureAwait(false);
     }
 }

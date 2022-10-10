@@ -25,65 +25,64 @@ using MediaBrowser.Controller.Subtitles;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Jellyfin.Plugin.Webhook
+namespace Jellyfin.Plugin.Webhook;
+
+/// <summary>
+/// Register webhook services.
+/// </summary>
+public class PluginServiceRegistrator : IPluginServiceRegistrator
 {
-    /// <summary>
-    /// Register webhook services.
-    /// </summary>
-    public class PluginServiceRegistrator : IPluginServiceRegistrator
+    /// <inheritdoc />
+    public void RegisterServices(IServiceCollection serviceCollection)
     {
-        /// <inheritdoc />
-        public void RegisterServices(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
-            serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
-            serviceCollection.AddScoped<IWebhookClient<GenericFormOption>, GenericFormClient>();
-            serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
-            serviceCollection.AddScoped<IWebhookClient<PushbulletOption>, PushbulletClient>();
-            serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
-            serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
-            serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
-            serviceCollection.AddScoped<IWebhookClient<MqttOption>, MqttClient>();
+        serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
+        serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
+        serviceCollection.AddScoped<IWebhookClient<GenericFormOption>, GenericFormClient>();
+        serviceCollection.AddScoped<IWebhookClient<GotifyOption>, GotifyClient>();
+        serviceCollection.AddScoped<IWebhookClient<PushbulletOption>, PushbulletClient>();
+        serviceCollection.AddScoped<IWebhookClient<PushoverOption>, PushoverClient>();
+        serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
+        serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
+        serviceCollection.AddScoped<IWebhookClient<MqttOption>, MqttClient>();
 
-            // Register sender.
-            serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
+        // Register sender.
+        serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
 
-            // Register MqttClients
-            serviceCollection.AddSingleton<IMqttClients, MqttClients>();
+        // Register MqttClients
+        serviceCollection.AddSingleton<IMqttClients, MqttClients>();
 
-            /*-- Register event consumers. --*/
-            // Library consumers.
-            serviceCollection.AddScoped<IEventConsumer<SubtitleDownloadFailureEventArgs>, SubtitleDownloadFailureNotifier>();
-            serviceCollection.AddSingleton<IItemAddedManager, ItemAddedManager>();
+        /*-- Register event consumers. --*/
+        // Library consumers.
+        serviceCollection.AddScoped<IEventConsumer<SubtitleDownloadFailureEventArgs>, SubtitleDownloadFailureNotifier>();
+        serviceCollection.AddSingleton<IItemAddedManager, ItemAddedManager>();
 
-            // Security consumers.
-            serviceCollection.AddScoped<IEventConsumer<GenericEventArgs<AuthenticationRequest>>, AuthenticationFailureNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<GenericEventArgs<AuthenticationResult>>, AuthenticationSuccessNotifier>();
+        // Security consumers.
+        serviceCollection.AddScoped<IEventConsumer<GenericEventArgs<AuthenticationRequest>>, AuthenticationFailureNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<GenericEventArgs<AuthenticationResult>>, AuthenticationSuccessNotifier>();
 
-            // Session consumers.
-            serviceCollection.AddScoped<IEventConsumer<PlaybackStartEventArgs>, PlaybackStartNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PlaybackStopEventArgs>, PlaybackStopNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PlaybackProgressEventArgs>, PlaybackProgressNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<SessionStartedEventArgs>, SessionStartNotifier>();
+        // Session consumers.
+        serviceCollection.AddScoped<IEventConsumer<PlaybackStartEventArgs>, PlaybackStartNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PlaybackStopEventArgs>, PlaybackStopNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PlaybackProgressEventArgs>, PlaybackProgressNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<SessionStartedEventArgs>, SessionStartNotifier>();
 
-            // System consumers.
-            serviceCollection.AddScoped<IEventConsumer<PendingRestartEventArgs>, PendingRestartNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<TaskCompletionEventArgs>, TaskCompletedNotifier>();
+        // System consumers.
+        serviceCollection.AddScoped<IEventConsumer<PendingRestartEventArgs>, PendingRestartNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<TaskCompletionEventArgs>, TaskCompletedNotifier>();
 
-            // Update consumers.
-            serviceCollection.AddScoped<IEventConsumer<PluginInstallationCancelledEventArgs>, PluginInstallationCancelledNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<InstallationFailedEventArgs>, PluginInstallationFailedNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PluginInstalledEventArgs>, PluginInstalledNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PluginInstallingEventArgs>, PluginInstallingNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PluginUninstalledEventArgs>, PluginUninstalledNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<PluginUpdatedEventArgs>, PluginUpdatedNotifier>();
+        // Update consumers.
+        serviceCollection.AddScoped<IEventConsumer<PluginInstallationCancelledEventArgs>, PluginInstallationCancelledNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<InstallationFailedEventArgs>, PluginInstallationFailedNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PluginInstalledEventArgs>, PluginInstalledNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PluginInstallingEventArgs>, PluginInstallingNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PluginUninstalledEventArgs>, PluginUninstalledNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<PluginUpdatedEventArgs>, PluginUpdatedNotifier>();
 
-            // User consumers.
-            serviceCollection.AddScoped<IEventConsumer<UserCreatedEventArgs>, UserCreatedNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<UserDeletedEventArgs>, UserDeletedNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<UserLockedOutEventArgs>, UserLockedOutNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<UserPasswordChangedEventArgs>, UserPasswordChangedNotifier>();
-            serviceCollection.AddScoped<IEventConsumer<UserUpdatedEventArgs>, UserUpdatedNotifier>();
-        }
+        // User consumers.
+        serviceCollection.AddScoped<IEventConsumer<UserCreatedEventArgs>, UserCreatedNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<UserDeletedEventArgs>, UserDeletedNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<UserLockedOutEventArgs>, UserLockedOutNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<UserPasswordChangedEventArgs>, UserPasswordChangedNotifier>();
+        serviceCollection.AddScoped<IEventConsumer<UserUpdatedEventArgs>, UserUpdatedNotifier>();
     }
 }

@@ -7,60 +7,59 @@ using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
-namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet
+namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
+
+/// <summary>
+/// Client for the <see cref="PushbulletOption"/>.
+/// </summary>
+public class PushbulletClient : BaseClient, IWebhookClient<PushbulletOption>
 {
+    private readonly ILogger<PushbulletClient> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+
     /// <summary>
-    /// Client for the <see cref="PushbulletOption"/>.
+    /// Initializes a new instance of the <see cref="PushbulletClient"/> class.
     /// </summary>
-    public class PushbulletClient : BaseClient, IWebhookClient<PushbulletOption>
+    /// <param name="logger">Instance of the <see cref="ILogger{PushbulletClient}"/> interface.</param>
+    /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/> interface.</param>
+    public PushbulletClient(
+        ILogger<PushbulletClient> logger,
+        IHttpClientFactory httpClientFactory)
     {
-        private readonly ILogger<PushbulletClient> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
+        _logger = logger;
+        _httpClientFactory = httpClientFactory;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PushbulletClient"/> class.
-        /// </summary>
-        /// <param name="logger">Instance of the <see cref="ILogger{PushbulletClient}"/> interface.</param>
-        /// <param name="httpClientFactory">Instance of the <see cref="IHttpClientFactory"/> interface.</param>
-        public PushbulletClient(
-            ILogger<PushbulletClient> logger,
-            IHttpClientFactory httpClientFactory)
+    /// <inheritdoc />
+    public async Task SendAsync(PushbulletOption option, Dictionary<string, object> data)
+    {
+        try
         {
-            _logger = logger;
-            _httpClientFactory = httpClientFactory;
+            if (!SendWebhook(_logger, option, data))
+            {
+                return;
+            }
+
+            data["PushbulletToken"] = option.Token;
+            data["PushbulletDeviceId"] = option.DeviceId;
+            data["PushbulletChannel"] = option.Channel;
+
+            var body = option.GetMessageBody(data);
+            _logger.LogDebug("SendAsync Body: {@Body}", body);
+
+            using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(option.WebhookUri) ? PushbulletOption.ApiUrl : option.WebhookUri);
+            requestOptions.Headers.TryAddWithoutValidation("Access-Token", option.Token);
+            requestOptions.Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+            using var response = await _httpClientFactory
+                .CreateClient(NamedClient.Default)
+                .SendAsync(requestOptions)
+                .ConfigureAwait(false);
+            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
         }
-
-        /// <inheritdoc />
-        public async Task SendAsync(PushbulletOption option, Dictionary<string, object> data)
+        catch (HttpRequestException e)
         {
-            try
-            {
-                if (!SendWebhook(_logger, option, data))
-                {
-                    return;
-                }
-
-                data["PushbulletToken"] = option.Token;
-                data["PushbulletDeviceId"] = option.DeviceId;
-                data["PushbulletChannel"] = option.Channel;
-
-                var body = option.GetMessageBody(data);
-                _logger.LogDebug("SendAsync Body: {@Body}", body);
-
-                using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(option.WebhookUri) ? PushbulletOption.ApiUrl : option.WebhookUri);
-                requestOptions.Headers.TryAddWithoutValidation("Access-Token", option.Token);
-                requestOptions.Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-
-                using var response = await _httpClientFactory
-                    .CreateClient(NamedClient.Default)
-                    .SendAsync(requestOptions)
-                    .ConfigureAwait(false);
-                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
-            }
-            catch (HttpRequestException e)
-            {
-                _logger.LogWarning(e, "Error sending notification");
-            }
+            _logger.LogWarning(e, "Error sending notification");
         }
     }
 }
