@@ -1,0 +1,13 @@
+{
+    "token": "{{Token}}",
+    "user": "{{UserToken}}",
+    "device": "{{Device}}",
+    "title": "{{{Title}}}",
+    "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
+    "url_title": "{{{MessageUrlTitle}}}",
+    "priority": {{MessagePriority}},
+    "sound": "{{NotificationSound}}",
+    {{#if_equals ItemType 'Episode'}}
+        "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+    {{/if_equals}}
+}
