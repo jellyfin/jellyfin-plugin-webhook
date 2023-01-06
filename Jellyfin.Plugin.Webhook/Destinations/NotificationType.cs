@@ -101,7 +101,7 @@ public enum NotificationType
     UserCreated = 18,
 
     /// <summary>
-    /// User created.
+    /// User deleted.
     /// </summary>
     UserDeleted = 19,
 
