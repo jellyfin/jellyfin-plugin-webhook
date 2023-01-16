@@ -5,6 +5,7 @@ using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Plugins;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier;
@@ -14,7 +15,6 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier;
 /// </summary>
 public class UserDataSavedNotifierEntryPoint : IServerEntryPoint
 {
-    private readonly IWebhookSender _webhookSender;
     private readonly IServerApplicationHost _applicationHost;
     private readonly IUserDataManager _userDataManager;
     private readonly IUserManager _userManager;
@@ -23,13 +23,11 @@ public class UserDataSavedNotifierEntryPoint : IServerEntryPoint
     /// <summary>
     /// Initializes a new instance of the <see cref="UserDataSavedNotifierEntryPoint"/> class.
     /// </summary>
-    /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
     /// <param name="userDataManager">Instance of the <see cref="IUserDataManager"/> interface.</param>
     /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
     /// <param name="logger">Instance of the <see cref="ILogger{UserDataChangedNotifierEntryPoint}"/> interface.</param>
     /// <param name="userManager">Instance of the <see cref="IUserManager"/> interface.</param>
     public UserDataSavedNotifierEntryPoint(
-        IWebhookSender webhookSender,
         IServerApplicationHost applicationHost,
         IUserDataManager userDataManager,
         ILogger<UserDataSavedNotifierEntryPoint> logger,
@@ -39,7 +37,6 @@ public class UserDataSavedNotifierEntryPoint : IServerEntryPoint
         _logger = logger;
         _userManager = userManager;
         _applicationHost = applicationHost;
-        _webhookSender = webhookSender;
     }
 
     /// <inheritdoc />
@@ -98,8 +95,13 @@ public class UserDataSavedNotifierEntryPoint : IServerEntryPoint
             dataObject["NotificationUsername"] = user.Username;
             dataObject["UserId"] = user.Id;
 
-            await _webhookSender.SendNotification(NotificationType.UserDataSaved, dataObject, eventArgs.Item.GetType())
-                .ConfigureAwait(false);
+            var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
+            await using (scope.ConfigureAwait(false))
+            {
+                var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
+                await webhookSender.SendNotification(NotificationType.UserDataSaved, dataObject, eventArgs.Item.GetType())
+                    .ConfigureAwait(false);
+            }
         }
         catch (Exception ex)
         {

@@ -5,6 +5,7 @@ using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Notifications;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers;
 
@@ -13,17 +14,14 @@ namespace Jellyfin.Plugin.Webhook.Notifiers;
 /// </summary>
 public class GenericNotifier : INotificationService
 {
-    private readonly IWebhookSender _webhookSender;
     private readonly IServerApplicationHost _applicationHost;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericNotifier"/> class.
     /// </summary>
-    /// <param name="webhookSender">Instance of the <see cref="IWebhookSender"/> interface.</param>
     /// <param name="applicationHost">Instance of the <see cref="IServerApplicationHost"/> interface.</param>
-    public GenericNotifier(IWebhookSender webhookSender, IServerApplicationHost applicationHost)
+    public GenericNotifier(IServerApplicationHost applicationHost)
     {
-        _webhookSender = webhookSender;
         _applicationHost = applicationHost;
     }
 
@@ -43,8 +41,13 @@ public class GenericNotifier : INotificationService
         dataObject[nameof(request.User.Username)] = request.User.Username;
         dataObject["UserId"] = request.User.Id;
 
-        await _webhookSender.SendNotification(NotificationType.Generic, dataObject)
-            .ConfigureAwait(false);
+        var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false))
+        {
+            var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
+            await webhookSender.SendNotification(NotificationType.Generic, dataObject)
+                .ConfigureAwait(false);
+        }
     }
 
     /// <inheritdoc />
