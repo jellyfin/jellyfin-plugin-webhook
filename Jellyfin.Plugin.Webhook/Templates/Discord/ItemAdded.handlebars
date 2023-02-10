@@ -1,0 +1,90 @@
+{
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{{BotUsername}}}",
+    "embeds": [
+        {   
+            "author": {
+                {{#if_equals ItemType 'Season'}}
+                    "name": "Season Added • {{{SeriesName}}} {{{Name}}}",
+                {{/if_equals}}
+
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Episode Added • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{/if_equals}}
+
+                {{#if_equals ItemType 'Movie'}}
+                    "name": "Movie Added • {{{Name}}}",
+                {{/if_equals}}
+
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            
+
+            "thumbnail":{
+                "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
+            },
+
+            "description": "
+            {{~#if_exist Overview~}}
+                > {{{Overview}}}\n\n
+            {{~/if_exist~}}
+
+            {{~#if_exist ServerUrl~}}
+                [**Watch Now** ]({{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_imdb~}}
+                • [**IMDb** ](https://www.imdb.com/title/{{Provider_imdb}}/)
+            {{~/if_exist~}}
+            
+            {{~#if_exist Provider_tmdb~}}
+                {{~#if_equals ItemType 'Movie'~}}
+                    • [**TMDb** ](https://www.themoviedb.org/movie/{{Provider_tmdb}})
+                {{~else~}}
+                    • [**TMDb** ](https://www.themoviedb.org/tv/{{Provider_tmdb}})
+                {{~/if_equals~}}
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_tvmaze~}}
+                {{~#if_equals ItemType 'Episode'~}}
+                    • [**TVMaze** ](https://www.tvmaze.com/episodes/{{Provider_tvmaze}})
+                {{~/if_equals~}}
+
+                {{~#if_equals ItemType 'Series'~}}
+                    • [**TVMaze** ](https://www.tvmaze.com/shows/{{Provider_tvmaze}})
+                {{~/if_equals~}}
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_audiodbartist~}}
+                • [**AudioDb** ](https://theaudiodb.com/artist/{{Provider_audiodbartist}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainzartist~}}
+                • [**MusicBrainz** ](https://musicbrainz.org/artist/{{Provider_musicbrainzartist}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainztrack~}}
+                • [**MusicBrainz Track** ](https://musicbrainz.org/track/{{Provider_musicbrainztrack}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainzalbum~}}
+                • [**MusicBrainz Album** ](https://musicbrainz.org/release/{{Provider_musicbrainzalbum}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_theaudiodbalbum~}}
+                • [**TADb Album** ](https://theaudiodb.com/album/{{Provider_theaudiodbalbum}})
+            {{~/if_exist~}}
+            ",
+
+            "color": "3381759",
+
+            "footer": {
+                "text": "{{{ServerName}}} ",
+                "icon_url": "{{AvatarUrl}}"
+            },
+
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+}
