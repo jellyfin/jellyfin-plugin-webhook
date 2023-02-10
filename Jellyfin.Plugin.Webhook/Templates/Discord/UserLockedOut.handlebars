@@ -1,0 +1,36 @@
+{
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{{BotUsername}}}",
+    "embeds": [
+        {   
+            "author": {
+                "name": "User Locked Out • {{{NotificationUsername}}}",
+
+                "url": "{{ServerUrl}}/web/index.html#!/useredit.html?userId={{UserId}}"
+            },
+
+            "thumbnail":{
+                "url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary"
+            },
+
+            "description": "
+            {{~#if_exist NotificationUsername~}}
+                > ``{{{NotificationUsername}}}`` has been locked out of ``{{{ServerName}}}`` for failing too many login attempts.\n\n
+            {{~/if_exist~}}
+            
+            {{~#if_exist ServerUrl~}}
+                [**Enable User **]({{ServerUrl}}/web/index.html#!/useredit.html?userId={{UserId}})
+            {{~/if_exist~}}
+
+            {{~#if_exist ServerUrl~}}
+                • [**Reset Password**]({{ServerUrl}}/web/index.html#!/userpassword.html?userId={{UserId}})
+            {{~/if_exist~}}
+            ",
+
+            "color": "15737923",
+
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+}
