@@ -1,7 +1,7 @@
 {
     "content": "{{MentionType}}",
     "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
-    "username": "{{NotificationUsername}}",
+    "username": "{{BotUsername}}",
     "embeds": [
         {
             "author": {
@@ -41,6 +41,14 @@
                 "text": "{{{ServerName}}}",
                 "icon_url": "{{AvatarUrl}}"
             },
+            
+            "fields": [
+            {
+              "name": "User",
+              "value": "{{{NotificationUsername}}}",
+              "inline": true
+            }
+            ],
 
             "timestamp": "{{Timestamp}}"
         }
