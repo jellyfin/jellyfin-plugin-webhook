@@ -15,7 +15,7 @@
       <PackageReference Include="MailKit" Version="3.6.0" />
       <PackageReference Include="Handlebars.Net" Version="2.1.4" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="6.*" />
-      <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.2.0.706" />
+      <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.2.1.781" />
     </ItemGroup>
 
     <ItemGroup>
