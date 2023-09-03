@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
@@ -91,6 +92,13 @@ public class BarkClient : BaseClient, IWebhookClient<BarkOption>
             }
 
             data = MergeOptionToData(option, data);
+            // generate general title and body for bark
+            if (option.SendAllProperties)
+            {
+                data["title"] = "Jellyfin Raw Event";
+                data["body"] = JsonSerializer.Serialize(data["data"], new JsonSerializerOptions { WriteIndented = true });
+            }
+
             var body = option.GetMessageBody(data);
             _logger.LogDebug("SendAsync Body: {@Body}", body);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);

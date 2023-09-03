@@ -619,7 +619,7 @@
                 const template = document.createElement("div");
                 template.dataset.type = "bark";
                 template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
-                template.appendChild(Webhook.mqtt.template.cloneNode(true).content);
+                template.appendChild(Webhook.bark.template.cloneNode(true).content);
 
                 const baseConfig = Webhook.baseConfig.addConfig(template, "Bark", config.WebhookName);
                 Webhook.configurationWrapper.appendChild(baseConfig);
