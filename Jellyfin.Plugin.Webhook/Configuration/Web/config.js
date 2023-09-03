@@ -625,7 +625,7 @@
                 Webhook.configurationWrapper.appendChild(baseConfig);
 
                 // Load configuration
-                Webhook.mqtt.setConfig(config, baseConfig);
+                Webhook.bark.setConfig(config, baseConfig);
             },
             setConfig: function (config, element) {
                 Webhook.baseConfig.setConfig(config, element);
