@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Configuration;
 using Jellyfin.Plugin.Webhook.Destinations;
+using Jellyfin.Plugin.Webhook.Destinations.Bark;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
@@ -33,6 +34,7 @@ public class WebhookSender : IWebhookSender
     private readonly IWebhookClient<SlackOption> _slackClient;
     private readonly IWebhookClient<SmtpOption> _smtpClient;
     private readonly IWebhookClient<MqttOption> _mqttClient;
+    private readonly IWebhookClient<BarkOption> _barkClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebhookSender"/> class.
@@ -47,6 +49,7 @@ public class WebhookSender : IWebhookSender
     /// <param name="slackClient">Instance of the <see cref="IWebhookClient{SlackOption}"/>.</param>
     /// <param name="smtpClient">Instance of the <see cref="IWebhookClient{SmtpOption}"/>.</param>
     /// <param name="mqttClient">Instance of the <see cref="IWebhookClient{mqttClient}"/>.</param>
+    /// <param name="barkClient">Instance of the <see cref="IWebhookClient{barkClient}"/>.</param>
     public WebhookSender(
         ILogger<WebhookSender> logger,
         IWebhookClient<DiscordOption> discordClient,
@@ -57,7 +60,8 @@ public class WebhookSender : IWebhookSender
         IWebhookClient<PushoverOption> pushoverClient,
         IWebhookClient<SlackOption> slackClient,
         IWebhookClient<SmtpOption> smtpClient,
-        IWebhookClient<MqttOption> mqttClient)
+        IWebhookClient<MqttOption> mqttClient,
+        IWebhookClient<BarkOption> barkClient)
     {
         _logger = logger;
         _discordClient = discordClient;
@@ -69,6 +73,7 @@ public class WebhookSender : IWebhookSender
         _slackClient = slackClient;
         _smtpClient = smtpClient;
         _mqttClient = mqttClient;
+        _barkClient = barkClient;
     }
 
     private static PluginConfiguration Configuration =>
@@ -128,6 +133,12 @@ public class WebhookSender : IWebhookSender
         foreach (var option in Configuration.MqttOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
         {
             await SendNotification(_mqttClient, option, itemData, itemType)
+                .ConfigureAwait(false);
+        }
+
+        foreach (var option in Configuration.BarkOptions.Where(o => o.NotificationTypes.Contains(notificationType)))
+        {
+            await SendNotification(_barkClient, option, itemData, itemType)
                 .ConfigureAwait(false);
         }
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+
+using Jellyfin.Plugin.Webhook.Destinations.Bark;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
@@ -32,6 +34,7 @@ public class PluginConfiguration : BasePluginConfiguration
         SlackOptions = Array.Empty<SlackOption>();
         SmtpOptions = Array.Empty<SmtpOption>();
         MqttOptions = Array.Empty<MqttOption>();
+        BarkOptions = Array.Empty<BarkOption>();
     }
 
     /// <summary>
@@ -83,4 +86,9 @@ public class PluginConfiguration : BasePluginConfiguration
     /// Gets or sets the mqtt options.
     /// </summary>
     public MqttOption[] MqttOptions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the bark options.
+    /// </summary>
+    public BarkOption[] BarkOptions { get; set; }
 }

@@ -2,6 +2,7 @@
 using Jellyfin.Data.Events.System;
 using Jellyfin.Data.Events.Users;
 using Jellyfin.Plugin.Webhook.Destinations;
+using Jellyfin.Plugin.Webhook.Destinations.Bark;
 using Jellyfin.Plugin.Webhook.Destinations.Discord;
 using Jellyfin.Plugin.Webhook.Destinations.Generic;
 using Jellyfin.Plugin.Webhook.Destinations.GenericForm;
@@ -44,6 +45,7 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
         serviceCollection.AddScoped<IWebhookClient<SlackOption>, SlackClient>();
         serviceCollection.AddScoped<IWebhookClient<SmtpOption>, SmtpClient>();
         serviceCollection.AddScoped<IWebhookClient<MqttOption>, MqttClient>();
+        serviceCollection.AddScoped<IWebhookClient<BarkOption>, BarkClient>();
 
         // Register sender.
         serviceCollection.AddScoped<IWebhookSender, WebhookSender>();
