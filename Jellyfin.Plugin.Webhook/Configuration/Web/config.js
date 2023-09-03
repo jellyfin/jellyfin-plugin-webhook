@@ -612,6 +612,41 @@
                 return config;
             }
         },
+        bark: {
+            btnAdd: document.querySelector("#btnAddBark"),
+            template: document.querySelector("#template-bark"),
+            addConfig: function (config) {
+                const template = document.createElement("div");
+                template.dataset.type = "bark";
+                template.appendChild(Webhook.baseConfig.template.cloneNode(true).content);
+                template.appendChild(Webhook.mqtt.template.cloneNode(true).content);
+
+                const baseConfig = Webhook.baseConfig.addConfig(template, "Bark", config.WebhookName);
+                Webhook.configurationWrapper.appendChild(baseConfig);
+
+                // Load configuration
+                Webhook.mqtt.setConfig(config, baseConfig);
+            },
+            setConfig: function (config, element) {
+                Webhook.baseConfig.setConfig(config, element);
+                element.querySelector("[data-name=txtDeviceKey]").value = config.DeviceKey || "";
+                element.querySelector("[data-name=txtLevel]").value = config.Level || "";
+                element.querySelector("[data-name=txtIcon]").value = config.Icon || "";
+                element.querySelector("[data-name=txtGroup]").value = config.Group || "Jellyfin";
+                element.querySelector("[data-name=txtIsArchive]").value = config.IsArchive || 1;
+                element.querySelector("[data-name=txtJumpUrl]").value = config.JumpUrl || "";
+            },
+            getConfig: function (element) {
+                const config = Webhook.baseConfig.getConfig(element);
+                config.DeviceKey = element.querySelector("[data-name=txtDeviceKey]").value || "";
+                config.Level = element.querySelector("[data-name=txtLevel]").value || "active";
+                config.Icon = element.querySelector("[data-name=txtIcon]").value || "";
+                config.Group = element.querySelector("[data-name=txtGroup]").value || "Jellyfin";
+                config.IsArchive = element.querySelector("[data-name=txtIsArchive]").value || null;
+                config.JumpUrl = element.querySelector("[data-name=txtJumpUrl]").value || "";
+                return config;
+            }
+        },
         init: async function () {
             // Clear any previously loaded configuration.
             Webhook.configurationWrapper.innerHTML = "";
@@ -626,6 +661,7 @@
             Webhook.slack.btnAdd.addEventListener("click", Webhook.slack.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             Webhook.mqtt.btnAdd.addEventListener("click", Webhook.mqtt.addConfig);
+            Webhook.bark.btnAdd.addEventListener("click", Webhook.bark.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
             await Webhook.userFilter.populate();
@@ -696,6 +732,12 @@
                 config.MqttOptions.push(Webhook.mqtt.getConfig(mqttConfigs[i]));
             }
 
+            config.BarkOptions = [];
+            const barkConfigs = document.querySelectorAll("[data-type=bark]");
+            for (let i = 0; i < barkConfigs.length; i++) {
+                config.BarkOptions.push(Webhook.bark.getConfig(barkConfigs[i]));
+            }
+
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
         loadConfig: function () {
@@ -737,6 +779,10 @@
 
                 for (let i = 0; i < config.MqttOptions.length; i++) {
                     Webhook.mqtt.addConfig(config.MqttOptions[i]);
+                }
+
+                for (let i = 0; i < config.BarkOptions.length; i++) {
+                    Webhook.bark.addConfig(config.BarkOptions[i]);
                 }
             });
 

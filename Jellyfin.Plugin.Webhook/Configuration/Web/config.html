@@ -44,6 +44,9 @@
             <button id="btnAddMqtt" is="emby-button" type="button" class="raised button block">
                 <span>Add MQTT Destination</span>
             </button>
+            <button id="btnAddBark" is="emby-button" type="button" class="raised button block">
+                <span>Add Bark Destination</span>
+            </button>
             <br />
             <div id="configurationWrapper"></div>
             <br />
@@ -55,25 +58,25 @@
 
     <template id="template-notification-type">
         <label class="checkboxContainer">
-            <input is="emby-checkbox" type="checkbox" data-name="notificationTypeValue"/>
+            <input is="emby-checkbox" type="checkbox" data-name="notificationTypeValue" />
             <span data-name="notificationTypeName"></span>
         </label>
     </template>
-    
+
     <template id="template-user-filter">
         <label class="checkboxContainer">
-            <input is="emby-checkbox" type="checkbox" data-name="userFilterValue"/>
+            <input is="emby-checkbox" type="checkbox" data-name="userFilterValue" />
             <span data-name="userFilterName"></span>
         </label>
     </template>
 
     <template id="template-base">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtWebhookName" required="required" label="Webhook Name:"/>
+            <input is="emby-input" type="text" data-name="txtWebhookName" required="required" label="Webhook Name:" />
             <span>The webhook name (for display only)</span>
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
+            <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:" />
             <span>The webhook destination url</span>
         </div>
         <div>
@@ -89,31 +92,31 @@
         <div>
             <label>Item Type:</label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableMovies"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableMovies" />
                 <span>Movies</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableEpisodes"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableEpisodes" />
                 <span>Episodes</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeasons"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeasons" />
                 <span>Season</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeries"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSeries" />
                 <span>Series</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableAlbums"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableAlbums" />
                 <span>Albums</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSongs"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableSongs" />
                 <span>Songs</span>
             </label>
             <label class="checkboxContainer">
-                <input is="emby-checkbox" type="checkbox" data-name="chkSendAllProperties"/>
+                <input is="emby-checkbox" type="checkbox" data-name="chkSendAllProperties" />
                 <span>Send All Properties (ignores template)</span>
             </label>
         </div>
@@ -127,10 +130,10 @@
 
     <template id="template-discord">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtAvatarUrl" label="Avatar Url:"/>
+            <input is="emby-input" type="text" data-name="txtAvatarUrl" label="Avatar Url:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtUsername" label="Webhook Username:"/>
+            <input is="emby-input" type="text" data-name="txtUsername" label="Webhook Username:" />
         </div>
         <div class="selectContainer">
             <select is="emby-select" data-name="ddlMentionType" label="Mention Type:">
@@ -141,38 +144,38 @@
         </div>
         <div class="inputContainer">
             <label>Embed Color</label>
-            <input type="color" data-name="EmbedColor" is="emby-input" style="height: 2.2em;"/>
-            <input type="text" is="emby-input" data-name="txtEmbedColor"/>
+            <input type="color" data-name="EmbedColor" is="emby-input" style="height: 2.2em;" />
+            <input type="text" is="emby-input" data-name="txtEmbedColor" />
         </div>
     </template>
 
     <template id="template-gotify">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtPriority" label="Priority:"/>
+            <input is="emby-input" type="text" data-name="txtPriority" label="Priority:" />
         </div>
     </template>
 
     <template id="template-pushover">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtUserToken" label="User Token:"/>
+            <input is="emby-input" type="text" data-name="txtUserToken" label="User Token:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtDevice" label="Device:"/>
+            <input is="emby-input" type="text" data-name="txtDevice" label="Device:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtTitle" label="Title:"/>
+            <input is="emby-input" type="text" data-name="txtTitle" label="Title:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtMessageUrl" label="Message Url:"/>
+            <input is="emby-input" type="text" data-name="txtMessageUrl" label="Message Url:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtMessageUrlTitle" label="Message Url Title:"/>
+            <input is="emby-input" type="text" data-name="txtMessageUrlTitle" label="Message Url Title:" />
         </div>
         <div class="selectContainer">
             <select is="emby-select" data-name="ddlMessagePriority" label="Message Priority:">
@@ -239,111 +242,133 @@
 
     <template id="template-generic-value">
         <div class="inputContainer" data-name="value">
-            <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
-            <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>
+            <input is="emby-input" type="text" data-name="txtKey" label="Key:" />
+            <input is="emby-input" type="text" data-name="txtValue" label="Value:" />
         </div>
     </template>
 
     <template id="template-generic-form-value">
         <div class="inputContainer" data-name="value">
-            <input is="emby-input" type="text" data-name="txtKey" label="Key:"/>
-            <input is="emby-input" type="text" data-name="txtValue" label="Value:"/>
+            <input is="emby-input" type="text" data-name="txtKey" label="Key:" />
+            <input is="emby-input" type="text" data-name="txtValue" label="Value:" />
         </div>
     </template>
-    
-<template id="template-smtp">
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtSenderAddress" label="Sender Address:"/>
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtReceiverAddress" label="Receiver Address:"/>
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtSmtpServer" label="SMTP Server Address:"/>
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="number" data-name="txtSmtpPort" label="SMTP Port:"/>
-    </div>
-    <label class="checkboxContainer">
-        <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials"/>
-        <span>Use Credentials</span>
-    </label>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtUsername" label="Username:"/>
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtPassword" label="Password:"/>
-    </div>
-    <label class="checkboxContainer">
-        <input is="emby-checkbox" type="checkbox" data-name="chkUseSsl"/>
-        <span>Use SSL</span>
-    </label>
-    <label class="checkboxContainer">
-        <input is="emby-checkbox" type="checkbox" data-name="chkIsHtml"/>
-        <span>Is Html Body</span>
-    </label>
-    <div class="inputContainer">
-        <label>Subject Template:</label>
-        <div>
-            <textarea data-name="txtSubjectTemplate" style="width: 100%; height: 400px"></textarea>
-        </div>
-    </div>        
-</template>
 
-<template id="template-mqtt">
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtMqttServer" label="MQTT Server:" />
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="number" data-name="txtMqttPort" label="MQTT Port (default is 1883):" />
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtTopic" label="Topic:" />
-    </div>
-    <label class="checkboxContainer">
-        <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials" />
-        <span>Use Credentials</span>
-    </label>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtUsername" label="Username:" />
-    </div>
-    <div class="inputContainer">
-        <input is="emby-input" type="text" data-name="txtPassword" label="Password:" />
-    </div>
-    <label class="checkboxContainer">
-        <input is="emby-checkbox" type="checkbox" data-name="chkUseTls" />
-        <span>Use TLS</span>
-    </label>
-    <div class="selectContainer">
-        <select is="emby-select" data-name="ddlQosLevel" label="Quality of Service:">
-            <option value="AtMostOnce">At Most Once</option>
-            <option value="AtLeastOnce">At Least Once</option>
-            <option value="ExactlyOnce">Exactly Once</option>
-        </select>
-    </div>
-</template>
+    <template id="template-smtp">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtSenderAddress" label="Sender Address:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtReceiverAddress" label="Receiver Address:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtSmtpServer" label="SMTP Server Address:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="number" data-name="txtSmtpPort" label="SMTP Port:" />
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials" />
+            <span>Use Credentials</span>
+        </label>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUsername" label="Username:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtPassword" label="Password:" />
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseSsl" />
+            <span>Use SSL</span>
+        </label>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkIsHtml" />
+            <span>Is Html Body</span>
+        </label>
+        <div class="inputContainer">
+            <label>Subject Template:</label>
+            <div>
+                <textarea data-name="txtSubjectTemplate" style="width: 100%; height: 400px"></textarea>
+            </div>
+        </div>
+    </template>
 
-<template id="template-pushbullet">
+    <template id="template-mqtt">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtToken" label="Token:"/>
+            <input is="emby-input" type="text" data-name="txtMqttServer" label="MQTT Server:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtDeviceId" label="Device Id:"/>
+            <input is="emby-input" type="number" data-name="txtMqttPort" label="MQTT Port (default is 1883):" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtChannel" label="Channel:"/>
+            <input is="emby-input" type="text" data-name="txtTopic" label="Topic:" />
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseCredentials" />
+            <span>Use Credentials</span>
+        </label>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtUsername" label="Username:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtPassword" label="Password:" />
+        </div>
+        <label class="checkboxContainer">
+            <input is="emby-checkbox" type="checkbox" data-name="chkUseTls" />
+            <span>Use TLS</span>
+        </label>
+        <div class="selectContainer">
+            <select is="emby-select" data-name="ddlQosLevel" label="Quality of Service:">
+                <option value="AtMostOnce">At Most Once</option>
+                <option value="AtLeastOnce">At Least Once</option>
+                <option value="ExactlyOnce">Exactly Once</option>
+            </select>
+        </div>
+    </template>
+
+    <template id="template-bark">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtDeviceKey" label="DeviceKey:" />
+        </div>
+        <div class="selectContainer">
+            <select is="emby-select" data-name="txtLevel" label="Level:">
+                <option value="active">active</option>
+                <option value="timeSensitive">timeSensitive</option>
+                <option value="passive">passive</option>
+            </select>
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtIcon" label="Icon:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtGroup" label="Group:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="number" data-name="txtIsArchive" label="IsArchive: 1 or other number" />
+        </div>
+    </template>
+
+    <template id="template-pushbullet">
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtToken" label="Token:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtDeviceId" label="Device Id:" />
+        </div>
+        <div class="inputContainer">
+            <input is="emby-input" type="text" data-name="txtChannel" label="Channel:" />
         </div>
     </template>
 
     <template id="template-slack">
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtUsername" label="Display Name:"/>
+            <input is="emby-input" type="text" data-name="txtUsername" label="Display Name:" />
         </div>
         <div class="inputContainer">
-            <input is="emby-input" type="text" data-name="txtIconUrl" label="Icon Url:"/>
+            <input is="emby-input" type="text" data-name="txtIconUrl" label="Icon Url:" />
         </div>
     </template>
-    
+
     <style>
         .checkboxContainer {
             max-width: fit-content;
