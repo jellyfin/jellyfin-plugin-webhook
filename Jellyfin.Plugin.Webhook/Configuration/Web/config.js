@@ -629,7 +629,7 @@
             },
             setConfig: function (config, element) {
                 Webhook.baseConfig.setConfig(config, element);
-                element.querySelector("[data-name=txtDeviceKey]").value = config.DeviceKey || "";
+
                 element.querySelector("[data-name=txtLevel]").value = config.Level || "";
                 element.querySelector("[data-name=txtIcon]").value = config.Icon || "";
                 element.querySelector("[data-name=txtGroup]").value = config.Group || "Jellyfin";
@@ -638,7 +638,6 @@
             },
             getConfig: function (element) {
                 const config = Webhook.baseConfig.getConfig(element);
-                config.DeviceKey = element.querySelector("[data-name=txtDeviceKey]").value || "";
                 config.Level = element.querySelector("[data-name=txtLevel]").value || "active";
                 config.Icon = element.querySelector("[data-name=txtIcon]").value || "";
                 config.Group = element.querySelector("[data-name=txtGroup]").value || "Jellyfin";

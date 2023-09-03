@@ -48,15 +48,6 @@ public class BarkClient : BaseClient, IWebhookClient<BarkOption>
         {
             ["data"] = data
         };
-        _logger.LogWarning("data is null");
-        if (!string.IsNullOrEmpty(option.DeviceKey))
-        {
-            wrappedData["device_key"] = option.DeviceKey;
-        }
-        else
-        {
-            _logger.LogWarning("device_key is empty");
-        }
 
         if (!string.IsNullOrWhiteSpace(option.Level))
         {
