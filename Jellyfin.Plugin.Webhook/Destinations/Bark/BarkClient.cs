@@ -61,7 +61,12 @@ public class BarkClient : BaseClient, IWebhookClient<BarkOption>
 
         if (!string.IsNullOrEmpty(option.Group))
         {
-            wrappedData["isArchive"] = option.Group;
+            wrappedData["group"] = option.Group;
+        }
+
+        if (option.IsArchive is not null)
+        {
+            wrappedData["isArchive"] = option.IsArchive;
         }
 
         if (!string.IsNullOrEmpty(option.JumpUrl))
