@@ -1,0 +1,19 @@
+{
+"title": "{{{data.NotificationType}}}"
+{{~#if_exist level~}}
+    "level": "{{level}}",
+{{~/if_exist~}}
+{{~#if_exist icon~}}
+    "icon": "{{icon}}",
+{{~/if_exist~}}
+{{~#if_exist group~}}
+    "group": "{{group}}",
+{{~/if_exist~}}
+{{~#if_exist isArchive~}}
+    "isArchive": "{{isArchive}}",
+{{~/if_exist~}}
+{{~#if_exist url~}}
+    "url": "{{url}}",
+{{~/if_exist~}}
+"body": "Client: {{{data.Client}}} Log to Server: {{{ServerName}}} via Device: {{{DeviceName}}}"
+}
