@@ -1,5 +1,5 @@
 {
-"title": "{{{data.NotificationType}}}",
+"title": "{{data.NotificationType}}",
 {{~#if_exist level~}}
     "level": "{{level}}",
 {{~/if_exist~}}
@@ -13,7 +13,7 @@
     "isArchive": "{{isArchive}}",
 {{~/if_exist~}}
 {{~#if_exist url~}}
-    "url": "{{url}}",
+    "url": "{{url}}", 
 {{~/if_exist~}}
 "body": "Client: {{{data.Client}}} Log to Server: {{{data.ServerName}}} via Device: {{{data.DeviceName}}}"
 }
