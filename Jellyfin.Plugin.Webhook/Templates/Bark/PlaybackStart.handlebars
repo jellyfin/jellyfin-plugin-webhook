@@ -15,5 +15,5 @@
 {{~#if_exist url~}}
     "url": "{{url}}",
 {{~/if_exist~}}
-"body": "Client: {{{data.Client}}} Log to Server: {{{data.ServerName}}} via Device: {{{data.DeviceName}}}"
+"body": "User: {{#each data.Users}}{{{this.Username}}},{{/each}} \n Playing: {{data.Item.Name}} \nClient: {{{data.ClientName}}} \n Device: {{{data.DeviceName}}}"
 }
