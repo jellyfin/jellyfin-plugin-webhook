@@ -10,6 +10,8 @@ using Jellyfin.Plugin.Webhook.Destinations.Generic;
 
 /// <summary>
 /// Bark specific options.
+/// https://github.com/Finb/bark receiver client.
+/// https://github.com/Finb/bark-server push server.
 /// </summary>
 public class BarkOption : BaseOption
 {
@@ -45,9 +47,4 @@ public class BarkOption : BaseOption
     /// 点击推送时，跳转的URL ，支持URL Scheme 和 Universal Link.
     /// </summary>
     public string? JumpUrl { get; set; }
-
-    /// <summary>
-    /// Gets or sets extra Headers other than application/json.
-    /// </summary>
-    public GenericOptionValue[] Headers { get; set; } = Array.Empty<GenericOptionValue>();
 }

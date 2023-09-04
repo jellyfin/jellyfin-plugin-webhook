@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Bark;
 
 /// <summary>
 /// Client for the <see cref="BarkOption"/>.
+/// https://github.com/Finb/bark receiver client.
+/// https://github.com/Finb/bark-server push server.
 /// </summary>
 public class BarkClient : BaseClient, IWebhookClient<BarkOption>
 {
@@ -41,7 +40,7 @@ public class BarkClient : BaseClient, IWebhookClient<BarkOption>
     /// <param name="option">the bark option.</param>
     /// <param name="data">the event data.</param>
     /// <returns>merged data.</returns>
-    public Dictionary<string, object> MergeOptionToData(BarkOption option, Dictionary<string, object> data)
+    private Dictionary<string, object> MergeOptionToData(BarkOption option, Dictionary<string, object> data)
     {
         option ??= new BarkOption();
         var wrappedData = new Dictionary<string, object>
@@ -98,24 +97,6 @@ public class BarkClient : BaseClient, IWebhookClient<BarkOption>
             var body = option.GetMessageBody(data);
             _logger.LogDebug("SendAsync Body: {@Body}", body);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);
-            foreach (var header in option.Headers)
-            {
-                if (string.IsNullOrEmpty(header.Key) || string.IsNullOrEmpty(header.Value))
-                {
-                    continue;
-                }
-
-                // should not change content type via manually set headers
-                if (string.Equals(HeaderNames.ContentType, header.Key, StringComparison.OrdinalIgnoreCase)
-                    && !string.IsNullOrEmpty(header.Value))
-                {
-                    _logger.LogDebug("should not change content type via manually set headers");
-                }
-                else
-                {
-                    httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-            }
 
             httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, "application/json");
             using var response = await _httpClientFactory
