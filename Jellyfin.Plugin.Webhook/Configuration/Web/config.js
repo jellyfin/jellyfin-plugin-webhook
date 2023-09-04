@@ -633,7 +633,8 @@
                 element.querySelector("[data-name=txtLevel]").value = config.Level || "";
                 element.querySelector("[data-name=txtIcon]").value = config.Icon || "";
                 element.querySelector("[data-name=txtGroup]").value = config.Group || "Jellyfin";
-                element.querySelector("[data-name=txtIsArchive]").value = config.IsArchive || 1;
+                
+                element.querySelector("[data-name=txtIsArchive]").value = config.IsArchive == null? -1 : config.IsArchive
                 element.querySelector("[data-name=txtJumpUrl]").value = config.JumpUrl || "";
             },
             getConfig: function (element) {
@@ -641,7 +642,8 @@
                 config.Level = element.querySelector("[data-name=txtLevel]").value || "active";
                 config.Icon = element.querySelector("[data-name=txtIcon]").value || "";
                 config.Group = element.querySelector("[data-name=txtGroup]").value || "Jellyfin";
-                config.IsArchive = element.querySelector("[data-name=txtIsArchive]").value || null;
+                const rawIsArchive = element.querySelector("[data-name=txtIsArchive]").value;
+                config.IsArchive = rawIsArchive <0 ? null : rawIsArchive;
                 config.JumpUrl = element.querySelector("[data-name=txtJumpUrl]").value || "";
                 return config;
             }
