@@ -93,6 +93,11 @@ public static class DataObjectHelpers
                     dataObject["SeriesName"] = episode.Series.Name.Escape();
                 }
 
+                if (!episode.SeasonId.Equals(default))
+                {
+                    dataObject["SeasonId"] = episode.SeasonId;
+                }
+
                 if (episode.Season?.IndexNumber is not null)
                 {
                     dataObject["SeasonNumber"] = episode.Season.IndexNumber;
