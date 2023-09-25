@@ -103,6 +103,7 @@ public static class DataObjectHelpers
                 if (episode.IndexNumber is not null)
                 {
                     dataObject["EpisodeNumber"] = episode.IndexNumber;
+                    dataObject["SeasonId"] = episode.SeasonId;
                     dataObject["EpisodeNumber00"] = episode.IndexNumber.Value.ToString("00", CultureInfo.InvariantCulture);
                     dataObject["EpisodeNumber000"] = episode.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                 }
