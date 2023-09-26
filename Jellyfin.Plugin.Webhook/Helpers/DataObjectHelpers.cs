@@ -66,6 +66,11 @@ public static class DataObjectHelpers
             dataObject["Year"] = item.ProductionYear;
         }
 
+        if (item.Genres is not null && item.Genres.Length > 0)
+        {
+            dataObject["Genres"] = string.Join(", ", item.Genres);
+        }
+
         switch (item)
         {
             case Season season:
@@ -122,6 +127,18 @@ public static class DataObjectHelpers
                 if (episode.Series?.ProductionYear is not null)
                 {
                     dataObject["Year"] = episode.Series.ProductionYear;
+                }
+
+                if (episode.Series?.PremiereDate is not null)
+                {
+                    DateTime premiereDate = episode.Series.PremiereDate.Value;
+                    string formattedPremiereDate = premiereDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    dataObject["PremiereDate"] = formattedPremiereDate;
+                }
+
+                if (episode.Series?.AirTime is not null)
+                {
+                    dataObject["AirTime"] = episode.Series.AirTime;
                 }
 
                 break;
