@@ -131,9 +131,7 @@ public static class DataObjectHelpers
 
                 if (episode.Series?.PremiereDate is not null)
                 {
-                    DateTime premiereDate = episode.Series.PremiereDate.Value;
-                    string formattedPremiereDate = premiereDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    dataObject["PremiereDate"] = formattedPremiereDate;
+                    dataObject["PremiereDate"] = episode.Series.PremiereDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }
 
                 if (episode.Series?.AirTime is not null)
