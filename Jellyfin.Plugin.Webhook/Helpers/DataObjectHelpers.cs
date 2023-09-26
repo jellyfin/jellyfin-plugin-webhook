@@ -66,6 +66,11 @@ public static class DataObjectHelpers
             dataObject["Year"] = item.ProductionYear;
         }
 
+        if (item.Genres is not null && item.Genres.Length > 0)
+        {
+            dataObject["Genres"] = string.Join(", ", item.Genres);
+        }
+
         switch (item)
         {
             case Season season:
@@ -77,6 +82,11 @@ public static class DataObjectHelpers
                 if (season.Series?.ProductionYear is not null)
                 {
                     dataObject["Year"] = season.Series.ProductionYear;
+                }
+
+                if (season.Series?.Id is not null)
+                {
+                    dataObject["SeriesId"] = season.Series.Id;
                 }
 
                 if (season.IndexNumber is not null)
@@ -91,6 +101,11 @@ public static class DataObjectHelpers
                 if (!string.IsNullOrEmpty(episode.Series?.Name))
                 {
                     dataObject["SeriesName"] = episode.Series.Name.Escape();
+                }
+
+                if (episode.Series?.Id is not null)
+                {
+                    dataObject["SeriesId"] = episode.Series.Id;
                 }
 
                 if (!episode.SeasonId.Equals(default))
@@ -117,6 +132,18 @@ public static class DataObjectHelpers
                     dataObject["EpisodeNumberEnd"] = episode.IndexNumberEnd;
                     dataObject["EpisodeNumberEnd00"] = episode.IndexNumberEnd.Value.ToString("00", CultureInfo.InvariantCulture);
                     dataObject["EpisodeNumberEnd000"] = episode.IndexNumberEnd.Value.ToString("000", CultureInfo.InvariantCulture);
+                }
+
+                if (episode.Series?.PremiereDate is not null)
+                {
+                    DateTime premiereDate = episode.Series.PremiereDate.Value;
+                    string formattedPremiereDate = premiereDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    dataObject["PremiereDate"] = formattedPremiereDate;
+                }
+
+                if (episode.Series?.AirTime is not null)
+                {
+                    dataObject["AirTime"] = episode.Series.AirTime;
                 }
 
                 if (episode.Series?.ProductionYear is not null)
