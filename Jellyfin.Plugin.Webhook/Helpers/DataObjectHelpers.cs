@@ -84,6 +84,11 @@ public static class DataObjectHelpers
                     dataObject["Year"] = season.Series.ProductionYear;
                 }
 
+                if (season.Series?.Id is not null)
+                {
+                    dataObject["SeriesId"] = season.Series.Id;
+                }
+
                 if (season.IndexNumber is not null)
                 {
                     dataObject["SeasonNumber"] = season.IndexNumber;
@@ -96,6 +101,11 @@ public static class DataObjectHelpers
                 if (!string.IsNullOrEmpty(episode.Series?.Name))
                 {
                     dataObject["SeriesName"] = episode.Series.Name.Escape();
+                }
+
+                if (episode.Series?.Id is not null)
+                {
+                    dataObject["SeriesId"] = episode.Series.Id;
                 }
 
                 if (!episode.SeasonId.Equals(default))
