@@ -66,6 +66,11 @@ public static class DataObjectHelpers
             dataObject["Year"] = item.ProductionYear;
         }
 
+        if (item.PremiereDate is not null)
+        {
+            dataObject["PremiereDate"] = item.PremiereDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        }
+
         if (item.Genres is not null && item.Genres.Length > 0)
         {
             dataObject["Genres"] = string.Join(", ", item.Genres);
@@ -137,11 +142,6 @@ public static class DataObjectHelpers
                     dataObject["EpisodeNumberEnd"] = episode.IndexNumberEnd;
                     dataObject["EpisodeNumberEnd00"] = episode.IndexNumberEnd.Value.ToString("00", CultureInfo.InvariantCulture);
                     dataObject["EpisodeNumberEnd000"] = episode.IndexNumberEnd.Value.ToString("000", CultureInfo.InvariantCulture);
-                }
-
-                if (episode.PremiereDate is not null)
-                {
-                    dataObject["EpisodePremiereDate"] = episode.PremiereDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 }
 
                 if (episode.Series?.ProductionYear is not null)
