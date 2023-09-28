@@ -273,6 +273,11 @@ public static class DataObjectHelpers
         dataObject[nameof(playbackProgressEventArgs.DeviceName)] = playbackProgressEventArgs.DeviceName;
         dataObject[nameof(playbackProgressEventArgs.ClientName)] = playbackProgressEventArgs.ClientName;
 
+        if (playbackProgressEventArgs.Session is not null && playbackProgressEventArgs.Session.PlayState?.PlayMethod is not null)
+        {
+            dataObject["PlayMethod"] = playbackProgressEventArgs.Session.PlayState.PlayMethod;
+        }
+
         return dataObject;
     }
 
