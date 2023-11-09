@@ -50,6 +50,11 @@ public class GenericFormClient : BaseClient, IWebhookClient<GenericFormOption>
             }
 
             var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
             var dictionaryBody = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
             if (dictionaryBody is null)
             {

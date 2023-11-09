@@ -36,6 +36,11 @@ public class MqttClient : BaseClient, IWebhookClient<MqttOption>
             }
 
             var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
             var client = _mqttClients.GetClient(option.Guid);
             if (client?.IsConnected != true)
             {

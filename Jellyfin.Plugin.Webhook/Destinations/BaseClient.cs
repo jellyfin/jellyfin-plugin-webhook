@@ -36,4 +36,25 @@ public class BaseClient
 
         return true;
     }
+
+    /// <summary>
+    /// Determines whether the client should send the webhook with the given message body.
+    /// </summary>
+    /// <param name="logger">Instance of the <see cref="ILogger"/> interface.</param>
+    /// <param name="option">The sender option.</param>
+    /// <param name="body">The message body.</param>
+    /// <returns>Whether the client should send the webhook.</returns>
+    protected bool SendMessageBody(
+        ILogger logger,
+        BaseOption option,
+        string body)
+    {
+        if (option.SkipEmptyMessageBody && string.IsNullOrWhiteSpace(body))
+        {
+            logger.LogDebug("Skip sending empty message body");
+            return false;
+        }
+
+        return true;
+    }
 }
