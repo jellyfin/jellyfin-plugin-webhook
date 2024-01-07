@@ -1,0 +1,108 @@
+{
+    {{! All in one Webhook template for Jellyfin Media server }}
+    {{! Written by https://github.com/manuel-rw. Read instructions for usage. }}
+    {{! Be friendly to the API: https://pushover.net/api#friendly. Use https://webhook.site/ to debug. }}
+
+    "token": "{{Token}}",
+    "user": "{{UserToken}}",
+    "title": "Notification from {{ServerName}} ({{ServerVersion}})",
+    "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
+    
+    {{#if_equals NotificationType 'Generic'}}
+        "message": "{{Name}}"
+    {{else}}
+        {{#if_equals NotificationType 'ItemAdded'}}
+            {{#if_equals ItemType 'Season'}}
+                "body": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}"
+            {{else}}
+                {{#if_equals ItemType 'Episode'}}
+                    "body": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}"
+                {{else}}
+                    "body": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}"
+                {{/if_equals}}
+            {{/if_equals}}
+        {{else}}
+            {{#if_equals NotificationType 'UserPasswordChanged'}}
+                "message": "The password for the user '{{NotificationUsername}}' has been changed"
+            {{else}}
+                {{#if_equals NotificationType 'PlaybackStart'}}
+                    "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                {{else}}
+                    {{#if_equals NotificationType 'PlaybackStop'}}
+                        "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                    {{else}}
+                        {{#if_equals NotificationType 'PlaybackProgress'}}
+                            "message": "Playback position for client '{{ClientName}}': {{PlaybackPosition}}"
+                        {{else}}
+                            {{#if_equals NotificationType 'PluginInstalling'}}
+                                "message": "Installing plugin {{PluginName}} version {{PluginVersion}}..."
+                            {{else}}
+                                {{#if_equals NotificationType 'PluginInstalled'}}
+                                    "message": "Plugin '{{PluginName}}' ({{PluginVersion}}) has been installed. A restart may be required"
+                                {{else}}
+                                    {{#if_equals NotificationType 'PluginUninstalled'}}
+                                        "message": "Plugin '{{PluginName}}' ({{PluginVersion}}) has been uninstalled. A restart may be required"
+                                    {{else}}
+                                        {{#if_equals NotificationType 'PluginUpdated'}}
+                                            "message": "Plugin '{{PluginName}}' ({{PluginVersion}}) has been updated. A restart may be required"
+                                        {{else}}
+                                            {{#if_equals NotificationType 'PluginInstallationCancelled'}}
+                                                "message": "Installation of plugin '{{PluginName}}' ({{PluginVersion}}) has been cannceled."
+                                            {{else}}
+                                                {{#if_equals NotificationType 'PluginInstallationFailed'}}
+                                                    "message": "Installation of plugin '{{PluginName}}' ({{PluginVersion}}) has failed: {{ExceptionMessage}}"
+                                                {{else}}
+                                                    {{#if_equals NotificationType 'UserCreated'}}
+                                                        "message": "A new user '{{NotificationUsername}}' was created on your server {{ServerName}}"
+                                                    {{else}}
+                                                        {{#if_equals NotificationType 'UserDeleted'}}
+                                                            "message": "message": "The user '{{NotificationUsername}}' has been deleted on {{ServerName}}"
+                                                        {{else}}
+                                                            {{#if_equals NotificationType 'UserLockedOut'}}
+                                                                "message": "The user '{{NotificationUsername}}' has been locked out because they exceeded the allowed incorrect login attempts."
+                                                            {{else}}
+                                                                {{#if_equals NotificationType 'UserPasswordChanged'}}
+                                                                    "message": "The password for the user '{{NotificationUsername}}' has been changed"
+                                                                {{else}}
+                                                                    {{#if_equals NotificationType 'UserPasswordChanged'}}
+                                                                        "message": "The password for the user '{{NotificationUsername}}' has been changed"
+                                                                    {{else}}
+                                                                        {{#if_equals NotificationType 'AuthenticationFailure'}}
+                                                                            "message": "An attempt to authenticate for account '{{Username}}' has failed"
+                                                                        {{else}}
+                                                                            {{#if_equals NotificationType 'AuthenticationFailure'}}
+                                                                                "message": "'{{NotificationUsername}}' has authenticated successfully. Last logged in on {{LastLoginDate}}"
+                                                                            {{else}}
+                                                                                {{#if_equals NotificationType 'TaskCompleted'}}
+                                                                                    "message": "Task '{{TaskName}}' has completed with status {{ResultStatus}}."
+                                                                                {{else}}
+                                                                                    {{#if_equals NotificationType 'SessionStart'}}
+                                                                                        "message": "Session for '{{NotificationUsername}}' has started on device {{DeviceName}}"
+                                                                                    {{else}}
+                                                                                        {{#if_equals NotificationType 'PendingRestart'}}
+                                                                                            "message": "{{ServerName}} requires a restart"
+                                                                                        {{else}}
+                                                                                            "message": "The handlebars template received an unknown notification with type '{{NotificationType}}'. An administrator may need to remove this notification type or adjust the template."
+                                                                                        {{/if_equals}}
+                                                                                    {{/if_equals}}
+                                                                                {{/if_equals}}
+                                                                            {{/if_equals}}
+                                                                        {{/if_equals}}
+                                                                    {{/if_equals}}
+                                                                {{/if_equals}}
+                                                            {{/if_equals}}
+                                                        {{/if_equals}}
+                                                    {{/if_equals}}
+                                                {{/if_equals}}
+                                            {{/if_equals}}
+                                        {{/if_equals}}
+                                    {{/if_equals}}
+                                {{/if_equals}}
+                            {{/if_equals}}
+                        {{/if_equals}}
+                    {{/if_equals}}
+                {{/if_equals}}
+            {{/if_equals}}
+        {{/if_equals}}
+    {{/if_equals}}
+}
