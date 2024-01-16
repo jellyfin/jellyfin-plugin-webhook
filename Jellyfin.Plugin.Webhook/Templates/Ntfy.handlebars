@@ -1,35 +1,35 @@
-{        
+{
     "topic": "jellyfin",
     "tags": ["octopus"],
-    {{#if_equals NotificationType 'PlaybackStart'}}    
+    {{#if_equals NotificationType 'PlaybackStart'}}
         "title": "{{{NotificationUsername}}} Playback Started",
         "priority": 3,
         "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
             {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}",
+                "message": "{{{NotificationUsername}}} started playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}",
-            {{/if_equals}}   
+                "message": "{{{NotificationUsername}}} started playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+            {{/if_equals}}
     {{/if_equals}}
-    
-    {{#if_equals NotificationType 'PlaybackStop'}}  
+
+    {{#if_equals NotificationType 'PlaybackStop'}}
         "title": "{{{NotificationUsername}}} Playback Stopped",
         "priority": 3,
         "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
             {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}",
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}",
-            {{/if_equals}}   
-    {{/if_equals}}    
-    
-    {{#if_equals NotificationType 'ItemAdded'}}  
+                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+            {{/if_equals}}
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'ItemAdded'}}
     "priority": 3,
-    "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",    
+    "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
         {{#if_equals ItemType 'Movie'}}
             "title": "Movie Added",
             "message": "{{ItemType}} Now Available\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
-        {{/if_equals}}    
+        {{/if_equals}}
         {{#if_equals ItemType 'Season'}}
             "title": "Season Added",
             "message": "{{ItemType}} Now Available\n\n{{{SeriesName}}} ({{Year}})\n{{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
@@ -38,7 +38,7 @@
             "message": "Episode Now Available\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
         {{/if_equals}}
     {{/if_equals}}
-    
+
     {{#if_equals NotificationType 'PendingRestart'}}
         "title": "Jellyfin Restart Required",
         "priority": 4,
