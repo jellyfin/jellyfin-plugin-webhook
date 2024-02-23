@@ -13,12 +13,12 @@
     {{else}}
         {{#if_equals NotificationType 'ItemAdded'}}
             {{#if_equals ItemType 'Season'}}
-                "body": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}"
+                "message": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}"
             {{else}}
                 {{#if_equals ItemType 'Episode'}}
-                    "body": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}"
+                    "message": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}"
                 {{else}}
-                    "body": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}"
+                    "message": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}"
                 {{/if_equals}}
             {{/if_equals}}
         {{else}}
