@@ -1,15 +1,15 @@
-﻿using System;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Controller.Plugins;
+using Microsoft.Extensions.Hosting;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
 
 /// <summary>
 /// Notifier when a library item is added.
 /// </summary>
-public class ItemAddedNotifierEntryPoint : IServerEntryPoint
+public class ItemAddedNotifierEntryPoint : IHostedService
 {
     private readonly IItemAddedManager _itemAddedManager;
     private readonly ILibraryManager _libraryManager;
@@ -27,33 +27,6 @@ public class ItemAddedNotifierEntryPoint : IServerEntryPoint
         _libraryManager = libraryManager;
     }
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc />
-    public Task RunAsync()
-    {
-        _libraryManager.ItemAdded += ItemAddedHandler;
-        HandlebarsFunctionHelpers.RegisterHelpers();
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// Dispose.
-    /// </summary>
-    /// <param name="disposing">Dispose all assets.</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            _libraryManager.ItemAdded -= ItemAddedHandler;
-        }
-    }
-
     private void ItemAddedHandler(object? sender, ItemChangeEventArgs itemChangeEventArgs)
     {
         // Never notify on virtual items.
@@ -63,5 +36,20 @@ public class ItemAddedNotifierEntryPoint : IServerEntryPoint
         }
 
         _itemAddedManager.AddItem(itemChangeEventArgs.Item);
+    }
+
+    /// <inheritdoc />
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _libraryManager.ItemAdded += ItemAddedHandler;
+        HandlebarsFunctionHelpers.RegisterHelpers();
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _libraryManager.ItemAdded -= ItemAddedHandler;
+        return Task.CompletedTask;
     }
 }
