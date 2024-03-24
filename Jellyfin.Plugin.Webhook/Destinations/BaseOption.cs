@@ -72,6 +72,7 @@ public abstract class BaseOption
     /// </summary>
     public bool TrimWhitespace { get; set; }
 
+    /// <summary>
     /// Gets or sets a value indicating whether to skip sending an empty message body.
     /// </summary>
     public bool SkipEmptyMessageBody { get; set; }
