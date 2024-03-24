@@ -72,6 +72,11 @@ public class PushoverClient : BaseClient, IWebhookClient<PushoverOption>
             }
 
             var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
             _logger.LogDebug("SendAsync Body: {@Body}", body);
             using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
             using var response = await _httpClientFactory
