@@ -45,6 +45,11 @@ public class PushbulletClient : BaseClient, IWebhookClient<PushbulletOption>
             data["PushbulletChannel"] = option.Channel;
 
             var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
             _logger.LogDebug("SendAsync Body: {@Body}", body);
 
             using var requestOptions = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(option.WebhookUri) ? PushbulletOption.ApiUrl : option.WebhookUri);

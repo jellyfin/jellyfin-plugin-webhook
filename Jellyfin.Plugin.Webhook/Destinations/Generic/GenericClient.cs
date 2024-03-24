@@ -53,6 +53,11 @@ public class GenericClient : BaseClient, IWebhookClient<GenericOption>
             }
 
             var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
             _logger.LogDebug("SendAsync Body: {@Body}", body);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);
             var contentType = MediaTypeNames.Text.Plain;

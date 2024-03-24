@@ -37,10 +37,13 @@ public class SmtpClient : BaseClient, IWebhookClient<SmtpOption>
             message.To.Add(new MailboxAddress(option.ReceiverAddress, option.ReceiverAddress));
 
             message.Subject = option.GetCompiledSubjectTemplate()(data);
-            message.Body = new TextPart(option.IsHtml ? "html" : "plain")
+            var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
             {
-                Text = option.GetMessageBody(data)
-            };
+                return;
+            }
+
+            message.Body = new TextPart(option.IsHtml ? "html" : "plain") { Text = body };
 
             using var smtpClient = new MailKit.Net.Smtp.SmtpClient();
             await smtpClient.ConnectAsync(option.SmtpServer, option.SmtpPort, option.UseSsl)
