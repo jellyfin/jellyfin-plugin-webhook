@@ -68,6 +68,11 @@ public abstract class BaseOption
     public bool SendAllProperties { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to trim the message body before sending.
+    /// </summary>
+    public bool TrimWhitespace { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to skip sending an empty message body.
     /// </summary>
     public bool SkipEmptyMessageBody { get; set; }
@@ -98,8 +103,10 @@ public abstract class BaseOption
     /// <returns>The string message body.</returns>
     public string GetMessageBody(Dictionary<string, object> data)
     {
-        return SendAllProperties
+        var body = SendAllProperties
             ? JsonSerializer.Serialize(data, JsonDefaults.Options)
             : GetCompiledTemplate()(data);
+
+        return TrimWhitespace ? body.Trim() : body;
     }
 }
