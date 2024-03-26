@@ -40,7 +40,6 @@
             template: document.querySelector("#template-notification-type"),
             values: {
                 "ItemAdded": "Item Added",
-                "Generic": "Generic",
                 "PlaybackStart": "Playback Start",
                 "PlaybackProgress": "Playback Progress",
                 "PlaybackStop": "Playback Stop",

@@ -13,13 +13,14 @@ using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
-using MediaBrowser.Common.Plugins;
 using MediaBrowser.Common.Updates;
+using MediaBrowser.Controller;
 using MediaBrowser.Controller.Authentication;
 using MediaBrowser.Controller.Events;
 using MediaBrowser.Controller.Events.Session;
 using MediaBrowser.Controller.Events.Updates;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Plugins;
 using MediaBrowser.Controller.Session;
 using MediaBrowser.Controller.Subtitles;
 using MediaBrowser.Model.Tasks;
@@ -33,7 +34,7 @@ namespace Jellyfin.Plugin.Webhook;
 public class PluginServiceRegistrator : IPluginServiceRegistrator
 {
     /// <inheritdoc />
-    public void RegisterServices(IServiceCollection serviceCollection)
+    public void RegisterServices(IServiceCollection serviceCollection, IServerApplicationHost applicationHost)
     {
         serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
         serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
