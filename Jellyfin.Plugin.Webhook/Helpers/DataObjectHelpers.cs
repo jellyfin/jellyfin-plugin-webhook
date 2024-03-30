@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
 using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Controller;
@@ -395,6 +396,13 @@ public static class DataObjectHelpers
     /// </summary>
     /// <param name="input">Input string.</param>
     /// <returns>Escaped string.</returns>
-    private static string Escape(this string? input)
-        => input?.Replace("\"", "\\\"", StringComparison.Ordinal) ?? string.Empty;
+    public static string Escape(this string? input)
+    {
+        if (input == null)
+        {
+            return string.Empty;
+        }
+
+        return JsonEncodedText.Encode(input).ToString();
+    }
 }
