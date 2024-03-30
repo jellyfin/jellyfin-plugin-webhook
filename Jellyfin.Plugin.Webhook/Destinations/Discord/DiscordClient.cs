@@ -67,7 +67,7 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
 
             var escapedJsonData = data.ToDictionary(
                 kvp => kvp.Key,
-                kvp => (object)System.Text.Json.JsonSerializer.Serialize(kvp.Value));
+                kvp => (object)System.Text.Json.JsonSerializer.Serialize(kvp.Value).Trim('"'));
 
             var body = option.GetMessageBody(escapedJsonData);
             if (!SendMessageBody(_logger, option, body))
