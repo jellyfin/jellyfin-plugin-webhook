@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using System.Linq;
+using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
@@ -67,8 +67,7 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
 
             var escapedJsonData = data.ToDictionary(
                 kvp => kvp.Key,
-                kvp => (object)System.Text.Json.JsonSerializer.Serialize(kvp.Value)
-            );
+                kvp => (object)System.Text.Json.JsonSerializer.Serialize(kvp.Value));
 
             var body = option.GetMessageBody(escapedJsonData);
             if (!SendMessageBody(_logger, option, body))
