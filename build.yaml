@@ -15,7 +15,7 @@ artifacts:
   - "Handlebars.dll"
   - "MailKit.dll"
   - "MimeKit.dll"
-  - "BouncyCastle.Crypto.dll"
+  - "BouncyCastle.Cryptography.dll"
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-

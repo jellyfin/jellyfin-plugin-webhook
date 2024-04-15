@@ -55,7 +55,7 @@ public class MqttClients : IMqttClients, IDisposable
 
                 if (option.UseTls)
                 {
-                    messageBuilder.WithTls();
+                    messageBuilder.WithTlsOptions(c => c.UseTls());
                 }
 
                 var clientOptions = messageBuilder.Build();
