@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "12"
-targetAbi: "10.9.0.0"
+version: 12
+targetAbi: "10.8.13.0"
 framework: "net8.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -19,17 +19,53 @@ artifacts:
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-
+  - 10.9 support (#219) @crobibero
+  - More Discord templates (#163) @seanmcbroom
+  - chore(deps): bump MailKit from 3.1.1 to 3.2.0 (#108) @dependabot
+
+  ### New features and improvements ###
+  - Implement option to trim leading/trailing whitespace from message body (#220) @danielztolnai
+  - Implement option to skip sending webhooks with an empty message body (#202) @danielztolnai
+  - Add PlayMethod variable (#197) @zeroquinc
+  - Add PremiereDate for movies (#195) @zeroquinc
+  - Support for SeriesId (#192) @zeroquinc
+  - Support for more variables (#194) @zeroquinc
+  - support for SeasonId (#190) @zeroquinc
+  - Added MQTT as a destination (#134) @darickc
+  - [Templates] Telegram & ntfy templates with special instructions (#130) @Fallenbagel
+
+  ### Bug Fixes ###
+  - Clear config when loading page (#115) @crobibero
+
   ### Code or Repo Maintenance ###
-  - Fix scheduled task (#106) @crobibero
-  - chore(deps): bump Handlebars.Net from 2.0.10 to 2.1.0 (#101) @dependabot
-  - chore(deps): bump MailKit from 3.1.0 to 3.1.1 (#102) @dependabot
-  - chore(deps): bump MailKit from 3.0.0 to 3.1.0 (#95) @dependabot
+  - Update link to Jellyfin website (#200) @methbkts
+  - Update dependencies and fix stylecop (#138) @crobibero
+
+  ### Documentation updates ###
+  - config: update pushover template AllInOne.handlebars (#218) @manuel-rw
+  - docs(ntfy) remove trailing commas and remove text error (#215) @lucavb
+  - fix: remove extra curly braces from templates (#211) @dowster
+  - docs: add all in one pushover template (#212) @manuel-rw
+  - Patch 1 (#175) @VandolinHimself
+  - Update NotificationType.cs (#155) @Zark247
+  - Add handlebar templates for Pushover (#153) @manuel-rw
 
   ### Dependency updates ###
-  - chore(deps): bump Handlebars.Net from 2.0.10 to 2.1.0 (#101) @dependabot
-  - chore(deps): bump MailKit from 3.1.0 to 3.1.1 (#102) @dependabot
-  - chore(deps): bump MailKit from 3.0.0 to 3.1.0 (#95) @dependabot
+  - chore(deps): update dependency stylecop.analyzers to v1.2.0-beta.507 (#180) @renovate
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.2.1.781 (#179) @renovate
+  - chore(deps): update dependency handlebars.net to v2.1.4 (#169) @renovate
+  - chore(deps): update dependency mailkit to v3.6.0 (#170) @renovate
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.2.0.706 (#176) @renovate
+  - chore(deps): update dependency handlebars.net to v2.1.3 (#164) @renovate
+  - chore(deps): update dependency mailkit to v3.5.0 (#159) @renovate
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.1.4.563 (#151) @renovate
+  - chore(deps): update dependency mailkit to v3.4.3 (#149) @renovate
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.1.3.436 (#145) @renovate
+  - chore(deps): update dependency mailkit to v3.4.2 (#142) @renovate
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.1.2.350 (#141) @renovate
+  - chore(deps): update dependency mailkit to v3.4.1 (#135) @renovate
+  - chore(deps): update dependency mailkit to v3.3.0 (#119) @renovate
+  - chore(deps): bump Handlebars.Net from 2.1.0 to 2.1.2 (#111) @dependabot
 
   ### CI & build changes ###
-  - fix: wrong name in ci workflows (#104) @h1dden-da3m0n
-  - ci: migrate to centralized Plugin CI workflows (#94) @h1dden-da3m0n
+  - fix: meta ci workflows (#116) @h1dden-da3m0n
