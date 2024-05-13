@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller.Library;
 using Microsoft.Extensions.Hosting;
 
@@ -42,7 +41,6 @@ public class ItemAddedNotifierEntryPoint : IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _libraryManager.ItemAdded += ItemAddedHandler;
-        HandlebarsFunctionHelpers.RegisterHelpers();
         return Task.CompletedTask;
     }
 
