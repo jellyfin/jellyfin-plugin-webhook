@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: "12"
-targetAbi: "10.9.0.0"
+version: 13
+targetAbi: "10.9.1.0"
 framework: "net8.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -18,18 +18,6 @@ artifacts:
   - "BouncyCastle.Cryptography.dll"
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
-changelog: |-
-  ### Code or Repo Maintenance ###
-  - Fix scheduled task (#106) @crobibero
-  - chore(deps): bump Handlebars.Net from 2.0.10 to 2.1.0 (#101) @dependabot
-  - chore(deps): bump MailKit from 3.1.0 to 3.1.1 (#102) @dependabot
-  - chore(deps): bump MailKit from 3.0.0 to 3.1.0 (#95) @dependabot
-
-  ### Dependency updates ###
-  - chore(deps): bump Handlebars.Net from 2.0.10 to 2.1.0 (#101) @dependabot
-  - chore(deps): bump MailKit from 3.1.0 to 3.1.1 (#102) @dependabot
-  - chore(deps): bump MailKit from 3.0.0 to 3.1.0 (#95) @dependabot
-
-  ### CI & build changes ###
-  - fix: wrong name in ci workflows (#104) @h1dden-da3m0n
-  - ci: migrate to centralized Plugin CI workflows (#94) @h1dden-da3m0n
+changelog: |2-
+  ### Bug Fixes ###
+  - Fix registering helpers during plugin initialization (#230) @crobibero
