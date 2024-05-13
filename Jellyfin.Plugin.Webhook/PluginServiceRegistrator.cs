@@ -11,6 +11,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
+using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
 using MediaBrowser.Common.Updates;
@@ -36,6 +37,8 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
     /// <inheritdoc />
     public void RegisterServices(IServiceCollection serviceCollection, IServerApplicationHost applicationHost)
     {
+        HandlebarsFunctionHelpers.RegisterHelpers();
+
         serviceCollection.AddScoped<IWebhookClient<DiscordOption>, DiscordClient>();
         serviceCollection.AddScoped<IWebhookClient<GenericOption>, GenericClient>();
         serviceCollection.AddScoped<IWebhookClient<GenericFormOption>, GenericFormClient>();
