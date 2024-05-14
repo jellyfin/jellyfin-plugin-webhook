@@ -14,6 +14,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
+using Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier;
 using MediaBrowser.Common.Updates;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Authentication;
@@ -88,5 +89,9 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
         serviceCollection.AddScoped<IEventConsumer<UserLockedOutEventArgs>, UserLockedOutNotifier>();
         serviceCollection.AddScoped<IEventConsumer<UserPasswordChangedEventArgs>, UserPasswordChangedNotifier>();
         serviceCollection.AddScoped<IEventConsumer<UserUpdatedEventArgs>, UserUpdatedNotifier>();
+
+        serviceCollection.AddHostedService<WebhookServerEntryPoint>();
+        serviceCollection.AddHostedService<ItemAddedNotifierEntryPoint>();
+        serviceCollection.AddHostedService<UserDataSavedNotifierEntryPoint>();
     }
 }
