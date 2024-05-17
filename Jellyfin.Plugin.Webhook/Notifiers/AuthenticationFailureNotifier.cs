@@ -1,17 +1,17 @@
-﻿using System.Threading.Tasks;
-using Jellyfin.Data.Events;
+﻿using System;
+using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Events;
-using MediaBrowser.Controller.Session;
+using MediaBrowser.Controller.Events.Authentication;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers;
 
 /// <summary>
 /// Authentication failure notifier.
 /// </summary>
-public class AuthenticationFailureNotifier : IEventConsumer<GenericEventArgs<AuthenticationRequest>>
+public class AuthenticationFailureNotifier : IEventConsumer<AuthenticationRequestEventArgs>
 {
     private readonly IServerApplicationHost _applicationHost;
     private readonly IWebhookSender _webhookSender;
@@ -30,21 +30,21 @@ public class AuthenticationFailureNotifier : IEventConsumer<GenericEventArgs<Aut
     }
 
     /// <inheritdoc />
-    public async Task OnEvent(GenericEventArgs<AuthenticationRequest> eventArgs)
+    public async Task OnEvent(AuthenticationRequestEventArgs eventArgs)
     {
-        if (eventArgs.Argument is null)
+        if (eventArgs is null)
         {
             return;
         }
 
         var dataObject = DataObjectHelpers
             .GetBaseDataObject(_applicationHost, NotificationType.AuthenticationFailure);
-        dataObject[nameof(eventArgs.Argument.App)] = eventArgs.Argument.App;
-        dataObject[nameof(eventArgs.Argument.Username)] = eventArgs.Argument.Username;
-        dataObject[nameof(eventArgs.Argument.UserId)] = eventArgs.Argument.UserId;
-        dataObject[nameof(eventArgs.Argument.AppVersion)] = eventArgs.Argument.AppVersion;
-        dataObject[nameof(eventArgs.Argument.DeviceId)] = eventArgs.Argument.DeviceId;
-        dataObject[nameof(eventArgs.Argument.DeviceName)] = eventArgs.Argument.DeviceName;
+        dataObject[nameof(eventArgs.App)] = eventArgs.App ?? string.Empty;
+        dataObject[nameof(eventArgs.Username)] = eventArgs.Username ?? string.Empty;
+        dataObject[nameof(eventArgs.UserId)] = eventArgs.UserId ?? Guid.Empty;
+        dataObject[nameof(eventArgs.AppVersion)] = eventArgs.AppVersion ?? string.Empty;
+        dataObject[nameof(eventArgs.DeviceId)] = eventArgs.DeviceId ?? string.Empty;
+        dataObject[nameof(eventArgs.DeviceName)] = eventArgs.DeviceName ?? string.Empty;
 
         await _webhookSender.SendNotification(NotificationType.AuthenticationFailure, dataObject)
             .ConfigureAwait(false);
