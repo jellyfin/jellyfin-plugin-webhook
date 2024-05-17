@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 13
+version: 14
 targetAbi: "10.9.1.0"
 framework: "net8.0"
 owner: "jellyfin"
@@ -20,4 +20,8 @@ artifacts:
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |2-
   ### Bug Fixes ###
-  - Fix registering helpers during plugin initialization (#230) @crobibero
+  - Fix AuthenticationFailureNotifier, AuthenticationSuccessNotifier (#238) @crobibero
+  - Actually register hosted services (#233) @crobibero
+
+  ### Dependency updates ###
+  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.3.4.1084 (#187) @renovate
