@@ -69,13 +69,39 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 return;
             }
 
-            _logger.LogDebug("SendAsync Body: {@Body}", body);
-            using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-            using var response = await _httpClientFactory
-                .CreateClient(NamedClient.Default)
-                .PostAsync(new Uri(option.WebhookUri), content)
-                .ConfigureAwait(false);
-            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            var thumbnailUrl = data.GetValueOrDefault("thumbnail_url") as string;
+            if (!string.IsNullOrWhiteSpace(thumbnailUrl))
+            {
+                _logger.LogDebug("SendAsync Body: {@Body}", body);
+
+                // get the image file
+                var imageBytes = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
+                    .GetByteArrayAsync(new Uri(thumbnailUrl))
+                    .ConfigureAwait(true);
+
+                // send the image file and the body as a multipart form
+                using var content = new MultipartFormDataContent
+                {
+                    { new ByteArrayContent(imageBytes), "files[0]", "thumbnail.jpg" },
+                    { new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json), "payload_json" }
+                };
+                using var response = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
+                    .PostAsync(new Uri(option.WebhookUri), content)
+                    .ConfigureAwait(false);
+                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            }
+            else
+            {
+                _logger.LogDebug("SendAsync Body: {@Body}", body);
+                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+                using var response = await _httpClientFactory
+                    .CreateClient(NamedClient.Default)
+                    .PostAsync(new Uri(option.WebhookUri), content)
+                    .ConfigureAwait(false);
+                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            }
         }
         catch (HttpRequestException e)
         {
