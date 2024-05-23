@@ -76,6 +76,11 @@ public static class DataObjectHelpers
             dataObject["Genres"] = string.Join(", ", item.Genres);
         }
 
+        if (item is IHasAspectRatio aspectRatioItem && !string.IsNullOrEmpty(aspectRatioItem.AspectRatio))
+        {
+            dataObject["AspectRatio"] = aspectRatioItem.AspectRatio;
+        }
+
         switch (item)
         {
             case Season season:
