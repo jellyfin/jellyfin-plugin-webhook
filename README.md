@@ -97,6 +97,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - The media runtime, in [Ticks](https://docs.microsoft.com/en-us/dotnet/api/system.datetime.ticks)
     - RunTime
         - The media runtime, as `hh:mm:ss`
+    - AspectRatio
+        - Item original aspect ratio 
 
 
 - Playback
