@@ -6,7 +6,7 @@
 <br/>
 <br/>
 <a href="https://github.com/jellyfin/jellyfin-plugin-webhook/actions?query=workflow%3A%22Test+Build+Plugin%22">
-<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/jellyfin/jellyfin-plugin-webhook/Test%20Build%20Plugin.svg">
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/jellyfin/jellyfin-plugin-webhook/.github/workflows/test.yml?branch=main">
 </a>
 <a href="https://github.com/jellyfin/jellyfin-plugin-webhook">
 <img alt="GPLv3 License" src="https://img.shields.io/github/license/jellyfin/jellyfin-plugin-webhook.svg"/>
