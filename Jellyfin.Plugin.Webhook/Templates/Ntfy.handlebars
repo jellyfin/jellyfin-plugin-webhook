@@ -1,47 +1,74 @@
 {
     "topic": "jellyfin",
-    "tags": ["octopus"],
     {{#if_equals NotificationType 'PlaybackStart'}}
-        "title": "{{{NotificationUsername}}} Playback Started",
-        "priority": 3,
+        "title": "{{NotificationUsername}} Playback Started",
+        "priority": 2,
         "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
             {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} started playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
+                "message": "{{NotificationUsername}} started playing:\n\n{{SeriesName}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{Name}}\n{{Overview}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} started playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+                "message": "{{NotificationUsername}} started playing:\n\n{{Name}} ({{Year}})\n{{Overview}}"
             {{/if_equals}}
     {{/if_equals}}
 
     {{#if_equals NotificationType 'PlaybackStop'}}
-        "title": "{{{NotificationUsername}}} Playback Stopped",
-        "priority": 3,
+        "title": "{{NotificationUsername}} Playback Stopped",
+        "priority": 2,
         "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
             {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
+                "message": "{{NotificationUsername}} stopped playing:\n\n{{SeriesName}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{Name}}\n{{Overview}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+                "message": "{{NotificationUsername}} stopped playing:\n\n{{Name}} ({{Year}})\n{{Overview}}"
             {{/if_equals}}
     {{/if_equals}}
 
     {{#if_equals NotificationType 'ItemAdded'}}
+    "tags": ["tada"],
     "priority": 3,
     "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
+    "delay": "5min",
+    "actions":  [
+      {
+        "action": "view",
+        "label": "Open",
+        "url": "{{{ServerUrl}}}/web/#/details?id={{{ItemId}}}&serverId={{{ServerId}}}",
+        "clear": true
+      }
+    ],
         {{#if_equals ItemType 'Movie'}}
-            "title": "Movie Added",
-            "message": "{{ItemType}} Now Available\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
-        {{/if_equals}}
-        {{#if_equals ItemType 'Season'}}
-            "title": "Season Added",
-            "message": "{{ItemType}} Now Available\n\n{{{SeriesName}}} ({{Year}})\n{{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+            "title": "Movie Added • {{Name}}",
+            "message": "{{Name}} ({{Year}})\nRuntime: {{RunTime}}\n\n{{Overview}}"
         {{else}}
-            "title": "Episode Added",
-            "message": "Episode Now Available\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+            {{#if_equals ItemType 'Season'}}
+            "title": "Season Added • {{SeriesName}} ~ {{Name}}",
+            "message": "{{SeriesName}} ({{Year}})\n{{Name}}\nRuntime: {{RunTime}}\n\n{{Overview}}"
+            {{else}}
+                "title": "Episode Added • {{SeriesName}} S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{Name}}",
+                "message": "{{SeriesName}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{Name}}\nRuntime: {{RunTime}}\n\n{{Overview}}"
+            {{/if_equals}}
         {{/if_equals}}
     {{/if_equals}}
 
     {{#if_equals NotificationType 'PendingRestart'}}
         "title": "Jellyfin Restart Required",
+        "tags": ["triangular_flag_on_post"],
         "priority": 4,
+        "click": "{{{ServerUrl}}}/web/#/dashboard",
         "message": "Jellyfin needs to be restarted, please restart jellyfin as soon as possible!"
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'UserLockedOut'}}
+        "title": "User Locked Out",
+        "tags": ["no_entry"],
+        "priority": 5,
+        "click": "{{{ServerUrl}}}/web/#/dashboard/users/profile?userId={{{UserId}}}",
+        "message": "User: {{NotificationUsername}} has locked out, please unlock as soon as possible!"
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'AuthenticationFailure'}}
+        "title": "User Login Failed",
+        "tags": ["warning"],
+        "priority": 4,
+        "message": "User: {{NotificationUsername}} has tried to login and failed!"
     {{/if_equals}}
 }
