@@ -1,47 +1,109 @@
+##REMOVE THESE LINES!!! ----->
+##This JSON template uses markdown which is supported by ntfy.sh. Don't forget to add following Request Header:
+##Key: X-Markdown
+##Value: true
+##
+##To publish as JSON, use the ntfy root URL, not the topic URL.
+##Correct: https://ntfy.sh[:PORT]
+##Incorrect: https://ntfy.sh[:PORT]/jellyfin
+##The default topic ("jellyfin") is specified within this JSON template.
+##<----- REMOVE THESE LINES!!!
 {
     "topic": "jellyfin",
-    "tags": ["octopus"],
     {{#if_equals NotificationType 'PlaybackStart'}}
-        "title": "{{{NotificationUsername}}} Playback Started",
-        "priority": 3,
-        "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
-            {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} started playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
+        "priority": 2,
+        "tags": ["arrow_forward"],
+        "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
+        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+            {{#if_equals ItemType 'Audio'}}
+                "title": "{{{NotificationUsername}}} | Playback started: {{{Artist}}} - {{{Name}}} ({{Year}})",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback started\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} started playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+            {{#if_equals ItemType 'Episode'}}
+                "title": "{{{NotificationUsername}}} | Playback started: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback started\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+            {{else}}
+                "title": "{{{NotificationUsername}}} | Playback started: {{{Name}}} ({{Year}})",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback started\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+            {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
 
     {{#if_equals NotificationType 'PlaybackStop'}}
-        "title": "{{{NotificationUsername}}} Playback Stopped",
-        "priority": 3,
-        "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
-            {{#if_equals ItemType 'Episode'}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\non {{{ServerName}}}"
+        "priority": 2,
+        "tags": ["stop_button"],
+        "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
+        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+            {{#if_equals ItemType 'Audio'}}
+                "title": "{{{NotificationUsername}}} | Playback stopped: {{{Artist}}} - {{{Name}}} ({{Year}})",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback stopped\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
             {{else}}
-                "message": "{{{NotificationUsername}}} stopped playing:\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\non {{{ServerName}}}"
+            {{#if_equals ItemType 'Episode'}}
+                "title": "{{{NotificationUsername}}} | Playback stopped: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback stopped\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+            {{else}}
+                "title": "{{{NotificationUsername}}} | Playback stopped: {{{Name}}} ({{Year}})",
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Action:** Playback stopped\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+            {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
 
+
     {{#if_equals NotificationType 'ItemAdded'}}
     "priority": 3,
-    "attach": "{{{ServerUrl}}}/Items/{{{ItemId}}}/Images/Primary",
-        {{#if_equals ItemType 'Movie'}}
-            "title": "Movie Added",
-            "message": "{{ItemType}} Now Available\n\n{{{Name}}} ({{Year}})\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
-        {{/if_equals}}
-        {{#if_equals ItemType 'Season'}}
-            "title": "Season Added",
-            "message": "{{ItemType}} Now Available\n\n{{{SeriesName}}} ({{Year}})\n{{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+    "tags": ["heavy_plus_sign"],
+    "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
+    "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+        {{#if_equals ItemType 'Audio'}}
+            "title": "Audio Track Added: {{{Artist}}} - {{{Name}}} | {{{Album}}} ({{Year}})",
+            "message": "---\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
         {{else}}
-            "title": "Episode Added",
-            "message": "Episode Now Available\n\n{{{SeriesName}}} ({{Year}})\nS{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n{{Overview}}\n\nRuntime\n{{RunTime}}\n\nStatus\nAvailable"
+        {{#if_equals ItemType 'MusicAlbum'}}
+            "title": "Album Added: {{{Artist}}} - {{{Name}}} ({{Year}})",
+            "message": "---\n**- Artist:** {{{Artist}}}\n**- Album:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
+        {{else}}
+        {{#if_equals ItemType 'Movie'}}
+            "title": "Movie Added: {{{Name}}} ({{Year}})",
+            "message": "---\n**{{{Name}}}** ({{Year}})\n**Runtime:** {{RunTime}}\n**Status:** Available\n\nDescription:**\n{{Overview}}"
+        {{else}}
+        {{#if_equals ItemType 'Season'}}
+            "title": "Season Added: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}",
+            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Season:** {{{Name}}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
+        {{else}}
+        {{#if_equals ItemType 'Series'}}
+            "title": "Series Added: {{Name}} ({{Year}})",
+            "message": "---\n**- Series:** {{Name}} ({{Year}})\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
+        {{else}}
+            "title": "Episode Added: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
+            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
+        {{/if_equals}}
+        {{/if_equals}}
+        {{/if_equals}}
+        {{/if_equals}}
         {{/if_equals}}
     {{/if_equals}}
 
     {{#if_equals NotificationType 'PendingRestart'}}
         "title": "Jellyfin Restart Required",
         "priority": 4,
-        "message": "Jellyfin needs to be restarted, please restart jellyfin as soon as possible!"
+        "message": "---\n**- Message:** Jellyfin needs to be restarted, please restart jellyfin as soon as possible!"
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'AuthenticationFailure'}}
+        "title": "Alert: {{{Username}}}: Authentication Failure",
+        "priority": 5,
+        "message": "---\n**- User:** {{{Username}}}\n**- Issue:** Login request was denied: Wrong password!"
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'AuthenticationSuccess'}}
+        "title": "{{{NotificationUsername}}}: Authentication Success",
+        "priority": 3,
+        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Message:** Successfully logged in!"
+    {{/if_equals}}
+
+    {{#if_equals NotificationType 'UserLockedOut'}}
+        "title": "Alert: {{{NotificationUsername}}}: User Locked Out",
+        "priority": 5,
+        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Issue:** User has been locked out!"
     {{/if_equals}}
 }
