@@ -1,12 +1,13 @@
 ##REMOVE THESE LINES!!! ----->
-##This JSON template uses markdown which is supported by ntfy.sh. Don't forget to add following Request Header:
+##This JSON template uses markdown (e.g. "---", "**" & "## ") which is supported by ntfy.sh on browser. Don't forget to add following Request Header:
 ##Key: X-Markdown
 ##Value: true
 ##
-##To publish as JSON, use the ntfy root URL, not the topic URL.
+##To publish as JSON, use the ntfy root URL, not the topic URL:
 ##Correct: https://ntfy.sh[:PORT]
 ##Incorrect: https://ntfy.sh[:PORT]/jellyfin
-##The default topic ("jellyfin") is specified within this JSON template.
+##
+##The topic ("jellyfin"), priorities (1-5) and of course titles & messages are specified within this JSON template. Modify them as you wish.
 ##<----- REMOVE THESE LINES!!!
 {
     "topic": "jellyfin",
@@ -64,7 +65,7 @@
         {{else}}
         {{#if_equals ItemType 'Movie'}}
             "title": "Movie Added: {{{Name}}} ({{Year}})",
-            "message": "---\n**{{{Name}}}** ({{Year}})\n**Runtime:** {{RunTime}}\n**Status:** Available\n\nDescription:**\n{{Overview}}"
+            "message": "---\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
         {{else}}
         {{#if_equals ItemType 'Season'}}
             "title": "Season Added: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}",
