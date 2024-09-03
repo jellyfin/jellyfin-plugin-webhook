@@ -50,7 +50,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
 
 #### Variables:
 
-- Every Notifier
+- Every Notifier: Server
     - ServerId
     - ServerName
     - ServerVersion
@@ -59,6 +59,30 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Server url
     - NotificationType
         - The [NotificationType](Jellyfin.Plugin.Webhook/Destinations/NotificationType.cs)
+
+- Every Notifier: User
+    - NotificationUsername
+        - Current user name
+    - Username
+        - Current user name
+    - UserId
+        - User ID
+    - LastLoginDate
+        - Last user login date
+    - LastActivityDate
+        - Last user activity date
+
+- Every Notifier: Device
+    - DeviceName
+        - Playback device name
+    - DeviceId
+        - Playback device ID
+
+- Every Notifier: Client
+    - ClientName
+        - Playback client name
+    - Client
+        - Playback client name
 
 - BaseItem:
     - Timestamp
@@ -74,57 +98,183 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - ItemId
         - Item id
     - ItemType
-        - Item type
+        - "Movie" "Episode" "Season" "Series" "Album" "Song"
+    - RunTimeTicks
+        - The media runtime, in [Ticks](https://docs.microsoft.com/en-us/dotnet/api/system.datetime.ticks)
+    - RunTime
+        - The media runtime, as `hh:mm:ss`
     - Year
         - Item production year
+    - PremiereDate
+        - Item premiere year
+    - Genres
+        - item Genre
+    - AspectRatio
+        - Item aspect ratio
+    - MediaSourceId
+        - The media source id
+    - Provider_{providerId_lowercase}
+        - "Provider_tvdb" "Provider_tmdb" "Provider_imdb"
+
+- BaseItem: Season
     - SeriesName
         - TV series name
+    - Year
+        - Season production year
+    - SeriesId
+        - Season Series ID
+    - SeriesPremiereDate
+        - Series premiere date
     - SeasonNumber
         - Series number - direct format
     - SeasonNumber00
         - Series number - padded 00
     - SeasonNumber000
         - Series number - padded 000
+
+- BaseItem: Episode
     - EpisodeNumber
         - Episode number - direct format
     - EpisodeNumber00
         - Episode number - padded 00
     - EpisodeNumber000 -
         - Episode number - padded 000
-    - Provider_{providerId_lowercase}
-        - ProviderId is lowercase.
-    - RunTimeTicks
-        - The media runtime, in [Ticks](https://docs.microsoft.com/en-us/dotnet/api/system.datetime.ticks)
-    - RunTime
-        - The media runtime, as `hh:mm:ss`
-    - AspectRatio
-        - Item original aspect ratio 
+    - EpisodeNumberEnd
+        - Episode number end - direct format
+    - EpisodeNumberEnd00
+        - Episode number end - padded 00
+    - EpisodeNumberEnd000
+        - Episode number end - padded 000
+    - AirTime
+        - Episode series airtime
+    - Year
+        - Episode production year
 
+- BaseItem: Audio
+    - Album
+        - Audio album
+    - Artist
+        - Audio artist
+    - Year
+        - Audio production year
+
+- BaseItem: Album
+    - Artist
+        - Album artist
+    - Year
+        - Album production year
 
 - Playback
-    - Includes everything from `BaseItem`
     - PlaybackPositionTicks
         - The current playback position, in [Ticks](https://docs.microsoft.com/en-us/dotnet/api/system.datetime.ticks)
     - PlaybackPosition
         - The current playback position, as `hh:mm:ss`
-    - MediaSourceId
-        - The media source id
+    - PlayMethod
+        - "Transcode" "DirectStream" "DirectPlay"
+    - PlayedToCompletion
+        - `true/false`, Only when `NotificationType == PlaybackStop`
     - IsPaused
         - If playback is paused
     - IsAutomated
         - If notification is automated, or user triggered
-    - DeviceId
-        - Playback device id
-    - DeviceName
-        - Playback device name
-    - ClientName
-        - Playback client name
-    - NotificationUsername
-        - User playing item. Note: multiple notifications will be sent if there are multiple users in a session
-    - UserId
-        - The user Id
-    - PlayedToCompletion
-        - `true/false`, Only when `NotificationType == PlaybackStop`
+    - Likes
+        - likes
+    - Rating
+        - rating
+    - PlayCount
+        - Total playcount
+    - Favorite
+        - Favorite
+    - Played
+        - Completely played
+    - AudioStreamIndex
+        - Audio stream index
+    - SubtitleStreamIndex
+        - Subtitle stream index
+    - LastPlayedDate
+        - Last played date
+
+- Audio info
+    - Audio_0_Title
+        - Display title
+    - Audio_0_Type
+        - Audio type
+    - Audio_0_Language
+        - Audio language
+    - Audio_0_Codec
+        - Audio codec
+    - Audio_0_Channels
+        - Number of audio channels
+    - Audio_0_Bitrate
+        - Audio bitrate
+    - Audio_0_SampleRate
+        - Audio samplerate
+    - Audio_0_Default
+        - default audio
+
+- Video info
+    - Video_0_Title
+        - Display title
+    - Video_0_Type
+        - Video type
+    - Video_0_Codec
+        - Video codec
+    - Video_0_Profile
+        - Video profile
+    - Video_0_Level
+        - Video level
+    - Video_0_Height
+        - Video height
+    - Video_0_Width
+        - Video width
+    - Video_0_AspectRatio
+        - Video aspect ratio
+    - Video_0_Interlaced
+        - Video interlaced
+    - Video_0_FrameRate
+        - Video framerate
+    - Video_0_VideoRange
+        - Video video range
+    - Video_0_ColorSpace
+        - Video color space
+    - Video_0_ColorTransfer
+        - Video color transfer
+    - Video_0_ColorPrimaries
+        - Video color primaries
+    - Video_0_PixelFormat
+        - Video pixel format
+    - Video_0_RefFrames
+        - Video ref frames
+
+- Subtitle info
+    - Subtitle_0_Title
+        - Subtitle title
+    - Subtitle_0_Type
+        - Subtitle type
+    - Subtitle_0_Language
+        - Subtitle language
+    - Subtitle_0_Codec
+        - Subtitle codec
+    - Subtitle_0_Default
+        - Default subtitle
+    - Subtitle_0_Forced
+        - Forced subtitle
+    - Subtitle_0_External
+        - External subtitle
+
+- Plugin info
+    - PluginId
+        - Plugin ID
+    - PluginName
+        - Plugin name
+    - PluginVersion
+        - Plugin version
+    - PluginChangelog
+        - Plugin Cchangelog
+    - PluginChecksum
+        - Plugin checksum
+    - PluginSourceUrl
+        - Plugin source URL
 
 #### Destination Specific:
 
