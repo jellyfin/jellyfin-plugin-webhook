@@ -52,7 +52,9 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
 
 - Every Notifier: Server
     - ServerId
+        - Server ID
     - ServerName
+        - Server name
     - ServerVersion
         - `$major.$minor.$build`
     - ServerUrl
