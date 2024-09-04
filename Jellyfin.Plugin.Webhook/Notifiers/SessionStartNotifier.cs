@@ -14,12 +14,12 @@ namespace Jellyfin.Plugin.Webhook.Notifiers;
 /// <summary>
 /// Session start notifier.
 /// </summary>
-public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>, IDisposable
+public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
 {
     private readonly IServerApplicationHost _applicationHost;
     private readonly IWebhookSender _webhookSender;
     private static readonly ConcurrentDictionary<string, DateTime> _recentEvents = new();
-    private Timer _cleanupTimer;
+    private static readonly Timer _cleanupTimer = new Timer(CleanupOldEntries, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SessionStartNotifier"/> class.
@@ -32,8 +32,7 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>, IDi
     {
         _applicationHost = applicationHost;
         _webhookSender = webhookSender;
-        // Initialize and start the cleanup timer
-        _cleanupTimer = new Timer(CleanupOldEntries, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+        _cleanupTimer?.Change(0, (int)TimeSpan.FromMinutes(30).TotalMilliseconds);
     }
 
     /// <inheritdoc />
@@ -66,39 +65,17 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>, IDi
             .ConfigureAwait(false);
     }
 
-    private void CleanupOldEntries(object? state)
+    private static void CleanupOldEntries(object? state)
     {
         DateTime threshold = DateTime.UtcNow - TimeSpan.FromMinutes(30);
-        foreach (var key in _recentEvents.Keys.ToList())
+        var keysToRemove = _recentEvents
+            .Where(kvp => kvp.Value < threshold)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        foreach (var key in keysToRemove)
         {
-            if (_recentEvents.TryGetValue(key, out DateTime value) && value < threshold)
-            {
-                _recentEvents.TryRemove(key, out _);
-            }
+            _recentEvents.TryRemove(key, out _);
         }
-    }
-
-    /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="SessionStartNotifier"/> and optionally releases the managed resources.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="SessionStartNotifier"/> and optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing">A boolean indicating whether to release both managed and unmanaged resources (true) or only unmanaged resources (false).</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            // Dispose managed resources.
-            _cleanupTimer?.Dispose();
-        }
-
-        // Dispose unmanaged resources (if any).
     }
 }
