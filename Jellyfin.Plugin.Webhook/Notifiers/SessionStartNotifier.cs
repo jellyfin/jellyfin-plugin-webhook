@@ -39,18 +39,15 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
             return;
         }
 
-            // Generate a unique key for this session event
+        // Generate a unique key for this session event
         string sessionKey = eventArgs.Argument.Id;
 
-            // Check if we've processed a similar event recently
-        if (_recentEvents.TryGetValue(sessionKey, out DateTime lastProcessedTime))
-            {
-                // Skip if it's too recent (e.g., within the last 5 seconds)
-                if (DateTime.UtcNow - lastProcessedTime < TimeSpan.FromSeconds(5))
-                {
-                    return;
-                }
-            }
+        // Check if we've processed a similar event recently
+        if (_recentEvents.TryGetValue(sessionKey, out DateTime lastProcessedTime) &&
+            DateTime.UtcNow - lastProcessedTime < TimeSpan.FromSeconds(5))
+        {
+            return;
+        }
 
             // Update the cache with the latest event time
         _recentEvents[sessionKey] = DateTime.UtcNow;
