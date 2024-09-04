@@ -86,7 +86,7 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - Client
         - Playback client name
     - RemoteEndPoint 
-        - IP Address of clinet
+        - IP Address of client
         
 - BaseItem:
     - Timestamp
