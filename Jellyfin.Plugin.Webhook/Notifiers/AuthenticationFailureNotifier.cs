@@ -45,6 +45,7 @@ public class AuthenticationFailureNotifier : IEventConsumer<AuthenticationReques
         dataObject[nameof(eventArgs.AppVersion)] = eventArgs.AppVersion ?? string.Empty;
         dataObject[nameof(eventArgs.DeviceId)] = eventArgs.DeviceId ?? string.Empty;
         dataObject[nameof(eventArgs.DeviceName)] = eventArgs.DeviceName ?? string.Empty;
+        dataObject[nameof(eventArgs.RemoteEndPoint)] = eventArgs.RemoteEndPoint ?? string.Empty;
 
         await _webhookSender.SendNotification(NotificationType.AuthenticationFailure, dataObject)
             .ConfigureAwait(false);
