@@ -55,6 +55,11 @@ public class PlaybackStopNotifier : IEventConsumer<PlaybackStopEventArgs>
             .AddPlaybackProgressData(eventArgs);
         dataObject[nameof(eventArgs.PlayedToCompletion)] = eventArgs.PlayedToCompletion;
 
+        if (eventArgs.Session != null)
+        {
+            dataObject = dataObject.AddSessionInfoData(eventArgs.Session);
+        }
+
         foreach (var user in eventArgs.Users)
         {
             var userDataObject = new Dictionary<string, object>(dataObject)
