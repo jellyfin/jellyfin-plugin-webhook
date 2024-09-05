@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using HandlebarsDotNet;
@@ -61,6 +61,11 @@ public abstract class BaseOption
     /// Gets or sets a value indicating whether to notify on songs.
     /// </summary>
     public bool EnableSongs { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to notify on videos.
+    /// </summary>
+    public bool EnableVideos { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether to send all possible properties.
