@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
+using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
@@ -166,6 +167,11 @@ public class WebhookSender : IWebhookSender
         }
 
         if (baseOptions.EnableSongs && itemType == typeof(Audio))
+        {
+            return true;
+        }
+
+        if (baseOptions.EnableVideos && itemType == typeof(Video))
         {
             return true;
         }
