@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
@@ -19,7 +18,8 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
     private readonly IServerApplicationHost _applicationHost;
     private readonly IWebhookSender _webhookSender;
     private static readonly ConcurrentDictionary<string, DateTime> _recentEvents = new();
-    private static readonly Timer _cleanupTimer = new Timer(CleanupOldEntries, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
+    private static readonly TimeSpan RecentEventThreshold = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan CleanupThreshold = TimeSpan.FromMinutes(5);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SessionStartNotifier"/> class.
@@ -32,7 +32,6 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
     {
         _applicationHost = applicationHost;
         _webhookSender = webhookSender;
-        _cleanupTimer?.Change(0, (int)TimeSpan.FromMinutes(30).TotalMilliseconds);
     }
 
     /// <inheritdoc />
@@ -43,12 +42,15 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
             return;
         }
 
+        // Clean up old session entries when a new session event is triggered
+        CleanupOldEntries();
+
         // Generate a unique key for this session event
         string sessionKey = eventArgs.Argument.Id;
 
         // Check if we've processed a similar event recently
         if (_recentEvents.TryGetValue(sessionKey, out DateTime lastProcessedTime) &&
-            DateTime.UtcNow - lastProcessedTime < TimeSpan.FromSeconds(5))
+            DateTime.UtcNow - lastProcessedTime < RecentEventThreshold)
         {
             return;
         }
@@ -65,9 +67,12 @@ public class SessionStartNotifier : IEventConsumer<SessionStartedEventArgs>
             .ConfigureAwait(false);
     }
 
-    private static void CleanupOldEntries(object? state)
+    /// <summary>
+    /// Cleans up old session entries from the cache.
+    /// </summary>
+    private static void CleanupOldEntries()
     {
-        DateTime threshold = DateTime.UtcNow - TimeSpan.FromMinutes(30);
+        DateTime threshold = DateTime.UtcNow - CleanupThreshold;
         var keysToRemove = _recentEvents
             .Where(kvp => kvp.Value < threshold)
             .Select(kvp => kvp.Key)
