@@ -85,6 +85,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Playback client name
     - Client
         - Playback client name
+    - App
+        - client name in Authentication Failure
     - RemoteEndPoint 
         - IP Address of client
         
