@@ -15,7 +15,7 @@
         "priority": 2,
         "tags": ["arrow_forward"],
         "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
-        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": " {{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
             {{#if_equals ItemType 'Audio'}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{Artist}}} - {{{Name}}} ({{Year}})",
                 "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
@@ -34,7 +34,7 @@
         "priority": 2,
         "tags": ["stop_button"],
         "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
-        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+        "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": " {{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
             {{#if_equals ItemType 'Audio'}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{Artist}}} - {{{Name}}} ({{Year}})",
                 "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
@@ -54,7 +54,7 @@
     "priority": 3,
     "tags": ["heavy_plus_sign"],
     "attach": "{{{ServerUrl}}}Items/{{{ItemId}}}/Images/Primary",
-    "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/index.html#!/details?id={{{ItemId}}}" }],
+    "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": " {{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
         {{#if_equals ItemType 'Audio'}}
             "title": "Audio Track Added: {{{Artist}}} - {{{Name}}} | {{{Album}}} ({{Year}})",
             "message": "---\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{Overview}}"
