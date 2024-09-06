@@ -31,7 +31,7 @@ public class AuthenticationSuccessNotifier : IEventConsumer<AuthenticationResult
     /// <inheritdoc />
     public async Task OnEvent(AuthenticationResultEventArgs eventArgs)
     {
-        if (eventArgs is null)
+        if (eventArgs is null || eventArgs.User == null || eventArgs.SessionInfo == null)
         {
             return;
         }
@@ -39,6 +39,7 @@ public class AuthenticationSuccessNotifier : IEventConsumer<AuthenticationResult
         var dataObject = DataObjectHelpers
             .GetBaseDataObject(_applicationHost, NotificationType.AuthenticationSuccess)
             .AddUserData(eventArgs.User);
+        dataObject = dataObject.AddSessionInfoData(eventArgs.SessionInfo);
 
         await _webhookSender.SendNotification(NotificationType.AuthenticationSuccess, dataObject)
             .ConfigureAwait(false);

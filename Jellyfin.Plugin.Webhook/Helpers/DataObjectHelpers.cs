@@ -334,6 +334,7 @@ public static class DataObjectHelpers
         dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
         dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
         dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
+        dataObject[nameof(sessionInfo.RemoteEndPoint)] = sessionInfo.RemoteEndPoint;
 
         return dataObject;
     }

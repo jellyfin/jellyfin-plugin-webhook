@@ -54,6 +54,11 @@ public class PlaybackProgressNotifier : IEventConsumer<PlaybackProgressEventArgs
             .AddBaseItemData(eventArgs.Item)
             .AddPlaybackProgressData(eventArgs);
 
+        if (eventArgs.Session != null)
+        {
+            dataObject = dataObject.AddSessionInfoData(eventArgs.Session);
+        }
+
         foreach (var user in eventArgs.Users)
         {
             var userDataObject = new Dictionary<string, object>(dataObject)
