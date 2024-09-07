@@ -11,19 +11,33 @@ public class QueuedItemContainer
     /// Initializes a new instance of the <see cref="QueuedItemContainer"/> class.
     /// </summary>
     /// <param name="id">The item id.</param>
-    public QueuedItemContainer(Guid id)
+    /// <param name="name">The item name (nullable).</param>
+    /// <param name="itemType">The item type.</param>
+    public QueuedItemContainer(Guid id, string? name = null, string? itemType = null)
     {
         ItemId = id;
+        Name = name;
+        ItemType = itemType;
         RetryCount = 0;
     }
 
     /// <summary>
-    /// Gets or sets the current retry count.
+    /// Gets or sets the item name.
     /// </summary>
-    public int RetryCount { get; set; }
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the item type.
+    /// </summary>
+    public string? ItemType { get; set; }
 
     /// <summary>
     /// Gets or sets the current item id.
     /// </summary>
     public Guid ItemId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current retry count.
+    /// </summary>
+    public int RetryCount { get; set; }
 }
