@@ -57,10 +57,9 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 data["AvatarUrl"] = option.AvatarUrl;
             }
 
-            if (!string.IsNullOrEmpty(option.Username))
+            if (!string.IsNullOrEmpty(option.BotUsername))
             {
-                data["Username"] = option.Username;
-                data["BotUsername"] = option.Username;
+                data["BotUsername"] = option.BotUsername;
             }
 
             var body = option.GetMessageBody(data);
