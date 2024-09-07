@@ -1,4 +1,6 @@
 ### Telegram
+**Webhook:** Use Generic Destination.
+
 To be able to send photo, you need Server URL which can be accessed from web
 
 Webhook URL:
