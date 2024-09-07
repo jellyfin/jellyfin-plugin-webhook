@@ -53,34 +53,31 @@ public class ItemDeletedManager : IItemDeletedManager
                 var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
                 foreach (var (key, container) in currentItems)
                 {
-                    if (_deletedItems.TryGetValue(key, out var item))
+                    if (_deletedItems.TryGetValue(key, out var item) && item != null)
                     {
-                        if (item != null)
+                        // Skip notification if item type is Studio
+                        if (container.ItemType == "Studio")
                         {
-                            // Skip notification if item type is Studio
-                            if (container.ItemType == "Studio")
-                            {
-                                _logger.LogDebug("Skipping notification for item type Studio");
-                                _itemProcessQueue.TryRemove(key, out _);
-                                _deletedItems.TryRemove(key, out _);
-                                continue;
-                            }
-
-                            _logger.LogDebug("Notifying for {ItemName}", container.Name);
-
-                            // Send notification to each configured destination.
-                            var dataObject = DataObjectHelpers
-                                .GetBaseDataObject(_applicationHost, NotificationType.ItemDeleted)
-                                .AddBaseItemData(item);
-
-                            var itemType = Type.GetType($"MediaBrowser.Controller.Entities.{container.ItemType}");
-                            await webhookSender.SendNotification(NotificationType.ItemDeleted, dataObject, itemType)
-                                .ConfigureAwait(false);
-
-                            // Remove item from queue.
+                            _logger.LogDebug("Skipping notification for item type Studio");
                             _itemProcessQueue.TryRemove(key, out _);
                             _deletedItems.TryRemove(key, out _);
+                            continue;
                         }
+
+                        _logger.LogDebug("Notifying for {ItemName}", container.Name);
+
+                        // Send notification to each configured destination.
+                        var dataObject = DataObjectHelpers
+                            .GetBaseDataObject(_applicationHost, NotificationType.ItemDeleted)
+                            .AddBaseItemData(item);
+
+                        var itemType = Type.GetType($"MediaBrowser.Controller.Entities.{container.ItemType}");
+                        await webhookSender.SendNotification(NotificationType.ItemDeleted, dataObject, itemType)
+                            .ConfigureAwait(false);
+
+                        // Remove item from queue.
+                        _itemProcessQueue.TryRemove(key, out _);
+                        _deletedItems.TryRemove(key, out _);
                     }
                 }
             }
