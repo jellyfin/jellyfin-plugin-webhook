@@ -182,7 +182,7 @@ public class WebhookSender : IWebhookSender
     private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> itemData, Type? itemType)
         where T : BaseOption
     {
-        if (NotifyOnItem(option, itemType))
+        if (option.EnableWebhook && NotifyOnItem(option, itemType))
         {
             try
             {
