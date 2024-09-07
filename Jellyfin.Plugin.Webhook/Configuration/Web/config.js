@@ -164,6 +164,7 @@ export default function (view) {
                 element.querySelector("[data-name=chkSendAllProperties]").checked = config.SendAllProperties || false;
                 element.querySelector("[data-name=chkTrimWhitespace]").checked = config.TrimWhitespace || false;
                 element.querySelector("[data-name=chkSkipEmptyMessageBody]").checked = config.SkipEmptyMessageBody || false;
+                element.querySelector("[data-name=chkEnableWebhook]").checked = config.EnableWebhook !== undefined ? config.EnableWebhook : true;
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
@@ -187,6 +188,7 @@ export default function (view) {
                 config.SendAllProperties = element.querySelector("[data-name=chkSendAllProperties]").checked || false;
                 config.TrimWhitespace = element.querySelector("[data-name=chkTrimWhitespace]").checked || false;
                 config.SkipEmptyMessageBody = element.querySelector("[data-name=chkSkipEmptyMessageBody]").checked || false;
+                config.EnableWebhook = element.querySelector("[data-name=chkEnableWebhook]").checked;
                 config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];
