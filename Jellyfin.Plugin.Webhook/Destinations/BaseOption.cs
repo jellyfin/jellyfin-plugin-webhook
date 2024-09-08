@@ -85,7 +85,7 @@ public abstract class BaseOption
     /// <summary>
     /// Gets or sets a value indicating whether to Enable or Disable Webhook.
     /// </summary>
-    public bool EnableWebhook { get; set; }
+    public bool EnableWebhook { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the handlebars template.
