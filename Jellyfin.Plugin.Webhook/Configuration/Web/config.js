@@ -40,6 +40,7 @@ export default function (view) {
             template: document.querySelector("#template-notification-type"),
             values: {
                 "ItemAdded": "Item Added",
+                "ItemDeleted": "Item Deleted",
                 "PlaybackStart": "Playback Start",
                 "PlaybackProgress": "Playback Progress",
                 "PlaybackStop": "Playback Stop",
