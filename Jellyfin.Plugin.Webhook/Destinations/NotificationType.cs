@@ -123,5 +123,10 @@ public enum NotificationType
     /// <summary>
     /// User data saved.
     /// </summary>
-    UserDataSaved = 23
+    UserDataSaved = 23,
+
+    /// <summary>
+    /// Item Deleted notification.
+    /// </summary>
+    ItemDeleted = 24
 }

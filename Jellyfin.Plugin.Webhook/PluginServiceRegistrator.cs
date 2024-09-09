@@ -13,6 +13,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Smtp;
 using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Notifiers;
 using Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
+using Jellyfin.Plugin.Webhook.Notifiers.ItemDeletedNotifier;
 using Jellyfin.Plugin.Webhook.Notifiers.UserDataSavedNotifier;
 using MediaBrowser.Common.Updates;
 using MediaBrowser.Controller;
@@ -58,6 +59,7 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
         // Library consumers.
         serviceCollection.AddScoped<IEventConsumer<SubtitleDownloadFailureEventArgs>, SubtitleDownloadFailureNotifier>();
         serviceCollection.AddSingleton<IItemAddedManager, ItemAddedManager>();
+        serviceCollection.AddSingleton<IItemDeletedManager, ItemDeletedManager>();
 
         // Security consumers.
         serviceCollection.AddScoped<IEventConsumer<AuthenticationRequestEventArgs>, AuthenticationFailureNotifier>();
@@ -90,6 +92,7 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
 
         serviceCollection.AddHostedService<WebhookServerEntryPoint>();
         serviceCollection.AddHostedService<ItemAddedNotifierEntryPoint>();
+        serviceCollection.AddHostedService<ItemDeletedNotifierEntryPoint>();
         serviceCollection.AddHostedService<UserDataSavedNotifierEntryPoint>();
     }
 }
