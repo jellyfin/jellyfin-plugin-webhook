@@ -83,6 +83,11 @@ public abstract class BaseOption
     public bool SkipEmptyMessageBody { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to Enable or Disable Webhook.
+    /// </summary>
+    public bool EnableWebhook { get; set; } = true;
+
+    /// <summary>
     /// Gets or sets the handlebars template.
     /// </summary>
     public string? Template { get; set; }
