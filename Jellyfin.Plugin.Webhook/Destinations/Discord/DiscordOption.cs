@@ -18,7 +18,7 @@ public class DiscordOption : BaseOption
     /// <summary>
     /// Gets or sets the bot username.
     /// </summary>
-    public string? Username { get; set; }
+    public string? BotUsername { get; set; }
 
     /// <summary>
     /// Gets or sets the mention type.
