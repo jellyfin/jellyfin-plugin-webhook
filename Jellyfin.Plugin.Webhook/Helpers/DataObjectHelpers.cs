@@ -326,15 +326,60 @@ public static class DataObjectHelpers
     /// <returns>The modified data object.</returns>
     public static Dictionary<string, object> AddSessionInfoData(this Dictionary<string, object> dataObject, SessionInfo sessionInfo)
     {
-        dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
+        if (!string.IsNullOrEmpty(sessionInfo.Id))
+        {
+            dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
+        }
+
         dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
         dataObject["NotificationUsername"] = sessionInfo.UserName.Escape();
         dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
         dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
         dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
         dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
-        dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
-        dataObject[nameof(sessionInfo.RemoteEndPoint)] = sessionInfo.RemoteEndPoint;
+
+        if (!string.IsNullOrEmpty(sessionInfo.DeviceId))
+        {
+            dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
+        }
+
+        if (!string.IsNullOrEmpty(sessionInfo.RemoteEndPoint))
+        {
+            dataObject[nameof(sessionInfo.RemoteEndPoint)] = sessionInfo.RemoteEndPoint;
+        }
+
+        return dataObject;
+    }
+
+    /// <summary>
+    /// Add session info data.
+    /// </summary>
+    /// <param name="dataObject">The data object.</param>
+    /// <param name="sessionInfo">The session info to add.</param>
+    /// <returns>The modified data object.</returns>
+    public static Dictionary<string, object> AddSessionInfoData(this Dictionary<string, object> dataObject, SessionInfoDto sessionInfo)
+    {
+        if (!string.IsNullOrEmpty(sessionInfo.Id))
+        {
+            dataObject[nameof(sessionInfo.Id)] = sessionInfo.Id;
+        }
+
+        dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
+        dataObject["NotificationUsername"] = sessionInfo.UserName.Escape();
+        dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
+        dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
+        dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
+        dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
+
+        if (!string.IsNullOrEmpty(sessionInfo.DeviceId))
+        {
+            dataObject[nameof(sessionInfo.DeviceId)] = sessionInfo.DeviceId;
+        }
+
+        if (!string.IsNullOrEmpty(sessionInfo.RemoteEndPoint))
+        {
+            dataObject[nameof(sessionInfo.RemoteEndPoint)] = sessionInfo.RemoteEndPoint;
+        }
 
         return dataObject;
     }
