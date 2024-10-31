@@ -18,14 +18,14 @@
         "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
             {{#if_equals ItemType 'Audio'}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{Artist}}} - {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
             {{else}}
             {{#if_equals ItemType 'Episode'}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
             {{else}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
             {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
@@ -37,14 +37,14 @@
         "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
             {{#if_equals ItemType 'Audio'}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{Artist}}} - {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}"
             {{else}}
             {{#if_equals ItemType 'Episode'}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
             {{else}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{Overview}}"
             {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
@@ -93,18 +93,18 @@
     {{#if_equals NotificationType 'AuthenticationFailure'}}
         "title": "Alert: {{{Username}}}: Authentication Failure",
         "priority": 5,
-        "message": "---\n**- User:** {{{Username}}}\n**- Issue:** Login request was denied: Wrong password!"
+        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Issue:** Login request was denied: Wrong password!"
     {{/if_equals}}
 
     {{#if_equals NotificationType 'AuthenticationSuccess'}}
         "title": "{{{NotificationUsername}}}: Authentication Success",
         "priority": 3,
-        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Message:** Successfully logged in!"
+        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Message:** Successfully logged in!"
     {{/if_equals}}
 
     {{#if_equals NotificationType 'UserLockedOut'}}
         "title": "Alert: {{{NotificationUsername}}}: User Locked Out",
         "priority": 5,
-        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Issue:** User has been locked out!"
+        "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Issue:** User has been locked out!"
     {{/if_equals}}
 }
