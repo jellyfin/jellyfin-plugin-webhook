@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 15
-targetAbi: "10.9.7.0"
+version: 16
+targetAbi: "10.10.0.0"
 framework: "net8.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -19,16 +19,25 @@ artifacts:
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-
-  - Fix test badge typo (#257) @RyanMelena
-  - Fix test status badge (#256) @RyanMelena
-  - Make "Original Aspect Ratio" property available to WebHooks (#249) @RyanMelena
+  - 10.10 (#296) @crobibero
+  - Add notification for item deleted (#285) @chiragkrishna
+  - Add NotificationUsername & ClientName to authentication failure (#284) @chiragkrishna
+  - Add Enable/Disable options for webhooks (#283) @chiragkrishna
+  - ntfy.sh: Template Optimizations Pt. 2 (#277) @v3DJG6GL
+  - Added Gotify handlebars (#278) @chiragkrishna
+  - Added Telegram handlebars (#279) @chiragkrishna
+  - Expose RemoteEndPoint & SessionInfo Variables (#275) @chiragkrishna
+  - Fix SessionStart double notifications (#272) @chiragkrishna
+  - Add option for Item type videos (#274) @chiragkrishna
+  - Add RemoteEndPoint variable (#273) @chiragkrishna
+  - Fix duplicate and wrong notification types for Pushover templates (#270) @Luka-He
+  - ntfy.sh: Template Optimizations (#268) @v3DJG6GL
 
-  ### Breaking changes ###
-  - Allow smtp connection without SSL (#258) @RyanMelena
-
-  ### Bug Fixes ###
-  - Allow smtp connection without SSL (#258) @RyanMelena
+  ### Documentation updates ###
+  - Update README.md (#271) @chiragkrishna
 
   ### Dependency updates ###
-  - chore(deps): update dependency mailkit to v4.7.0 (#174) @renovate
-  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.3.6.1152 (#246) @renovate
+  - Update dependency Microsoft.Extensions.Http to 8.0.1 (#290) @renovate
+  - Update dependency MailKit to 4.8.0 (#288) @renovate
+  - Update dependency MQTTnet.Extensions.ManagedClient to 4.3.7.1207 (#280) @renovate
+  - chore(deps): update dependency mailkit to v4.7.1.1 (#263) @renovate
