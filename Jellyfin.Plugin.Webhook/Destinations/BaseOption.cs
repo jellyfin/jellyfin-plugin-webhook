@@ -12,6 +12,22 @@ namespace Jellyfin.Plugin.Webhook.Destinations;
 /// </summary>
 public abstract class BaseOption
 {
+    private readonly List<string> fieldsToEscape = new List<string>
+    {
+        "ServerName",
+        "Name",
+        "Overview",
+        "Tagline",
+        "ItemType",
+        "SeriesName",
+        "NotificationUsername",
+        "Client",
+        "DeviceName",
+        "PluginName",
+        "PluginChangelog",
+        "ExceptionMessage"
+    };
+
     private HandlebarsTemplate<object, string>? _compiledTemplate;
 
     /// <summary>
@@ -98,6 +114,11 @@ public abstract class BaseOption
     public Guid[] UserFilter { get; set; } = Array.Empty<Guid>();
 
     /// <summary>
+    /// Gets or sets the Media-Content type of the webhook body. Should not be set by User except for Generic Client.
+    /// </summary>
+    public WebhookMediaContentType MediaContentType { get; set; } = WebhookMediaContentType.Json;
+
+    /// <summary>
     /// Gets the compiled handlebars template.
     /// </summary>
     /// <returns>The compiled handlebars template.</returns>
@@ -113,10 +134,30 @@ public abstract class BaseOption
     /// <returns>The string message body.</returns>
     public string GetMessageBody(Dictionary<string, object> data)
     {
+        Dictionary<string, object> cloneData = new(data); // Quickly clone the dictionary to avoid "over escaping" if we use the same data-dictionary for multiple services in a row.
+        foreach (var field in fieldsToEscape)
+        {
+            if (cloneData.TryGetValue(field, out object? value))
+            {
+                cloneData[field] = MediaContentType switch
+                {
+                    WebhookMediaContentType.Json => JsonEncode((string)value),
+                    WebhookMediaContentType.PlainText => DefaultEscape((string)value),
+                    WebhookMediaContentType.Xml => DefaultEscape((string)value),
+                    _ => DefaultEscape((string)value)
+                };
+                cloneData[field] = JsonEncodedText.Encode((string)value);
+            }
+        }
+
         var body = SendAllProperties
-            ? JsonSerializer.Serialize(data, JsonDefaults.Options)
-            : GetCompiledTemplate()(data);
+            ? JsonSerializer.Serialize(cloneData, JsonDefaults.Options)
+            : GetCompiledTemplate()(cloneData);
 
         return TrimWhitespace ? body.Trim() : body;
     }
+
+    private string JsonEncode(string value) => JsonEncodedText.Encode(value).Value;
+
+    private string DefaultEscape(string value) => value.Replace("\"", "\\\"", StringComparison.Ordinal);
 }
