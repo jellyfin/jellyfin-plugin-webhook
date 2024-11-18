@@ -14,7 +14,7 @@ public class GenericFormOption : BaseOption
     {
         Headers = Array.Empty<GenericFormOptionValue>();
         Fields = Array.Empty<GenericFormOptionValue>();
-        MediaContentType = WebhookMediaContentType.PlainText;
+        // The MediaType is left as JSON because that is what is assumed to be used in GenericFormClient.cs
     }
 
     /// <summary>
