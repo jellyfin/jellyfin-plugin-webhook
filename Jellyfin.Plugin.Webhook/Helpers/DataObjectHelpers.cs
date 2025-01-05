@@ -300,7 +300,7 @@ public static class DataObjectHelpers
                 }
             }
 
-            if (!string.IsNullOrEmpty(maxMatchLibraryId))
+            if (!string.IsNullOrEmpty(maxMatchLibraryName))
             {
                 dataObject["LibraryIdByMaxPath"] = maxMatchLibraryId;
                 dataObject["LibraryNameByMaxPath"] = maxMatchLibraryName;
