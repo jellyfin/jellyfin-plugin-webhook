@@ -44,9 +44,8 @@ public static class DataObjectHelpers
     /// </summary>
     /// <param name="dataObject">The existing data object.</param>
     /// <param name="item">Instance of the <see cref="BaseItem"/>.</param>
-    /// <param name="libraryManager">Instence of the <see cref="ILibraryManager"/>.</param>
     /// <returns>The data object.</returns>
-    public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, BaseItem? item, ILibraryManager? libraryManager = null)
+    public static Dictionary<string, object> AddBaseItemData(this Dictionary<string, object> dataObject, BaseItem? item)
     {
         if (item is null)
         {
@@ -265,50 +264,6 @@ public static class DataObjectHelpers
             }
         }
 
-        if (libraryManager is not null && dataObject.TryGetValue("Path", out var pathObject) &&
-            pathObject is string path)
-        {
-            var libraryList = libraryManager.GetVirtualFolders(false);
-            string maxMatchLibraryId = string.Empty;
-            string maxMatchLibraryName = string.Empty;
-            string minMatchLibraryId = string.Empty;
-            string minMatchLibraryName = string.Empty;
-            int maxMatchLength = 0;
-            int minMatchLength = int.MaxValue;
-
-            foreach (var library in libraryList)
-            {
-                foreach (var location in library.Locations)
-                {
-                    var normalizedLocation = location.EndsWith(Path.DirectorySeparatorChar) ? location : location + Path.DirectorySeparatorChar;
-                    if (path.StartsWith(normalizedLocation, StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (normalizedLocation.Length > maxMatchLength)
-                        {
-                            maxMatchLength = normalizedLocation.Length;
-                            maxMatchLibraryId = library.ItemId;
-                            maxMatchLibraryName = library.Name;
-                        }
-
-                        if (normalizedLocation.Length < minMatchLength)
-                        {
-                            minMatchLength = normalizedLocation.Length;
-                            minMatchLibraryId = library.ItemId;
-                            minMatchLibraryName = library.Name;
-                        }
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(maxMatchLibraryName))
-            {
-                dataObject["LibraryIdByMaxPath"] = maxMatchLibraryId;
-                dataObject["LibraryNameByMaxPath"] = maxMatchLibraryName;
-                dataObject["LibraryIdByMinPath"] = minMatchLibraryId;
-                dataObject["LibraryNameByMinPath"] = minMatchLibraryName;
-            }
-        }
-
         return dataObject;
     }
 
@@ -487,6 +442,67 @@ public static class DataObjectHelpers
         if (userItemData.LastPlayedDate.HasValue)
         {
             dataObject["LastPlayedDate"] = userItemData.LastPlayedDate;
+        }
+
+        return dataObject;
+    }
+
+    /// <summary>
+    /// Get library data from <see cref="ILibraryManager"/>.
+    /// </summary>
+    /// <param name="dataObject">The existing data object.</param>
+    /// <param name="item">Instance of the <see cref="BaseItem"/>.</param>
+    /// <param name="libraryManager">Instence of the <see cref="ILibraryManager"/>.</param>
+    /// <returns>The modified data object.</returns>
+    public static Dictionary<string, object> AddLibraryItemData(this Dictionary<string, object> dataObject, BaseItem? item, ILibraryManager? libraryManager)
+    {
+        if (item is null || libraryManager is null)
+        {
+            return dataObject;
+        }
+
+        if (dataObject.TryGetValue("Path", out var pathObject) &&
+            pathObject is string path)
+        {
+            var libraryList = libraryManager.GetVirtualFolders(false);
+            string maxMatchLibraryId = string.Empty;
+            string maxMatchLibraryName = string.Empty;
+            string minMatchLibraryId = string.Empty;
+            string minMatchLibraryName = string.Empty;
+            int maxMatchLength = 0;
+            int minMatchLength = int.MaxValue;
+
+            foreach (var library in libraryList)
+            {
+                foreach (var location in library.Locations)
+                {
+                    var normalizedLocation = location.EndsWith(Path.DirectorySeparatorChar) ? location : location + Path.DirectorySeparatorChar;
+                    if (path.StartsWith(normalizedLocation, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (normalizedLocation.Length > maxMatchLength)
+                        {
+                            maxMatchLength = normalizedLocation.Length;
+                            maxMatchLibraryId = library.ItemId;
+                            maxMatchLibraryName = library.Name;
+                        }
+
+                        if (normalizedLocation.Length < minMatchLength)
+                        {
+                            minMatchLength = normalizedLocation.Length;
+                            minMatchLibraryId = library.ItemId;
+                            minMatchLibraryName = library.Name;
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(maxMatchLibraryName))
+            {
+                dataObject["LibraryIdByMaxPath"] = maxMatchLibraryId;
+                dataObject["LibraryNameByMaxPath"] = maxMatchLibraryName;
+                dataObject["LibraryIdByMinPath"] = minMatchLibraryId;
+                dataObject["LibraryNameByMinPath"] = minMatchLibraryName;
+            }
         }
 
         return dataObject;
