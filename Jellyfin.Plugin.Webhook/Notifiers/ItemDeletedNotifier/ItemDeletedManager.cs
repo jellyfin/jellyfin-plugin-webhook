@@ -66,7 +66,7 @@ public class ItemDeletedManager : IItemDeletedManager
                         // Send notification to each configured destination.
                         var dataObject = DataObjectHelpers
                             .GetBaseDataObject(_applicationHost, NotificationType.ItemDeleted)
-                            .AddBaseItemData(item);
+                            .AddBaseItemData(item, _libraryManager);
 
                         var itemType = item.GetType();
                         await webhookSender.SendNotification(NotificationType.ItemDeleted, dataObject, itemType)
