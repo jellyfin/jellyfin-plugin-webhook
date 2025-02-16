@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using HandlebarsDotNet;
-using System.Web; // Add this namespace for URL encoding
+using System.Web;
 
 namespace Jellyfin.Plugin.Webhook.Helpers;
 
