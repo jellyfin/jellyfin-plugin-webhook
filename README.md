@@ -47,6 +47,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
     - if the value of the parameter is not null or empty
 - link_to
     - wrap the $url and $text in an `<a>` tag
+- url_encode
+    - encode the given text to url-encoded format (useful for including text with spaces in urls)
 
 #### Variables:
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using HandlebarsDotNet;
 using System.Web;
+using HandlebarsDotNet;
 
 namespace Jellyfin.Plugin.Webhook.Helpers;
 
