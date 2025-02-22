@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Web;
 using HandlebarsDotNet;
 
 namespace Jellyfin.Plugin.Webhook.Helpers;
@@ -46,6 +47,18 @@ public static class HandlebarsFunctionHelpers
         }
     };
 
+    private static readonly HandlebarsHelper UrlEncodeHelper = (writer, context, parameters) =>
+    {
+        if (parameters.Length != 1)
+        {
+            throw new HandlebarsException("{{url_encode}} helper must have exactly one argument");
+        }
+
+        var valueToEncode = GetStringValue(parameters[0]);
+        var encodedValue = HttpUtility.UrlEncode(valueToEncode);
+        writer.WriteSafeString(encodedValue);
+    };
+
     /// <summary>
     /// Register handlebars helpers.
     /// </summary>
@@ -57,6 +70,7 @@ public static class HandlebarsFunctionHelpers
         {
             writer.WriteSafeString($"<a href='{parameters["url"]}'>{context["text"]}</a>");
         });
+        Handlebars.RegisterHelper("url_encode", UrlEncodeHelper);
     }
 
     /// <summary>
