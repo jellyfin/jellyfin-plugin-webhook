@@ -228,7 +228,7 @@ export default function (view) {
             setConfig: function (config, element) {
                 Webhook.baseConfig.setConfig(config, element);
                 element.querySelector("[data-name=txtAvatarUrl]").value = config.AvatarUrl || "";
-                element.querySelector("[data-name=txtUsername]").value = config.Username || "";
+                element.querySelector("[data-name=txtUsername]").value = config.BotUsername || "";
                 element.querySelector("[data-name=ddlMentionType]").value = config.MentionType || "None";
                 element.querySelector("[data-name=txtEmbedColor]").value = config.EmbedColor || Webhook.discord.defaultEmbedColor;
                 element.querySelector("[data-name=EmbedColor]").value = config.EmbedColor || Webhook.discord.defaultEmbedColor;
@@ -236,7 +236,7 @@ export default function (view) {
             getConfig: function (e) {
                 const config = Webhook.baseConfig.getConfig(e);
                 config.AvatarUrl = e.querySelector("[data-name=txtAvatarUrl]").value || "";
-                config.Username = e.querySelector("[data-name=txtUsername]").value || "";
+                config.BotUsername = e.querySelector("[data-name=txtUsername]").value || "";
                 config.MentionType = e.querySelector("[data-name=ddlMentionType]").value || "";
                 config.EmbedColor = e.querySelector("[data-name=txtEmbedColor]").value || "";
                 return config;

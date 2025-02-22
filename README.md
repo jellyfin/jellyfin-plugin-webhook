@@ -69,6 +69,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Current user name
     - Username
         - Current user name
+    - BotUsername
+        - user name for Discord/Slack
     - UserId
         - User ID
     - LastLoginDate
