@@ -16,7 +16,7 @@ public abstract class BaseOption
     /// The data fields that have historically been manually escaped in <see cref="DataObjectHelpers"/>.
     /// More fields may be added as needed.
     /// </summary>
-    private readonly List<string> fieldsToEscape =
+    private static readonly string[] FieldsToEscape =
     [
         "ServerName",
         "Name",
