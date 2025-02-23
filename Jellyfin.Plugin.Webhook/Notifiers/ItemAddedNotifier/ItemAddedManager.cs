@@ -76,7 +76,8 @@ public class ItemAddedManager : IItemAddedManager
                     // Send notification to each configured destination.
                     var dataObject = DataObjectHelpers
                         .GetBaseDataObject(_applicationHost, NotificationType.ItemAdded)
-                        .AddBaseItemData(item);
+                        .AddBaseItemData(item)
+                        .AddLibraryItemData(item, _libraryManager);
 
                     var itemType = item.GetType();
                     await webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType)
