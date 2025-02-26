@@ -67,14 +67,14 @@ public static class DataObjectHelpers
             dataObject["Year"] = item.ProductionYear;
         }
 
-        if (item.Studios is not null)
+        if (item.Studios is not null && item.Studios.Length > 0)
         {
-            dataObject["Studios"] = item.Studios;
+            dataObject["Studios"] = string.Join(", ", item.Studios);
         }
 
-        if (item.Tags is not null)
+        if (item.Tags is not null && item.Tags.Length > 0)
         {
-            dataObject["Tags"] = item.Tags;
+            dataObject["Tags"] = string.Join(", ", item.Tags);
         }
 
         if (item.CommunityRating is not null)
