@@ -79,7 +79,7 @@ public static class DataObjectHelpers
 
         if (item.CommunityRating is not null)
         {
-            dataObject["CommunityRating"] = item.CommunityRating;
+            dataObject["CommunityRating"] = item.CommunityRating.Value.ToString("F1", CultureInfo.InvariantCulture);
         }
 
         if (item.PremiereDate is not null)
