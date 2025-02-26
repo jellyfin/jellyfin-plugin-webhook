@@ -106,14 +106,6 @@ public static class DataObjectHelpers
                     dataObject["SeasonNumber000"] = season.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                 }
 
-                if (season.Series?.ProviderIds is not null)
-                {
-                    foreach (var (providerKey, providerValue) in season.Series.ProviderIds)
-                    {
-                        dataObject[$"SeriesProvider_{providerKey.ToLowerInvariant()}"] = providerValue;
-                    }
-                }
-
                 break;
             case Episode episode:
                 if (!string.IsNullOrEmpty(episode.Series?.Name))
