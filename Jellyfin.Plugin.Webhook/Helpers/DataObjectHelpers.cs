@@ -106,6 +106,14 @@ public static class DataObjectHelpers
                     dataObject["SeasonNumber000"] = season.IndexNumber.Value.ToString("000", CultureInfo.InvariantCulture);
                 }
 
+                if (season.Series != null)
+                {
+                    foreach (var (providerKey, providerValue) in season.Series.ProviderIds)
+                    {
+                        dataObject[$"Provider_{providerKey.ToLowerInvariant()}_Show"] = providerValue;
+                    }
+                }
+
                 break;
             case Episode episode:
                 if (!string.IsNullOrEmpty(episode.Series?.Name))
@@ -157,6 +165,14 @@ public static class DataObjectHelpers
                 if (episode.Series?.AirTime is not null)
                 {
                     dataObject["AirTime"] = episode.Series.AirTime;
+                }
+
+                if (episode.Series != null)
+                {
+                    foreach (var (providerKey, providerValue) in episode.Series.ProviderIds)
+                    {
+                        dataObject[$"Provider_{providerKey.ToLowerInvariant()}_Show"] = providerValue;
+                    }
                 }
 
                 break;
