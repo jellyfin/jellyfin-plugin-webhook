@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
@@ -7,6 +9,7 @@ using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Models;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -50,6 +53,14 @@ public class ItemAddedManager : IItemAddedManager
         _logger.LogDebug("ProcessItemsAsync");
         // Attempt to process all items in queue.
         var currentItems = _itemProcessQueue.ToArray();
+
+        var series = currentItems.
+            Select((item) => _libraryManager.GetItemById(item.Key)).
+            Where((item) => item is not null).
+            Where((item) => item!.GetType() == typeof(Series)).
+            Select((item) => item as Series).
+            Select((item) => item!.Id);
+
         if (currentItems.Length != 0)
         {
             var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
@@ -64,6 +75,13 @@ public class ItemAddedManager : IItemAddedManager
                         // Remove item from queue.
                         _itemProcessQueue.TryRemove(key, out _);
                         return;
+                    }
+
+                    // Remove the item if the parent is in the queue
+                    if (series.Contains(item.ParentId))
+                    {
+                        _itemProcessQueue.TryRemove(key, out _);
+                        continue;
                     }
 
                     _logger.LogDebug("Item {ItemName}", item.Name);
