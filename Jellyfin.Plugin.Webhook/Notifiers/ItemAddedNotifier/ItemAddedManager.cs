@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
@@ -20,6 +21,7 @@ public class ItemAddedManager : IItemAddedManager
     private readonly ILibraryManager _libraryManager;
     private readonly IServerApplicationHost _applicationHost;
     private readonly ConcurrentDictionary<Guid, QueuedItemContainer> _itemProcessQueue;
+    private static Semaphore _lock = new(initialCount: 0, maximumCount: 1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemAddedManager"/> class.
@@ -41,6 +43,10 @@ public class ItemAddedManager : IItemAddedManager
     /// <inheritdoc />
     public async Task ProcessItemsAsync()
     {
+        // Wait until a semaphore task is available
+        // meaning our queue isn't waiting for a task.
+        _lock.WaitOne();
+
         _logger.LogDebug("ProcessItemsAsync");
         // Attempt to process all items in queue.
         var currentItems = _itemProcessQueue.ToArray();
@@ -87,11 +93,29 @@ public class ItemAddedManager : IItemAddedManager
                 }
             }
         }
+
+        _lock.Release();
     }
 
     /// <inheritdoc />
     public void AddItem(BaseItem item)
     {
+        // Once 2s is elapsed, we release a lock from the semaphore.
+        _ = Task.Run(static () =>
+        {
+            try
+            {
+                _lock.WaitOne(500);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            Thread.Sleep(500);
+            _lock.Release();
+        });
+
         _itemProcessQueue.TryAdd(item.Id, new QueuedItemContainer(item.Id));
         _logger.LogDebug("Queued {ItemName} for notification", item.Name);
     }
