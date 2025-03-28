@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Extensions;
@@ -59,6 +61,8 @@ public class ItemAddedManager : IItemAddedManager
             Select((item) => item!.Id).
             ToList();
 
+        _logger.LogDebug("Table of parent element IDs: {ArrayJson}", JsonSerializer.Serialize(itemsIds));
+
         if (currentItems.Length != 0)
         {
             var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
@@ -81,12 +85,14 @@ public class ItemAddedManager : IItemAddedManager
                     {
                         if (itemsIds.Contains(parent.Id))
                         {
+                            _logger.LogDebug("While walking for {ItemName}, a common parent was found: {ParentId}", item.Name, parent.Id);
                             parentInterect = true;
                             break;
                         }
 
                         if (parent!.ParentId.IsEmpty())
                         {
+                            _logger.LogDebug("Walking up parent because ParentId is not null : {ParentId}", parent!.ParentId);
                             parent = _libraryManager.GetItemById(parent.ParentId);
                         }
                     }
@@ -94,6 +100,7 @@ public class ItemAddedManager : IItemAddedManager
                     // Remove the item if the parent is in the queue
                     if (parentInterect)
                     {
+                        _logger.LogDebug("Item {ItemName} ignored because a common parent was found", item.Name);
                         _itemProcessQueue.TryRemove(key, out _);
                         continue;
                     }
