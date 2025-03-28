@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Jellyfin.Extensions;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
 using Jellyfin.Plugin.Webhook.Models;
@@ -55,7 +56,8 @@ public class ItemAddedManager : IItemAddedManager
         var itemsIds = currentItems.
             Select((item) => _libraryManager.GetItemById(item.Key)).
             Where((item) => item is not null).
-            Select((item) => item!.Id);
+            Select((item) => item!.Id).
+            ToList();
 
         if (currentItems.Length != 0)
         {
@@ -73,8 +75,24 @@ public class ItemAddedManager : IItemAddedManager
                         return;
                     }
 
+                    var parentInterect = false;
+                    var parent = _libraryManager.GetItemById(item.ParentId);
+                    while (parent is not null)
+                    {
+                        if (itemsIds.Contains(parent.Id))
+                        {
+                            parentInterect = true;
+                            break;
+                        }
+
+                        if (parent!.ParentId.IsEmpty())
+                        {
+                            parent = _libraryManager.GetItemById(parent.ParentId);
+                        }
+                    }
+
                     // Remove the item if the parent is in the queue
-                    if (itemsIds.Contains(item.ParentId))
+                    if (parentInterect)
                     {
                         _itemProcessQueue.TryRemove(key, out _);
                         continue;
