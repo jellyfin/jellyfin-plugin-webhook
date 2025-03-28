@@ -54,11 +54,9 @@ public class ItemAddedManager : IItemAddedManager
         // Attempt to process all items in queue.
         var currentItems = _itemProcessQueue.ToArray();
 
-        var series = currentItems.
+        var itemsIds = currentItems.
             Select((item) => _libraryManager.GetItemById(item.Key)).
             Where((item) => item is not null).
-            Where((item) => item!.GetType() == typeof(Series)).
-            Select((item) => item as Series).
             Select((item) => item!.Id);
 
         if (currentItems.Length != 0)
@@ -78,7 +76,7 @@ public class ItemAddedManager : IItemAddedManager
                     }
 
                     // Remove the item if the parent is in the queue
-                    if (series.Contains(item.ParentId))
+                    if (itemsIds.Contains(item.ParentId))
                     {
                         _itemProcessQueue.TryRemove(key, out _);
                         continue;
