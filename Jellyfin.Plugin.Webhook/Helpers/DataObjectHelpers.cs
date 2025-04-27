@@ -30,7 +30,7 @@ public static class DataObjectHelpers
     {
         var dataObject = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         dataObject["ServerId"] = applicationHost.SystemId;
-        dataObject["ServerName"] = applicationHost.FriendlyName.Escape();
+        dataObject["ServerName"] = applicationHost.FriendlyName;
         dataObject["ServerVersion"] = applicationHost.ApplicationVersionString;
         dataObject["ServerUrl"] = WebhookPlugin.Instance?.Configuration.ServerUrl ?? "localhost:8096";
         dataObject[nameof(NotificationType)] = notificationType.ToString();
@@ -53,11 +53,11 @@ public static class DataObjectHelpers
 
         dataObject["Timestamp"] = DateTime.Now;
         dataObject["UtcTimestamp"] = DateTime.UtcNow;
-        dataObject["Name"] = item.Name.Escape();
-        dataObject["Overview"] = item.Overview.Escape();
-        dataObject["Tagline"] = item.Tagline.Escape();
+        dataObject["Name"] = item.Name;
+        dataObject["Overview"] = item.Overview;
+        dataObject["Tagline"] = item.Tagline;
         dataObject["ItemId"] = item.Id;
-        dataObject["ItemType"] = item.GetType().Name.Escape();
+        dataObject["ItemType"] = item.GetType().Name;
         dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
         dataObject["RunTime"] = TimeSpan.FromTicks(item.RunTimeTicks ?? 0).ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
 
@@ -86,7 +86,7 @@ public static class DataObjectHelpers
             case Season season:
                 if (!string.IsNullOrEmpty(season.Series?.Name))
                 {
-                    dataObject["SeriesName"] = season.Series.Name.Escape();
+                    dataObject["SeriesName"] = season.Series.Name;
                 }
 
                 if (season.Series?.ProductionYear is not null)
@@ -110,7 +110,7 @@ public static class DataObjectHelpers
             case Episode episode:
                 if (!string.IsNullOrEmpty(episode.Series?.Name))
                 {
-                    dataObject["SeriesName"] = episode.Series.Name.Escape();
+                    dataObject["SeriesName"] = episode.Series.Name;
                 }
 
                 if (episode.Series?.Id is not null)
@@ -294,7 +294,7 @@ public static class DataObjectHelpers
     /// <returns>The modified data object.</returns>
     public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, UserDto user)
     {
-        dataObject["NotificationUsername"] = user.Name.Escape();
+        dataObject["NotificationUsername"] = user.Name;
         dataObject["UserId"] = user.Id;
         dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
         dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -310,7 +310,7 @@ public static class DataObjectHelpers
     /// <returns>The modified data object.</returns>
     public static Dictionary<string, object> AddUserData(this Dictionary<string, object> dataObject, User user)
     {
-        dataObject["NotificationUsername"] = user.Username.Escape();
+        dataObject["NotificationUsername"] = user.Username;
         dataObject["UserId"] = user.Id;
         dataObject[nameof(user.LastLoginDate)] = user.LastLoginDate ?? DateTime.UtcNow;
         dataObject[nameof(user.LastActivityDate)] = user.LastActivityDate ?? DateTime.MinValue;
@@ -332,11 +332,11 @@ public static class DataObjectHelpers
         }
 
         dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
-        dataObject["NotificationUsername"] = sessionInfo.UserName.Escape();
-        dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
+        dataObject["NotificationUsername"] = sessionInfo.UserName;
+        dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client;
         dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
         dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
-        dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
+        dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName;
 
         if (!string.IsNullOrEmpty(sessionInfo.DeviceId))
         {
@@ -365,11 +365,11 @@ public static class DataObjectHelpers
         }
 
         dataObject[nameof(sessionInfo.UserId)] = sessionInfo.UserId;
-        dataObject["NotificationUsername"] = sessionInfo.UserName.Escape();
-        dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client.Escape();
+        dataObject["NotificationUsername"] = sessionInfo.UserName ?? string.Empty;
+        dataObject[nameof(sessionInfo.Client)] = sessionInfo.Client ?? string.Empty;
         dataObject[nameof(sessionInfo.LastActivityDate)] = sessionInfo.LastActivityDate;
         dataObject[nameof(sessionInfo.LastPlaybackCheckIn)] = sessionInfo.LastPlaybackCheckIn;
-        dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName.Escape();
+        dataObject[nameof(sessionInfo.DeviceName)] = sessionInfo.DeviceName ?? string.Empty;
 
         if (!string.IsNullOrEmpty(sessionInfo.DeviceId))
         {
@@ -393,9 +393,9 @@ public static class DataObjectHelpers
     public static Dictionary<string, object> AddPluginInstallationInfo(this Dictionary<string, object> dataObject, InstallationInfo installationInfo)
     {
         dataObject["PluginId"] = installationInfo.Id;
-        dataObject["PluginName"] = installationInfo.Name.Escape();
+        dataObject["PluginName"] = installationInfo.Name;
         dataObject["PluginVersion"] = installationInfo.Version;
-        dataObject["PluginChangelog"] = installationInfo.Changelog.Escape();
+        dataObject["PluginChangelog"] = installationInfo.Changelog;
         dataObject["PluginChecksum"] = installationInfo.Checksum;
         dataObject["PluginSourceUrl"] = installationInfo.SourceUrl;
 
@@ -410,7 +410,7 @@ public static class DataObjectHelpers
     /// <returns>The modified data object.</returns>
     public static Dictionary<string, object> AddExceptionInfo(this Dictionary<string, object> dataObject, Exception exception)
     {
-        dataObject["ExceptionMessage"] = exception.Message.Escape();
+        dataObject["ExceptionMessage"] = exception.Message;
         dataObject["ExceptionMessageInner"] = exception.InnerException?.Message ?? string.Empty;
 
         return dataObject;
@@ -440,12 +440,4 @@ public static class DataObjectHelpers
 
         return dataObject;
     }
-
-    /// <summary>
-    /// Escape quotes for proper json.
-    /// </summary>
-    /// <param name="input">Input string.</param>
-    /// <returns>Escaped string.</returns>
-    private static string Escape(this string? input)
-        => input?.Replace("\"", "\\\"", StringComparison.Ordinal) ?? string.Empty;
 }
