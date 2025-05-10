@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Jellyfin.Data.Entities;
+using Jellyfin.Database.Implementations.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Entities;
