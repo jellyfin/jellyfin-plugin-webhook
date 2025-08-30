@@ -29,6 +29,34 @@ public static class HandlebarsFunctionHelpers
         }
     };
 
+    private static readonly HandlebarsBlockHelper StringEqualityAllHelper = (output, options, context, arguments) =>
+    {
+        if (arguments.Length < 2)
+        {
+            throw new HandlebarsException("{{if_all}} helper must have at least two arguments");
+        }
+
+        var argument = GetStringValue(arguments[0]);
+        bool isMatch = true;
+        for (int i = 1; i < arguments.Length; i++)
+        {
+            if (!string.Equals(argument, GetStringValue(arguments[i]), StringComparison.OrdinalIgnoreCase))
+            {
+                isMatch = false;
+                break;
+            }
+        }
+
+        if (isMatch)
+        {
+            options.Template(output, context);
+        }
+        else
+        {
+            options.Inverse(output, context);
+        }
+    };
+
     private static readonly HandlebarsBlockHelper StringEqualityAnyHelper = (output, options, context, arguments) =>
     {
         if (arguments.Length < 2)
@@ -92,6 +120,7 @@ public static class HandlebarsFunctionHelpers
     /// </summary>
     public static void RegisterHelpers()
     {
+        Handlebars.RegisterHelper("if_all", StringEqualityAllHelper);
         Handlebars.RegisterHelper("if_any", StringEqualityAnyHelper);
         Handlebars.RegisterHelper("if_equals", StringEqualityHelper);
         Handlebars.RegisterHelper("if_exist", StringExistHelper);
