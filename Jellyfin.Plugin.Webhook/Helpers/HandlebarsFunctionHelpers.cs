@@ -10,37 +10,22 @@ namespace Jellyfin.Plugin.Webhook.Helpers;
 /// </summary>
 public static class HandlebarsFunctionHelpers
 {
-    private static readonly HandlebarsBlockHelper StringEqualityHelper = (output, options, context, arguments) =>
-    {
-        if (arguments.Length != 2)
-        {
-            throw new HandlebarsException("{{if_equals}} helper must have exactly two arguments");
-        }
-
-        var left = GetStringValue(arguments[0]);
-        var right = GetStringValue(arguments[1]);
-        if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase))
-        {
-            options.Template(output, context);
-        }
-        else
-        {
-            options.Inverse(output, context);
-        }
-    };
-
     private static readonly HandlebarsBlockHelper StringEqualityAllHelper = (output, options, context, arguments) =>
     {
         if (arguments.Length < 2)
         {
-            throw new HandlebarsException("{{if_all}} helper must have at least two arguments");
+            throw new HandlebarsException("{{if_all}} helper requires at least two arguments");
         }
 
-        var argument = GetStringValue(arguments[0]);
-        bool isMatch = true;
-        for (int i = 1; i < arguments.Length; i++)
+        if (arguments.Length % 2 != 0)
         {
-            if (!string.Equals(argument, GetStringValue(arguments[i]), StringComparison.OrdinalIgnoreCase))
+            throw new HandlebarsException("{{if_all}} helper must have an even number of arguments");
+        }
+
+        bool isMatch = true;
+        for (int i = 0; i < arguments.Length; i += 2)
+        {
+            if (!string.Equals(GetStringValue(arguments[i]), GetStringValue(arguments[i + 1]), StringComparison.OrdinalIgnoreCase))
             {
                 isMatch = false;
                 break;
@@ -61,14 +46,19 @@ public static class HandlebarsFunctionHelpers
     {
         if (arguments.Length < 2)
         {
-            throw new HandlebarsException("{{if_any}} helper must have at least two arguments");
+            throw new HandlebarsException("{{if_any}} helper requires at least two arguments");
+        }
+
+        if (arguments.Length % 2 != 0)
+        {
+            throw new HandlebarsException("{{if_any}} helper must have an even number of arguments");
         }
 
         var argument = GetStringValue(arguments[0]);
         bool isMatch = false;
-        for (int i = 1; i < arguments.Length; i++)
+        for (int i = 0; i < arguments.Length; i += 2)
         {
-            if (string.Equals(argument, GetStringValue(arguments[i]), StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(GetStringValue(arguments[i]), GetStringValue(arguments[i + 1]), StringComparison.OrdinalIgnoreCase))
             {
                 isMatch = true;
                 break;
@@ -76,6 +66,25 @@ public static class HandlebarsFunctionHelpers
         }
 
         if (isMatch)
+        {
+            options.Template(output, context);
+        }
+        else
+        {
+            options.Inverse(output, context);
+        }
+    };
+
+    private static readonly HandlebarsBlockHelper StringEqualityHelper = (output, options, context, arguments) =>
+    {
+        if (arguments.Length != 2)
+        {
+            throw new HandlebarsException("{{if_equals}} helper must have exactly two arguments");
+        }
+
+        var left = GetStringValue(arguments[0]);
+        var right = GetStringValue(arguments[1]);
+        if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase))
         {
             options.Template(output, context);
         }
