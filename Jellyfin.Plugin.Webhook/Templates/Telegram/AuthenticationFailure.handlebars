@@ -1,6 +1,5 @@
 {
-    "chat_id":"$ChatID",
-    "text":"<b>🚫 Authentication Failure 🚫</b> \n<b>User:</b> {{Username}} \n<b>Client:</b> {{App}} \n<b>Device:</b> {{DeviceName}} \n<b>Client IP:</b> {{RemoteEndPoint}}",
+    "chat_id": "$ChatID",
     "parse_mode": "html",
-    "protect_content":"true"
+    "text": "<b>{{ServerName}} - Authentication Failure</b>\nThe user {{NotificationUsername}} failed to authenticate while trying to access {{App}} from the device {{DeviceName}} with IP address {{RemoteEndPoint}}."    
 }
