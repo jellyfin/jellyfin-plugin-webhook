@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.Json.JsonEncodedText;
 using System.Web;
 using HandlebarsDotNet;
 
@@ -59,6 +60,17 @@ public static class HandlebarsFunctionHelpers
         writer.WriteSafeString(encodedValue);
     };
 
+    private static readonly HandlebarsHelper JsonEncodeHelper = (writer, context, parameters) => {
+        if (parameters.Length != 1)
+        {
+            throw new HandlebarsException("{{json_encode}} helper must have exactly one argument");
+        }
+
+        var valueToEncode = GetStringValue(parameters[0]);
+        var encodedValue = JsonEncodedText.Encode(valueToEncode).ToString();
+        writer.WriteSafeString(encodedValue);
+    };
+
     /// <summary>
     /// Register handlebars helpers.
     /// </summary>
@@ -71,6 +83,7 @@ public static class HandlebarsFunctionHelpers
             writer.WriteSafeString($"<a href='{parameters["url"]}'>{context["text"]}</a>");
         });
         Handlebars.RegisterHelper("url_encode", UrlEncodeHelper);
+        Handlebars.RegisterHelper("json_encode", JsonEncodeHelper);
     }
 
     /// <summary>
