@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Jellyfin.Data.Entities;
 using Jellyfin.Plugin.Webhook.Destinations;
 using MediaBrowser.Controller;
@@ -74,6 +75,11 @@ public static class DataObjectHelpers
         if (item.Genres is not null && item.Genres.Length > 0)
         {
             dataObject["Genres"] = string.Join(", ", item.Genres);
+        }
+
+        if (!string.IsNullOrEmpty(item.Path))
+        {
+            dataObject["Path"] = item.Path;
         }
 
         if (item is IHasAspectRatio aspectRatioItem && !string.IsNullOrEmpty(aspectRatioItem.AspectRatio))
@@ -436,6 +442,67 @@ public static class DataObjectHelpers
         if (userItemData.LastPlayedDate.HasValue)
         {
             dataObject["LastPlayedDate"] = userItemData.LastPlayedDate;
+        }
+
+        return dataObject;
+    }
+
+    /// <summary>
+    /// Get library data from <see cref="ILibraryManager"/>.
+    /// </summary>
+    /// <param name="dataObject">The existing data object.</param>
+    /// <param name="item">Instance of the <see cref="BaseItem"/>.</param>
+    /// <param name="libraryManager">Instence of the <see cref="ILibraryManager"/>.</param>
+    /// <returns>The modified data object.</returns>
+    public static Dictionary<string, object> AddLibraryItemData(this Dictionary<string, object> dataObject, BaseItem? item, ILibraryManager? libraryManager)
+    {
+        if (item is null || libraryManager is null)
+        {
+            return dataObject;
+        }
+
+        if (dataObject.TryGetValue("Path", out var pathObject) &&
+            pathObject is string path)
+        {
+            var libraryList = libraryManager.GetVirtualFolders(false);
+            string maxMatchLibraryId = string.Empty;
+            string maxMatchLibraryName = string.Empty;
+            string minMatchLibraryId = string.Empty;
+            string minMatchLibraryName = string.Empty;
+            int maxMatchLength = 0;
+            int minMatchLength = int.MaxValue;
+
+            foreach (var library in libraryList)
+            {
+                foreach (var location in library.Locations)
+                {
+                    var normalizedLocation = location.EndsWith(Path.DirectorySeparatorChar) ? location : location + Path.DirectorySeparatorChar;
+                    if (path.StartsWith(normalizedLocation, StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (normalizedLocation.Length > maxMatchLength)
+                        {
+                            maxMatchLength = normalizedLocation.Length;
+                            maxMatchLibraryId = library.ItemId;
+                            maxMatchLibraryName = library.Name;
+                        }
+
+                        if (normalizedLocation.Length < minMatchLength)
+                        {
+                            minMatchLength = normalizedLocation.Length;
+                            minMatchLibraryId = library.ItemId;
+                            minMatchLibraryName = library.Name;
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(maxMatchLibraryName))
+            {
+                dataObject["LibraryIdByMaxPath"] = maxMatchLibraryId;
+                dataObject["LibraryNameByMaxPath"] = maxMatchLibraryName;
+                dataObject["LibraryIdByMinPath"] = minMatchLibraryId;
+                dataObject["LibraryNameByMinPath"] = minMatchLibraryName;
+            }
         }
 
         return dataObject;
