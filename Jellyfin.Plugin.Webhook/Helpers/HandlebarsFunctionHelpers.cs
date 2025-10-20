@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.Json;
 using System.Web;
 using HandlebarsDotNet;
-using System.Text.Json;
 
 namespace Jellyfin.Plugin.Webhook.Helpers;
 
