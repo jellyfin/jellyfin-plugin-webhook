@@ -41,6 +41,10 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
 
 #### Helpers:
 
+- if_all
+    - if _all_ pairs of the following parameters equals each other case insensitive (logical AND)
+- if_any
+    - if _any_ pair of the following parameters equals each other case insensitive (logical OR)
 - if_equals
     - if first parameter equals second parameter case insensitive
 - if_exist
