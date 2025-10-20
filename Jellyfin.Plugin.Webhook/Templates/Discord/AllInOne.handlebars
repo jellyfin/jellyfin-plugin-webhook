@@ -1,0 +1,628 @@
+{
+{{#if_equals NotificationType 'ItemAdded'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Season'}}
+                    "name": "Season Added • {{{SeriesName}}} {{{Name}}}",
+                {{/if_equals}}
+
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Episode Added • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{/if_equals}}
+
+                {{#if_equals ItemType 'Movie'}}
+                    "name": "Movie Added • {{{Name}}}",
+                {{/if_equals}}
+
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "description": "
+            {{~#if_exist Overview~}}
+                > {{{Overview}}}\n\n
+            {{~/if_exist~}}
+
+            {{~#if_exist ServerUrl~}}
+                [**Watch Now** ]({{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_imdb~}}
+                • [**IMDb** ](https://www.imdb.com/title/{{Provider_imdb}}/)
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_tmdb~}}
+                {{~#if_equals ItemType 'Movie'~}}
+                    • [**TMDb** ](https://www.themoviedb.org/movie/{{Provider_tmdb}})
+                {{~else~}}
+                    • [**TMDb** ](https://www.themoviedb.org/tv/{{Provider_tmdb}})
+                {{~/if_equals~}}
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_tvmaze~}}
+                {{~#if_equals ItemType 'Episode'~}}
+                    • [**TVMaze** ](https://www.tvmaze.com/episodes/{{Provider_tvmaze}})
+                {{~/if_equals~}}
+
+                {{~#if_equals ItemType 'Series'~}}
+                    • [**TVMaze** ](https://www.tvmaze.com/shows/{{Provider_tvmaze}})
+                {{~/if_equals~}}
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_audiodbartist~}}
+                • [**AudioDb** ](https://theaudiodb.com/artist/{{Provider_audiodbartist}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainzartist~}}
+                • [**MusicBrainz** ](https://musicbrainz.org/artist/{{Provider_musicbrainzartist}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainztrack~}}
+                • [**MusicBrainz Track** ](https://musicbrainz.org/track/{{Provider_musicbrainztrack}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_musicbrainzalbum~}}
+                • [**MusicBrainz Album** ](https://musicbrainz.org/release/{{Provider_musicbrainzalbum}})
+            {{~/if_exist~}}
+
+            {{~#if_exist Provider_theaudiodbalbum~}}
+                • [**TADb Album** ](https://theaudiodb.com/album/{{Provider_theaudiodbalbum}})
+            {{~/if_exist~}}
+            ",
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "color": "3381759",
+            "footer": {
+                "text": "{{{ServerName}}} ",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'Generic'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "NotificationType: {{NotificationType}}\n{{{Name}}}",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PlaybackStart'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Playback Started • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{else}}
+                    "name": "Playback Started • {{{Name}}} ({{Year}})",
+                {{/if_equals}}
+
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PlaybackProgress'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Playback Started • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{else}}
+                    "name": "Playback Started • {{{Name}}} ({{Year}})",
+                {{/if_equals}}
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "description": "`[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PlaybackStop'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Episode'}}
+                    {{#if_equals PlayedToCompletion true}}
+                        "name": "Playback Completed • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                    {{else}}
+                        "name": "Playback Stopped • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                    {{/if_equals}}
+                {{else}}
+                    {{#if_equals PlayedToCompletion true}}
+                        "name": "Playback Completed • {{{Name}}} ({{Year}})",
+                    {{else}}
+                        "name": "Playback Stopped • {{{Name}}} ({{Year}})",
+                    {{/if_equals}}
+                {{/if_equals}}
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            {{#if_equals PlayedToCompletion true}}
+                "color": "3381759",
+            {{else}}
+                "color": "15737923",
+            {{/if_equals}}
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'SubtitleDownloadFailure'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{else}}
+                    "name": "{{{Name}}} ({{Year}})",
+                {{/if_equals}}
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "description": "Subtitle failed to download.",
+            "color": "15737923",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'AuthenticationFailure'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "title": "🚫 Authentication Failure 🚫",
+            "author": {
+                "name": "User: {{{NotificationUsername}}}",
+                "url": "{{ServerUrl}}web/#/dashboard/users"
+            },
+            "description": "**Client:** {{App}} \n**AppVersion:** {{AppVersion}} \n**Device:** {{DeviceName}} \n**DeviceId:** {{DeviceId}} \n**Client IP:** {{RemoteEndPoint}}",
+            "color": "15737923",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'AuthenticationSuccess'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "title": "✅ Authentication Success ✅",
+            "author": {
+                "name": "User: {{{NotificationUsername}}}",
+                "url": "{{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
+            },
+            "description": "**UserId:** {{UserId}} \n**Device:** {{DeviceName}} \n**DeviceId:** {{DeviceId}} \n**Client IP:** {{RemoteEndPoint}}\n**Last login date:** {{LastLoginDate}}",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'SessionStart'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "title": "⚡ User Active ⚡",
+            "author": {
+                "name": "User: {{{NotificationUsername}}}",
+                "url": "{{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
+            },
+            "description": "**UserId:** {{UserId}} \n**Device:** {{DeviceName}} \n**DeviceId:** {{DeviceId}} \n**Client IP:** {{RemoteEndPoint}}",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PendingRestart'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Restart pending for server: `{{{ServerName}}}`.",
+            "color": "15105570",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'TaskCompleted'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+        {{#if_equals ResultStatus 'Completed'}}
+            "description": "Task `{{TaskName}}` has completed at `{{EndTime}}` successfully.",
+            "color": "3394611",
+        {{else}}
+        {{#if_equals ResultStatus 'Failed'}}
+            "description": "Task `{{TaskName}}` has failed at `{{EndTime}}`.
+                {{~#if_exist ResultErrorMessage~}}
+                    \nResultErrorMessage: {{{ResultErrorMessage}}}
+                {{~/if_exist~}}
+                {{~#if_exist ResultLongErrorMessage~}}
+                    \nResultLongErrorMessage: {{{ResultLongErrorMessage}}}
+                {{~/if_exist~}}
+                ",
+            "color": "15737923",
+        {{else}}
+        {{#if_equals ResultStatus 'Cancelled'}}
+            "description": "Task `{{TaskName}}` has been canceled at `{{EndTime}}`.",
+            "color": "15105570",
+        {{else}}
+        {{#if_equals ResultStatus 'Aborted'}}
+            "description": "Task `{{TaskName}}` has been aborted at `{{EndTime}}`.",
+            "color": "15105570",
+        {{/if_equals}}
+        {{/if_equals}}
+        {{/if_equals}}
+        {{/if_equals}}
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginInstallationCancelled'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Installation of plugin `{{PluginName}} ({{PluginVersion}})` has been canceled.",
+            "color": "15105570",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginInstallationFailed'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Installation of plugin `{{PluginName}} ({{PluginVersion}})` has failed: {{ExceptionMessage}}.",
+            "color": "15737923",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginInstalled'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Plugin `{{PluginName}} ({{PluginVersion}})` has been installed. A restart may be required.",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginInstalling'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Installing plugin `{{PluginName}} ({{PluginVersion}})`...",
+            "color": "15105570",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginUninstalled'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Plugin `{{PluginName}} ({{PluginVersion}})` has been uninstalled. A restart may be required.",
+            "color": "15105570",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'PluginUpdated'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "Plugin `{{PluginName}} ({{PluginVersion}})` has been updated. A restart may be required.\nChangelog: {{PluginChangelog}}",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserCreated'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "A new user account named `{{{NotificationUsername}}}` was created on `{{{ServerName}}}`.",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserDeleted'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "The user account named `{{{NotificationUsername}}}` has been deleted from `{{{ServerName}}}`.",
+            "color": "15105570",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserLockedOut'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {   
+            "author": {
+                "name": "User Locked Out • {{{NotificationUsername}}}",
+                "url": "{{ServerUrl}}web/index.html#!/useredit.html?userId={{UserId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
+            },
+            "description": "`{{{NotificationUsername}}}` has been locked out of `{{{ServerName}}}` for failing too many login attempts.\n\n[**Enable User **]({{ServerUrl}}web/index.html#!/useredit.html?userId={{UserId}}) • [**Reset Password**]({{ServerUrl}}web/index.html#!/userpassword.html?userId={{UserId}})",
+            "color": "15737923",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserPasswordChanged'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "thumbnail":{
+                "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
+            },
+            "description": "The password for the user account named `{{{NotificationUsername}}}` has been changed on `{{{ServerName}}}`.",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserUpdated'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "thumbnail":{
+                "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
+            },
+            "description": "Updated the stored user data for `{{{NotificationUsername}}}` on `{{{ServerName}}}`.",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'UserDataSaved'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Saving User Stream Data • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{else}}
+                    "name": "Saving User Stream Data • {{{Name}}} ({{Year}})",
+                {{/if_equals}}
+                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+            },
+            "thumbnail":{
+                "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
+            },
+            "description": "Saved the following information:\n> `{{{SaveReason}}}`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "color": "3394611",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+{{#if_equals NotificationType 'ItemDeleted'}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "author": {
+                {{#if_equals ItemType 'Season'}}
+                    "name": "Season Deleted • {{{SeriesName}}} {{{Name}}}",
+                {{/if_equals}}
+                {{#if_equals ItemType 'Episode'}}
+                    "name": "Episode Deleted • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
+                {{/if_equals}}
+                {{#if_equals ItemType 'Movie'}}
+                    "name": "Movie Deleted • {{{Name}}}",
+                {{/if_equals}}
+                "url": "{{ServerUrl}}"
+            },
+            "description": "`{{{Name}}}` has been removed from `{{{ServerName}}}`",
+            "color": "15737923",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+{{else}}
+    "content": "{{MentionType}}",
+    "avatar_url": "{{AvatarUrl}}",
+    "username": "{{BotUsername}}",
+    "embeds": [
+        {
+            "description": "The handlebars template received an unknown notification with type `{{NotificationType}}`. An administrator may need to remove this notification type or adjust the template.",
+            "footer": {
+                "text": "{{{ServerName}}}",
+                "icon_url": "{{AvatarUrl}}"
+            },
+            "timestamp": "{{Timestamp}}"
+        }
+    ]
+
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+{{/if_equals}}
+}
