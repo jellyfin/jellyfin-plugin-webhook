@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
+using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
@@ -170,13 +171,18 @@ public class WebhookSender : IWebhookSender
             return true;
         }
 
+        if (baseOptions.EnableVideos && itemType == typeof(Video))
+        {
+            return true;
+        }
+
         return false;
     }
 
     private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> itemData, Type? itemType)
         where T : BaseOption
     {
-        if (NotifyOnItem(option, itemType))
+        if (option.EnableWebhook && NotifyOnItem(option, itemType))
         {
             try
             {

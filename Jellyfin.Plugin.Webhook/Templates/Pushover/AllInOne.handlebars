@@ -7,6 +7,7 @@
     "user": "{{UserToken}}",
     "title": "Notification from {{ServerName}} ({{ServerVersion}})",
     "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
+    "url_title": "Open Item",
     
     {{#if_equals NotificationType 'Generic'}}
         "message": "{{Name}}"
@@ -64,26 +65,22 @@
                                                                 {{#if_equals NotificationType 'UserPasswordChanged'}}
                                                                     "message": "The password for the user '{{NotificationUsername}}' has been changed"
                                                                 {{else}}
-                                                                    {{#if_equals NotificationType 'UserPasswordChanged'}}
-                                                                        "message": "The password for the user '{{NotificationUsername}}' has been changed"
+                                                                    {{#if_equals NotificationType 'AuthenticationFailure'}}
+                                                                        "message": "An attempt to authenticate for account '{{Username}}' has failed"
                                                                     {{else}}
-                                                                        {{#if_equals NotificationType 'AuthenticationFailure'}}
-                                                                            "message": "An attempt to authenticate for account '{{Username}}' has failed"
+                                                                        {{#if_equals NotificationType 'AuthenticationSuccess'}}
+                                                                            "message": "'{{NotificationUsername}}' has authenticated successfully. Last logged in on {{LastLoginDate}}"
                                                                         {{else}}
-                                                                            {{#if_equals NotificationType 'AuthenticationFailure'}}
-                                                                                "message": "'{{NotificationUsername}}' has authenticated successfully. Last logged in on {{LastLoginDate}}"
+                                                                            {{#if_equals NotificationType 'TaskCompleted'}}
+                                                                                "message": "Task '{{TaskName}}' has completed with status {{ResultStatus}}."
                                                                             {{else}}
-                                                                                {{#if_equals NotificationType 'TaskCompleted'}}
-                                                                                    "message": "Task '{{TaskName}}' has completed with status {{ResultStatus}}."
+                                                                                {{#if_equals NotificationType 'SessionStart'}}
+                                                                                    "message": "Session for '{{NotificationUsername}}' has started on device {{DeviceName}}"
                                                                                 {{else}}
-                                                                                    {{#if_equals NotificationType 'SessionStart'}}
-                                                                                        "message": "Session for '{{NotificationUsername}}' has started on device {{DeviceName}}"
+                                                                                    {{#if_equals NotificationType 'PendingRestart'}}
+                                                                                        "message": "{{ServerName}} requires a restart"
                                                                                     {{else}}
-                                                                                        {{#if_equals NotificationType 'PendingRestart'}}
-                                                                                            "message": "{{ServerName}} requires a restart"
-                                                                                        {{else}}
-                                                                                            "message": "The handlebars template received an unknown notification with type '{{NotificationType}}'. An administrator may need to remove this notification type or adjust the template."
-                                                                                        {{/if_equals}}
+                                                                                        "message": "The handlebars template received an unknown notification with type '{{NotificationType}}'. An administrator may need to remove this notification type or adjust the template."
                                                                                     {{/if_equals}}
                                                                                 {{/if_equals}}
                                                                             {{/if_equals}}

@@ -1,15 +1,15 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 14
-targetAbi: "10.9.1.0"
-framework: "net8.0"
+version: 18
+targetAbi: "10.11.0.0"
+framework: "net9.0"
 owner: "jellyfin"
 overview: "Sends notifications."
 description: >
   Sends notifications to destinations via webhooks.
 
-category: "Notifications"
+category: "Administration"
 artifacts:
   - "Jellyfin.Plugin.Webhook.dll"
   - "Handlebars.dll"
@@ -18,10 +18,9 @@ artifacts:
   - "BouncyCastle.Cryptography.dll"
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
-changelog: |2-
-  ### Bug Fixes ###
-  - Fix AuthenticationFailureNotifier, AuthenticationSuccessNotifier (#238) @crobibero
-  - Actually register hosted services (#233) @crobibero
+changelog: |-
+  - Jellyfin 10.11 support (#328) @crobibero
+  - Fix the problem of html escape of "Description" in Chinese. (#320) @sqliu07
 
-  ### Dependency updates ###
-  - chore(deps): update dependency mqttnet.extensions.managedclient to v4.3.4.1084 (#187) @renovate
+  ### New features and improvements ###
+  - Add json_encode helper mostly for {{{Overview}}} (#339) @mfedderly

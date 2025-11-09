@@ -1,4 +1,4 @@
-﻿export default function (view) {
+export default function (view) {
     /*** Utils ***/
     /**
      * Determine if a collection contains an object.
@@ -40,6 +40,7 @@
             template: document.querySelector("#template-notification-type"),
             values: {
                 "ItemAdded": "Item Added",
+                "ItemDeleted": "Item Deleted",
                 "PlaybackStart": "Playback Start",
                 "PlaybackProgress": "Playback Progress",
                 "PlaybackStop": "Playback Stop",
@@ -158,11 +159,13 @@
                 element.querySelector("[data-name=chkEnableSeries]").checked = config.EnableSeries || (typeof config.EnableSeries == "undefined");
                 element.querySelector("[data-name=chkEnableAlbums]").checked = config.EnableAlbums || (typeof config.EnableAlbums == "undefined");
                 element.querySelector("[data-name=chkEnableSongs]").checked = config.EnableSongs || (typeof config.EnableSongs == "undefined");
+                element.querySelector("[data-name=chkEnableVideos]").checked = config.EnableVideos || (typeof config.EnableVideos == "undefined");
                 element.querySelector("[data-name=txtWebhookName]").value = config.WebhookName || "";
                 element.querySelector("[data-name=txtWebhookUri]").value = config.WebhookUri || "";
                 element.querySelector("[data-name=chkSendAllProperties]").checked = config.SendAllProperties || false;
                 element.querySelector("[data-name=chkTrimWhitespace]").checked = config.TrimWhitespace || false;
                 element.querySelector("[data-name=chkSkipEmptyMessageBody]").checked = config.SkipEmptyMessageBody || false;
+                element.querySelector("[data-name=chkEnableWebhook]").checked = config.EnableWebhook !== undefined ? config.EnableWebhook : true;
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
@@ -180,11 +183,13 @@
                 config.EnableSeries = element.querySelector("[data-name=chkEnableSeries]").checked || false;
                 config.EnableAlbums = element.querySelector("[data-name=chkEnableAlbums]").checked || false;
                 config.EnableSongs = element.querySelector("[data-name=chkEnableSongs]").checked || false;
+                config.EnableVideos = element.querySelector("[data-name=chkEnableVideos]").checked || false;
                 config.WebhookName = element.querySelector("[data-name=txtWebhookName]").value || "";
                 config.WebhookUri = element.querySelector("[data-name=txtWebhookUri]").value || "";
                 config.SendAllProperties = element.querySelector("[data-name=chkSendAllProperties]").checked || false;
                 config.TrimWhitespace = element.querySelector("[data-name=chkTrimWhitespace]").checked || false;
                 config.SkipEmptyMessageBody = element.querySelector("[data-name=chkSkipEmptyMessageBody]").checked || false;
+                config.EnableWebhook = element.querySelector("[data-name=chkEnableWebhook]").checked;
                 config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];

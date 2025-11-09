@@ -1,4 +1,4 @@
-﻿<div data-role="page" id="webhookConfigurationPage" class="page type-interior pluginConfigurationPage fullWidthContent"
+<div data-role="page" id="webhookConfigurationPage" class="page type-interior pluginConfigurationPage fullWidthContent"
      data-controller="__plugin/Webhook.js">
     <div class="content-primary">
         <div class="verticalSection">
@@ -76,6 +76,13 @@
             <input is="emby-input" type="text" data-name="txtWebhookUri" required="required" label="Webhook Url:"/>
             <span>The webhook destination url</span>
         </div>
+        <div class="inputContainer">
+            <label>Status:</label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableWebhook"/>
+                <span>Enable</span>
+            </label>
+        </div>
         <div>
             <label>Notification Type:</label>
             <div data-name="notificationTypeContainer">
@@ -111,6 +118,10 @@
             <label class="checkboxContainer">
                 <input is="emby-checkbox" type="checkbox" data-name="chkEnableSongs"/>
                 <span>Songs</span>
+            </label>
+            <label class="checkboxContainer">
+                <input is="emby-checkbox" type="checkbox" data-name="chkEnableVideos"/>
+                <span>Videos</span>
             </label>
             <label class="checkboxContainer">
                 <input is="emby-checkbox" type="checkbox" data-name="chkSendAllProperties"/>
