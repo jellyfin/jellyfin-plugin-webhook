@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Mime;
@@ -69,16 +70,23 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 return;
             }
 
-            var thumbnailUrl = data.GetValueOrDefault("thumbnail_url") as string;
-            if (!string.IsNullOrWhiteSpace(thumbnailUrl))
+            var serverUrl = data.GetValueOrDefault("ServerUrl") as string;
+            _logger.LogDebug("serverUrl: {@ServerUrl}", serverUrl);
+            var itemId = data.GetValueOrDefault("ItemId", Guid.Empty).ToString();
+            _logger.LogDebug("itemId: {@ItemId}", itemId);
+            var thumbnailUrl = serverUrl + "/Items/" + itemId + "/Images/Primary";
+            _logger.LogDebug("thumbnailUrl: {@ThumbnailUrl}", thumbnailUrl);
+            if (!string.IsNullOrWhiteSpace(serverUrl) && itemId != Guid.Empty.ToString())
             {
-                _logger.LogDebug("SendAsync Body: {@Body}", body);
+                _logger.LogDebug("Attaching Thumbnail - SendAsync Body: {@Body}", body);
 
                 // get the image file
                 var imageBytes = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .GetByteArrayAsync(new Uri(thumbnailUrl))
                     .ConfigureAwait(true);
+                var imageSize = imageBytes.GetLength(0);
+                _logger.LogDebug("imageSize: {@ImageSize}", imageSize);
 
                 // send the image file and the body as a multipart form
                 using var content = new MultipartFormDataContent
