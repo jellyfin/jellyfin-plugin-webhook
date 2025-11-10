@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Mime;
@@ -70,17 +69,18 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 return;
             }
 
+            _logger.LogDebug("SendAsync Body: {@Body}", body);
+
+            // Build the thumbnail url
             var serverUrl = data.GetValueOrDefault("ServerUrl") as string;
-            _logger.LogDebug("serverUrl: {@ServerUrl}", serverUrl);
             var itemId = data.GetValueOrDefault("ItemId", Guid.Empty).ToString();
-            _logger.LogDebug("itemId: {@ItemId}", itemId);
             var thumbnailUrl = serverUrl + "/Items/" + itemId + "/Images/Primary";
             _logger.LogDebug("thumbnailUrl: {@ThumbnailUrl}", thumbnailUrl);
+
             if (!string.IsNullOrWhiteSpace(serverUrl) && itemId != Guid.Empty.ToString())
             {
-                _logger.LogDebug("Attaching Thumbnail - SendAsync Body: {@Body}", body);
-
-                // get the image file
+                // Get the image file
+                _logger.LogDebug("Getting thumbnail");
                 var imageBytes = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .GetByteArrayAsync(new Uri(thumbnailUrl))
@@ -88,12 +88,13 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 var imageSize = imageBytes.GetLength(0);
                 _logger.LogDebug("imageSize: {@ImageSize}", imageSize);
 
-                // send the image file and the body as a multipart form
+                // Send the image file and the body as a multipart form
                 using var content = new MultipartFormDataContent
                 {
                     { new ByteArrayContent(imageBytes), "files[0]", "thumbnail.jpg" },
                     { new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json), "payload_json" }
                 };
+                _logger.LogDebug("Sending body with thumbnail");
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
                     .PostAsync(new Uri(option.WebhookUri), content)
@@ -102,7 +103,7 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
             }
             else
             {
-                _logger.LogDebug("SendAsync Body: {@Body}", body);
+                _logger.LogDebug("Sending body without thumbnail");
                 using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var response = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
