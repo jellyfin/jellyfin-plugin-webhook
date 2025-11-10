@@ -89,10 +89,12 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
                 _logger.LogDebug("imageSize: {@ImageSize}", imageSize);
 
                 // Send the image file and the body as a multipart form
+                using var thumbnailContent = new ByteArrayContent(imageBytes);
+                using var bodyContent = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 using var content = new MultipartFormDataContent
                 {
-                    { new ByteArrayContent(imageBytes), "files[0]", "thumbnail.jpg" },
-                    { new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json), "payload_json" }
+                    { thumbnailContent, "files[0]", "thumbnail.jpg" },
+                    { bodyContent, "payload_json" }
                 };
                 _logger.LogDebug("Sending body with thumbnail");
                 using var response = await _httpClientFactory
