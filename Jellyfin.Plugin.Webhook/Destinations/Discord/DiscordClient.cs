@@ -74,38 +74,28 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
         var attachThumbnail = false;
         try
         {
-            var jsonRoot = JsonDocument.Parse(body).RootElement;
-            if (jsonRoot.TryGetProperty("embeds", out JsonElement embedsElement))
+            foreach (var embedElement in JsonDocument.Parse(body).RootElement.GetProperty("embeds").EnumerateArray())
             {
-                foreach (JsonElement embedElement in embedsElement.EnumerateArray())
+                if (embedElement.GetProperty("thumbnail").GetProperty("url").GetString() == "attachment://thumbnail.jpg")
                 {
-                    if (embedElement.TryGetProperty("thumbnail", out JsonElement thumbnailElement))
-                    {
-                        if (thumbnailElement.TryGetProperty("url", out JsonElement urlElement))
-                        {
-                            if (urlElement.GetString() == "attachment://thumbnail.jpg")
-                            {
-                                attachThumbnail = true;
-                            }
-                        }
-                    }
+                    _logger.LogDebug("Attaching thumbnail");
+                    attachThumbnail = true;
+                    break;
                 }
             }
         }
-        catch (Exception e) when (e is JsonException || e is ArgumentException)
+        catch (Exception e) when (e is JsonException || e is ArgumentException || e is InvalidOperationException || e is KeyNotFoundException)
         {
-            _logger.LogWarning(e, "Couldn't parse body");
+            _logger.LogDebug(e, "Not attaching thumbnail");
         }
 
         if (attachThumbnail)
         {
-            _logger.LogDebug("Attaching thumbnail");
-
             // Get the thumbnail
             var serverUrl = data.GetValueOrDefault("ServerUrl") as string;
             var itemId = data.GetValueOrDefault("ItemId", Guid.Empty).ToString();
             var thumbnailUrl = serverUrl + "/Items/" + itemId + "/Images/Primary";
-            byte[] thumbnailBytes = [];
+            byte[] thumbnailBytes;
             try
             {
                 thumbnailBytes = await _httpClientFactory
@@ -115,7 +105,7 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
             }
             catch (Exception e) when (e is InvalidOperationException || e is HttpRequestException || e is TaskCanceledException || e is UriFormatException)
             {
-                _logger.LogWarning(e, "Coudn't get thumbnail from {@ThumbnailUrl}", thumbnailUrl);
+                _logger.LogWarning(e, "Coudn't get thumbnail from {Url}", thumbnailUrl);
                 using var stringContent = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
                 await SendContent(option.WebhookUri, stringContent).ConfigureAwait(false);
                 return;
@@ -133,7 +123,6 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
         }
         else
         {
-            _logger.LogDebug("Not attaching thumbnail");
             using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
             await SendContent(option.WebhookUri, content).ConfigureAwait(false);
         }
@@ -141,6 +130,7 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
 
     private async Task SendContent(string webhookUri, HttpContent content)
     {
+        _logger.LogDebug("Sending content as: {Type}", content.GetType());
         try
         {
             using var response = await _httpClientFactory
