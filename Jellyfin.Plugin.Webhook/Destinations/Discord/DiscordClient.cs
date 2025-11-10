@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Extensions;
 using MediaBrowser.Common.Net;
@@ -33,88 +34,122 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
     /// <inheritdoc />
     public async Task SendAsync(DiscordOption option, Dictionary<string, object> data)
     {
+        if (string.IsNullOrEmpty(option.WebhookUri))
+        {
+            throw new ArgumentException(nameof(option.WebhookUri));
+        }
+
+        if (!SendWebhook(_logger, option, data))
+        {
+            return;
+        }
+
+        // Add discord specific properties.
+        data["MentionType"] = GetMentionType(option.MentionType);
+        if (!string.IsNullOrEmpty(option.EmbedColor))
+        {
+            data["EmbedColor"] = FormatColorCode(option.EmbedColor);
+        }
+
+        if (!string.IsNullOrEmpty(option.AvatarUrl))
+        {
+            data["AvatarUrl"] = option.AvatarUrl;
+        }
+
+        if (!string.IsNullOrEmpty(option.Username))
+        {
+            data["Username"] = option.Username;
+            data["BotUsername"] = option.Username;
+        }
+
+        var body = option.GetMessageBody(data);
+        if (!SendMessageBody(_logger, option, body))
+        {
+            return;
+        }
+
+        _logger.LogDebug("SendAsync Body: {@Body}", body);
+
+        // Determine if a thumbnail should be attached
+        var attachThumbnail = false;
         try
         {
-            if (string.IsNullOrEmpty(option.WebhookUri))
+            var jsonRoot = JsonDocument.Parse(body).RootElement;
+            if (jsonRoot.TryGetProperty("embeds", out JsonElement embedsElement))
             {
-                throw new ArgumentException(nameof(option.WebhookUri));
+                foreach (JsonElement embedElement in embedsElement.EnumerateArray())
+                {
+                    if (embedElement.TryGetProperty("thumbnail", out JsonElement thumbnailElement))
+                    {
+                        if (thumbnailElement.TryGetProperty("url", out JsonElement urlElement))
+                        {
+                            if (urlElement.GetString() == "attachment://thumbnail.jpg")
+                            {
+                                attachThumbnail = true;
+                            }
+                        }
+                    }
+                }
             }
+        }
+        catch (Exception e) when (e is JsonException || e is ArgumentException)
+        {
+            _logger.LogWarning(e, "Couldn't parse body");
+        }
 
-            if (!SendWebhook(_logger, option, data))
-            {
-                return;
-            }
+        if (attachThumbnail)
+        {
+            _logger.LogDebug("Attaching thumbnail");
 
-            // Add discord specific properties.
-            data["MentionType"] = GetMentionType(option.MentionType);
-            if (!string.IsNullOrEmpty(option.EmbedColor))
-            {
-                data["EmbedColor"] = FormatColorCode(option.EmbedColor);
-            }
-
-            if (!string.IsNullOrEmpty(option.AvatarUrl))
-            {
-                data["AvatarUrl"] = option.AvatarUrl;
-            }
-
-            if (!string.IsNullOrEmpty(option.Username))
-            {
-                data["Username"] = option.Username;
-                data["BotUsername"] = option.Username;
-            }
-
-            var body = option.GetMessageBody(data);
-            if (!SendMessageBody(_logger, option, body))
-            {
-                return;
-            }
-
-            _logger.LogDebug("SendAsync Body: {@Body}", body);
-
-            // Build the thumbnail url
+            // Get the thumbnail
             var serverUrl = data.GetValueOrDefault("ServerUrl") as string;
             var itemId = data.GetValueOrDefault("ItemId", Guid.Empty).ToString();
             var thumbnailUrl = serverUrl + "/Items/" + itemId + "/Images/Primary";
-            _logger.LogDebug("thumbnailUrl: {@ThumbnailUrl}", thumbnailUrl);
-
-            if (!string.IsNullOrWhiteSpace(serverUrl) && itemId != Guid.Empty.ToString())
+            byte[] thumbnailBytes = [];
+            try
             {
-                // Get the image file
-                _logger.LogDebug("Getting thumbnail");
-                var imageBytes = await _httpClientFactory
+                thumbnailBytes = await _httpClientFactory
                     .CreateClient(NamedClient.Default)
-                    .GetByteArrayAsync(new Uri(thumbnailUrl))
-                    .ConfigureAwait(true);
-                var imageSize = imageBytes.GetLength(0);
-                _logger.LogDebug("imageSize: {@ImageSize}", imageSize);
-
-                // Send the image file and the body as a multipart form
-                using var thumbnailContent = new ByteArrayContent(imageBytes);
-                using var bodyContent = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-                using var content = new MultipartFormDataContent
-                {
-                    { thumbnailContent, "files[0]", "thumbnail.jpg" },
-                    { bodyContent, "payload_json" }
-                };
-                _logger.LogDebug("Sending body with thumbnail");
-                using var response = await _httpClientFactory
-                    .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(option.WebhookUri), content)
+                    .GetByteArrayAsync(thumbnailUrl)
                     .ConfigureAwait(false);
-                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
             }
-            else
+            catch (Exception e) when (e is InvalidOperationException || e is HttpRequestException || e is TaskCanceledException || e is UriFormatException)
             {
-                _logger.LogDebug("Sending body without thumbnail");
-                using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-                using var response = await _httpClientFactory
-                    .CreateClient(NamedClient.Default)
-                    .PostAsync(new Uri(option.WebhookUri), content)
-                    .ConfigureAwait(false);
-                await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+                _logger.LogWarning(e, "Coudn't get thumbnail from {@ThumbnailUrl}", thumbnailUrl);
+                using var stringContent = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+                await SendContent(option.WebhookUri, stringContent).ConfigureAwait(false);
+                return;
             }
+
+            // Send the thumbnail and the body as a multipart form
+            using var thumbnailContent = new ByteArrayContent(thumbnailBytes);
+            using var bodyContent = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+            using var content = new MultipartFormDataContent
+            {
+                { thumbnailContent, "files[0]", "thumbnail.jpg" },
+                { bodyContent, "payload_json" }
+            };
+            await SendContent(option.WebhookUri, content).ConfigureAwait(false);
         }
-        catch (HttpRequestException e)
+        else
+        {
+            _logger.LogDebug("Not attaching thumbnail");
+            using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
+            await SendContent(option.WebhookUri, content).ConfigureAwait(false);
+        }
+    }
+
+    private async Task SendContent(string webhookUri, HttpContent content)
+    {
+        try
+        {
+            using var response = await _httpClientFactory
+                .CreateClient(NamedClient.Default)
+                .PostAsync(webhookUri, content)
+                .ConfigureAwait(false);
+            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+        }
+        catch (Exception e) when (e is InvalidOperationException || e is HttpRequestException || e is TaskCanceledException || e is UriFormatException)
         {
             _logger.LogWarning(e, "Error sending notification");
         }
