@@ -18,7 +18,7 @@
                     "name": "Movie Added • {{{Name}}}",
                 {{/if_equals}}
 
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
             "description": "
             {{~#if_exist Overview~}}
@@ -26,7 +26,7 @@
             {{~/if_exist~}}
 
             {{~#if_exist ServerUrl~}}
-                [**Watch Now** ]({{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})
+                [**Watch Now** ]({{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})
             {{~/if_exist~}}
 
             {{~#if_exist Provider_imdb~}}
@@ -111,9 +111,9 @@
                     "name": "Playback Started • {{{Name}}} ({{Year}})",
                 {{/if_equals}}
 
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
-            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}})",
             "thumbnail":{
                 "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
             },
@@ -138,9 +138,9 @@
                 {{else}}
                     "name": "Playback Started • {{{Name}}} ({{Year}})",
                 {{/if_equals}}
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
-            "description": "`[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "description": "`[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}})",
             "thumbnail":{
                 "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
             },
@@ -172,12 +172,12 @@
                         "name": "Playback Stopped • {{{Name}}} ({{Year}})",
                     {{/if_equals}}
                 {{/if_equals}}
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
             },
-            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "description": "> `[{{PlaybackPosition}}/{{RunTime}}]`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}})",
             {{#if_equals PlayedToCompletion true}}
                 "color": "3381759",
             {{else}}
@@ -203,7 +203,7 @@
                 {{else}}
                     "name": "{{{Name}}} ({{Year}})",
                 {{/if_equals}}
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
@@ -227,7 +227,7 @@
             "title": "🚫 Authentication Failure 🚫",
             "author": {
                 "name": "User: {{{NotificationUsername}}}",
-                "url": "{{ServerUrl}}web/#/dashboard/users"
+                "url": "{{ServerUrl}}/web/#/dashboard/users"
             },
             "description": "**Client:** {{App}} \n**AppVersion:** {{AppVersion}} \n**Device:** {{DeviceName}} \n**DeviceId:** {{DeviceId}} \n**Client IP:** {{RemoteEndPoint}}",
             "color": "15737923",
@@ -248,7 +248,7 @@
             "title": "✅ Authentication Success ✅",
             "author": {
                 "name": "User: {{{NotificationUsername}}}",
-                "url": "{{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}}"
+                "url": "{{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
@@ -272,7 +272,7 @@
             "title": "⚡ User Active ⚡",
             "author": {
                 "name": "User: {{{NotificationUsername}}}",
-                "url": "{{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}}"
+                "url": "{{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
@@ -479,12 +479,12 @@
         {   
             "author": {
                 "name": "User Locked Out • {{{NotificationUsername}}}",
-                "url": "{{ServerUrl}}web/index.html#!/useredit.html?userId={{UserId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/useredit.html?userId={{UserId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Users/{{UserId}}/Images/Primary"
             },
-            "description": "`{{{NotificationUsername}}}` has been locked out of `{{{ServerName}}}` for failing too many login attempts.\n\n[**Enable User **]({{ServerUrl}}web/index.html#!/useredit.html?userId={{UserId}}) • [**Reset Password**]({{ServerUrl}}web/index.html#!/userpassword.html?userId={{UserId}})",
+            "description": "`{{{NotificationUsername}}}` has been locked out of `{{{ServerName}}}` for failing too many login attempts.\n\n[**Enable User **]({{ServerUrl}}/web/index.html#!/useredit.html?userId={{UserId}}) • [**Reset Password**]({{ServerUrl}}/web/index.html#!/userpassword.html?userId={{UserId}})",
             "color": "15737923",
             "footer": {
                 "text": "{{{ServerName}}}",
@@ -544,12 +544,12 @@
                 {{else}}
                     "name": "Saving User Stream Data • {{{Name}}} ({{Year}})",
                 {{/if_equals}}
-                "url": "{{ServerUrl}}web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
             "thumbnail":{
                 "url": "{{ServerUrl}}Items/{{ItemId}}/Images/Primary"
             },
-            "description": "Saved the following information:\n> `{{{SaveReason}}}`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}web/#/dashboard/users/profile?userId={{UserId}})",
+            "description": "Saved the following information:\n> `{{{SaveReason}}}`\n[**User: {{{NotificationUsername}}}**]({{ServerUrl}}/web/#/dashboard/users/profile?userId={{UserId}})",
             "color": "3394611",
             "footer": {
                 "text": "{{{ServerName}}}",
