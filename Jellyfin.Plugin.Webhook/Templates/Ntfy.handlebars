@@ -25,10 +25,10 @@
             {{else}}
             {{#if_equals ItemType 'Episode'}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{Overview}}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{json_encode Overview}}}"
             {{else}}
                 "title": "{{{NotificationUsername}}} | Playback started: {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{Overview}}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback started\n**- Play Method:** {{{PlayMethod}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{json_encode Overview}}}"
             {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
@@ -44,10 +44,10 @@
             {{else}}
             {{#if_equals ItemType 'Episode'}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{Overview}}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{json_encode Overview}}}"
             {{else}}
                 "title": "{{{NotificationUsername}}} | Playback stopped: {{{Name}}} ({{Year}})",
-                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{Overview}}}"
+                "message": "---\n**- User:** {{{NotificationUsername}}}\n**- Device/Client:** {{{DeviceName}}} - {{{ClientName}}}\n**- IP Address:** {{{RemoteEndPoint}}}\n**- Action:** Playback stopped\n**- Played To Completion:** {{{PlayedToCompletion}}}\n**- Playback Position:** {{{PlaybackPosition}}}\n\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n\n**- Description:**\n{{{json_encode Overview}}}"
             {{/if_equals}}
             {{/if_equals}}
     {{/if_equals}}
@@ -60,26 +60,26 @@
     "actions": [{ "action": "view", "label": "Visit Jellyfin", "url": "{{{ServerUrl}}}web/#/details?id={{ItemId}}" }],
         {{#if_equals ItemType 'Audio'}}
             "title": "Audio Track Added: {{{Artist}}} - {{{Name}}} | {{{Album}}} ({{Year}})",
-            "message": "---\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Artist:** {{{Artist}}}\n**- Track:** {{{Name}}}\n**- Album:** {{{Album}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{else}}
         {{#if_equals ItemType 'MusicAlbum'}}
             "title": "Album Added: {{{Artist}}} - {{{Name}}} ({{Year}})",
-            "message": "---\n**- Artist:** {{{Artist}}}\n**- Album:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Artist:** {{{Artist}}}\n**- Album:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{else}}
         {{#if_equals ItemType 'Movie'}}
             "title": "Movie Added: {{{Name}}} ({{Year}})",
-            "message": "---\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Movie:** {{{Name}}} ({{Year}})\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{else}}
         {{#if_equals ItemType 'Season'}}
             "title": "Season Added: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}",
-            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Season:** {{{Name}}}\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Season:** {{{Name}}}\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{else}}
         {{#if_equals ItemType 'Series'}}
             "title": "Series Added: {{Name}} ({{Year}})",
-            "message": "---\n**- Series:** {{Name}} ({{Year}})\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Series:** {{Name}} ({{Year}})\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{else}}
             "title": "Episode Added: {{{SeriesName}}} ({{Year}}) - S{{SeasonNumber00}}E{{EpisodeNumber00}}",
-            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{Overview}}}"
+            "message": "---\n**- Series:** {{{SeriesName}}} ({{Year}})\n**- Episode:** S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}}\n**- Runtime:** {{RunTime}}\n**- Status:** Available\n\n**- Description:**\n{{{json_encode Overview}}}"
         {{/if_equals}}
         {{/if_equals}}
         {{/if_equals}}
