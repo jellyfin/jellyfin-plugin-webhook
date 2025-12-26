@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 18
-targetAbi: "10.11.0.0"
+version: 19
+targetAbi: "10.11.5.0"
 framework: "net9.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -19,8 +19,9 @@ artifacts:
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-
-  - Jellyfin 10.11 support (#328) @crobibero
-  - Fix the problem of html escape of "Description" in Chinese. (#320) @sqliu07
+  - fix: accept non-string JSON and convert to strings for form encoding (#348) @MattKobayashi
 
-  ### New features and improvements ###
-  - Add json_encode helper mostly for {{{Overview}}} (#339) @mfedderly
+  ### Dependency updates ###
+  - Update dependency MailKit to 4.14.1 - autoclosed (#310) @[renovate[bot]](https://github.com/apps/renovate)
+  - Update dependency Microsoft.Extensions.Http to v10 (#357) @[renovate[bot]](https://github.com/apps/renovate)
+  - Update dependency Microsoft.Extensions.Http to 9.0.11 (#350) @[renovate[bot]](https://github.com/apps/renovate)
