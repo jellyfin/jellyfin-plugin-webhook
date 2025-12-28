@@ -56,6 +56,7 @@ public static class DataObjectHelpers
         dataObject["Name"] = item.Name.Escape();
         dataObject["Overview"] = item.Overview.Escape();
         dataObject["Tagline"] = item.Tagline.Escape();
+        dataObject["IsHD"] = item.IsHD;
         dataObject["ItemId"] = item.Id;
         dataObject["ItemType"] = item.GetType().Name.Escape();
         dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
@@ -64,6 +65,21 @@ public static class DataObjectHelpers
         if (item.ProductionYear is not null)
         {
             dataObject["Year"] = item.ProductionYear;
+        }
+
+        if (item.Studios is not null && item.Studios.Length > 0)
+        {
+            dataObject["Studios"] = string.Join(", ", item.Studios);
+        }
+
+        if (item.Tags is not null && item.Tags.Length > 0)
+        {
+            dataObject["Tags"] = string.Join(", ", item.Tags);
+        }
+
+        if (item.CommunityRating is not null)
+        {
+            dataObject["CommunityRating"] = item.CommunityRating.Value.ToString("F1", CultureInfo.InvariantCulture);
         }
 
         if (item.PremiereDate is not null)
