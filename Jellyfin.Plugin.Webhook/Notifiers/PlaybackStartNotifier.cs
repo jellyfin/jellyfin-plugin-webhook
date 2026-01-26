@@ -64,7 +64,8 @@ public class PlaybackStartNotifier : IEventConsumer<PlaybackStartEventArgs>
             var userDataObject = new Dictionary<string, object>(dataObject)
             {
                 ["NotificationUsername"] = user.Username,
-                ["UserId"] = user.Id
+                ["UserId"] = user.Id,
+                ["UserIdN"] = user.Id.ToString("N")
             };
 
             await _webhookSender.SendNotification(NotificationType.PlaybackStart, userDataObject, eventArgs.Item.GetType())
