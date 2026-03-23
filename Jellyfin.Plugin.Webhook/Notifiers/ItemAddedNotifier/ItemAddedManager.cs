@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
-using Jellyfin.Plugin.Webhook.Models;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
@@ -15,11 +14,10 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
 /// <inheritdoc />
 public class ItemAddedManager : IItemAddedManager
 {
-    private const int MaxRetries = 10;
     private readonly ILogger<ItemAddedManager> _logger;
     private readonly ILibraryManager _libraryManager;
     private readonly IServerApplicationHost _applicationHost;
-    private readonly ConcurrentDictionary<Guid, QueuedItemContainer> _itemProcessQueue;
+    private readonly ConcurrentDictionary<Guid, byte> _pendingItems;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemAddedManager"/> class.
@@ -35,64 +33,65 @@ public class ItemAddedManager : IItemAddedManager
         _logger = logger;
         _libraryManager = libraryManager;
         _applicationHost = applicationHost;
-        _itemProcessQueue = new ConcurrentDictionary<Guid, QueuedItemContainer>();
-    }
-
-    /// <inheritdoc />
-    public async Task ProcessItemsAsync()
-    {
-        _logger.LogDebug("ProcessItemsAsync");
-        // Attempt to process all items in queue.
-        var currentItems = _itemProcessQueue.ToArray();
-        if (currentItems.Length != 0)
-        {
-            var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
-            await using (scope.ConfigureAwait(false))
-            {
-                var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
-                foreach (var (key, container) in currentItems)
-                {
-                    var item = _libraryManager.GetItemById(key);
-                    if (item is null)
-                    {
-                        // Remove item from queue.
-                        _itemProcessQueue.TryRemove(key, out _);
-                        return;
-                    }
-
-                    _logger.LogDebug("Item {ItemName}", item.Name);
-
-                    // Metadata not refreshed yet and under retry limit.
-                    if (item.ProviderIds.Keys.Count == 0 && container.RetryCount < MaxRetries)
-                    {
-                        _logger.LogDebug("Requeue {ItemName}, no provider ids", item.Name);
-                        container.RetryCount++;
-                        _itemProcessQueue.AddOrUpdate(key, container, (_, _) => container);
-                        continue;
-                    }
-
-                    _logger.LogDebug("Notifying for {ItemName}", item.Name);
-
-                    // Send notification to each configured destination.
-                    var dataObject = DataObjectHelpers
-                        .GetBaseDataObject(_applicationHost, NotificationType.ItemAdded)
-                        .AddBaseItemData(item);
-
-                    var itemType = item.GetType();
-                    await webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType)
-                        .ConfigureAwait(false);
-
-                    // Remove item from queue.
-                    _itemProcessQueue.TryRemove(key, out _);
-                }
-            }
-        }
+        _pendingItems = new ConcurrentDictionary<Guid, byte>();
     }
 
     /// <inheritdoc />
     public void AddItem(BaseItem item)
     {
-        _itemProcessQueue.TryAdd(item.Id, new QueuedItemContainer(item.Id));
-        _logger.LogDebug("Queued {ItemName} for notification", item.Name);
+        _pendingItems.TryAdd(item.Id, 0);
+        _logger.LogDebug("Queued {ItemName} for ItemAdded notification", item.Name);
+    }
+
+    /// <inheritdoc />
+    public void HandleItemUpdated(BaseItem item)
+    {
+        if (!_pendingItems.TryRemove(item.Id, out _))
+        {
+            return;
+        }
+
+        _logger.LogDebug("Item {ItemName} updated and was in pending queue, firing webhook after delay", item.Name);
+
+        // Fire after a short delay on a background thread.
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var delayMs = (WebhookPlugin.Instance?.Configuration.ItemNotificationDelay ?? 5) * 1000;
+                await Task.Delay(delayMs).ConfigureAwait(false);
+                await SendNotificationAsync(item.Id).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending ItemAdded notification for {ItemName}", item.Name);
+            }
+        });
+    }
+
+    private async Task SendNotificationAsync(Guid itemId)
+    {
+        var item = _libraryManager.GetItemById(itemId);
+        if (item is null)
+        {
+            _logger.LogDebug("Item {ItemId} no longer exists, skipping notification", itemId);
+            return;
+        }
+
+        _logger.LogDebug("Notifying for {ItemName}", item.Name);
+
+        var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false))
+        {
+            var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
+
+            var dataObject = DataObjectHelpers
+                .GetBaseDataObject(_applicationHost, NotificationType.ItemAdded)
+                .AddBaseItemData(item);
+
+            var itemType = item.GetType();
+            await webhookSender.SendNotification(NotificationType.ItemAdded, dataObject, itemType)
+                .ConfigureAwait(false);
+        }
     }
 }

@@ -649,6 +649,7 @@ export default function (view) {
             Dashboard.showLoadingMsg();
 
             const config = {};
+            config.ItemNotificationDelay = parseInt(document.querySelector("#txtItemNotificationDelay").value, 10) || 5;
             config.ServerUrl = document.querySelector("#txtServerUrl").value;
             config.DiscordOptions = [];
             const discordConfigs = document.querySelectorAll("[data-type=discord]");
@@ -710,6 +711,7 @@ export default function (view) {
             Dashboard.showLoadingMsg();
 
             window.ApiClient.getPluginConfiguration(Webhook.pluginId).then(function (config) {
+                document.querySelector("#txtItemNotificationDelay").value = config.ItemNotificationDelay ?? 5;
                 document.querySelector("#txtServerUrl").value = config.ServerUrl || "";
                 for (let i = 0; i < config.DiscordOptions.length; i++) {
                     Webhook.discord.addConfig(config.DiscordOptions[i]);
