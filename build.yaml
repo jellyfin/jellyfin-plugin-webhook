@@ -1,7 +1,7 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 19
+version: 20
 targetAbi: "10.11.8.0"
 framework: "net9.0"
 owner: "jellyfin"
@@ -18,10 +18,7 @@ artifacts:
   - "BouncyCastle.Cryptography.dll"
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
-changelog: |-
-  - fix: accept non-string JSON and convert to strings for form encoding (#348) @MattKobayashi
+changelog: |2-
 
   ### Dependency updates ###
-  - Update dependency MailKit to 4.14.1 - autoclosed (#310) @[renovate[bot]](https://github.com/apps/renovate)
-  - Update dependency Microsoft.Extensions.Http to v10 (#357) @[renovate[bot]](https://github.com/apps/renovate)
-  - Update dependency Microsoft.Extensions.Http to 9.0.11 (#350) @[renovate[bot]](https://github.com/apps/renovate)
+  - Update dependency MailKit to 4.16.0 (#370) @[renovate[bot]](https://github.com/apps/renovate)
