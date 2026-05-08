@@ -42,6 +42,7 @@ public class AuthenticationFailureNotifier : IEventConsumer<AuthenticationReques
         dataObject[nameof(eventArgs.App)] = eventArgs.App ?? string.Empty;
         dataObject[nameof(eventArgs.Username)] = eventArgs.Username ?? string.Empty;
         dataObject[nameof(eventArgs.UserId)] = eventArgs.UserId ?? Guid.Empty;
+        dataObject["UserIdN"] = eventArgs.UserId?.ToString("N") ?? string.Empty;
         dataObject[nameof(eventArgs.AppVersion)] = eventArgs.AppVersion ?? string.Empty;
         dataObject[nameof(eventArgs.DeviceId)] = eventArgs.DeviceId ?? string.Empty;
         dataObject[nameof(eventArgs.DeviceName)] = eventArgs.DeviceName ?? string.Empty;
