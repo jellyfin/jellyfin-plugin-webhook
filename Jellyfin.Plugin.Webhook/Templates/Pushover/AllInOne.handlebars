@@ -17,7 +17,7 @@
                 "message": "{{{SeriesName}}} {{{Name}}} has been added to {{{ServerName}}}"
             {{else}}
                 {{#if_equals ItemType 'Episode'}}
-                    "message": "{{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} has been added to {{{ServerName}}}"
+                    "message": "{{{SeriesName}}} — {{{Name}}} (S{{SeasonNumber00}}E{{EpisodeNumber00}}) has been added to {{{ServerName}}}"
                 {{else}}
                     "message": "{{{Name}}} ({{Year}}) has been added to {{{ServerName}}}"
                 {{/if_equals}}
@@ -27,10 +27,18 @@
                 "message": "The password for the user '{{NotificationUsername}}' has been changed"
             {{else}}
                 {{#if_equals NotificationType 'PlaybackStart'}}
-                    "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                    {{#if_equals ItemType 'Episode'}}
+                        "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} — {{{Name}}} (S{{SeasonNumber00}}E{{EpisodeNumber00}}) on {{DeviceName}} with {{ClientName}}"
+                    {{else}}
+                        "message": "{{NotificationUsername}} started playback of {{{Name}}} ({{Year}}) on {{DeviceName}} with {{ClientName}}"
+                    {{/if_equals}}
                 {{else}}
                     {{#if_equals NotificationType 'PlaybackStop'}}
-                        "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                        {{#if_equals ItemType 'Episode'}}
+                            "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} — {{{Name}}} (S{{SeasonNumber00}}E{{EpisodeNumber00}}) on {{DeviceName}} with {{ClientName}}"
+                        {{else}}
+                            "message": "{{NotificationUsername}} stopped playback of {{{Name}}} ({{Year}}) on {{DeviceName}} with {{ClientName}}"
+                        {{/if_equals}}
                     {{else}}
                         {{#if_equals NotificationType 'PlaybackProgress'}}
                             "message": "Playback position for client '{{ClientName}}': {{PlaybackPosition}}"
@@ -80,7 +88,19 @@
                                                                                     {{#if_equals NotificationType 'PendingRestart'}}
                                                                                         "message": "{{ServerName}} requires a restart"
                                                                                     {{else}}
-                                                                                        "message": "The handlebars template received an unknown notification with type '{{NotificationType}}'. An administrator may need to remove this notification type or adjust the template."
+                                                                                        {{#if_equals NotificationType 'ItemDeleted'}}
+                                                                                            {{#if_equals ItemType 'Season'}}
+                                                                                                "message": "{{{SeriesName}}} {{{Name}}} has been deleted from {{{ServerName}}}"
+                                                                                            {{else}}
+                                                                                                {{#if_equals ItemType 'Episode'}}
+                                                                                                    "message": "{{{SeriesName}}} — {{{Name}}} (S{{SeasonNumber00}}E{{EpisodeNumber00}}) has been deleted from {{{ServerName}}}"
+                                                                                                {{else}}
+                                                                                                    "message": "{{{Name}}} ({{Year}}) has been deleted from {{{ServerName}}}"
+                                                                                                {{/if_equals}}
+                                                                                            {{/if_equals}}
+                                                                                        {{else}}
+                                                                                            "message": "The handlebars template received an unknown notification with type '{{NotificationType}}'. An administrator may need to remove this notification type or adjust the template."
+                                                                                        {{/if_equals}}
                                                                                     {{/if_equals}}
                                                                                 {{/if_equals}}
                                                                             {{/if_equals}}
