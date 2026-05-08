@@ -17,6 +17,7 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
+using MediaBrowser.Controller.LiveTv;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook;
@@ -172,6 +173,11 @@ public class WebhookSender : IWebhookSender
         }
 
         if (baseOptions.EnableVideos && itemType == typeof(Video))
+        {
+            return true;
+        }
+
+        if (baseOptions.EnableLiveTV && itemType == typeof(LiveTvChannel))
         {
             return true;
         }
