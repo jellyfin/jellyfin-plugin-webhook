@@ -35,8 +35,8 @@ public class SmtpClient : BaseClient, IWebhookClient<SmtpOption>
             }
 
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(option.SenderAddress, option.SenderAddress));
-            message.To.Add(new MailboxAddress(option.ReceiverAddress, option.ReceiverAddress));
+            message.From.Add(MailboxAddress.Parse(option.SenderAddress));
+            message.To.Add(MailboxAddress.Parse(option.ReceiverAddress));
 
             message.Subject = option.GetCompiledSubjectTemplate()(data);
             var body = option.GetMessageBody(data);
