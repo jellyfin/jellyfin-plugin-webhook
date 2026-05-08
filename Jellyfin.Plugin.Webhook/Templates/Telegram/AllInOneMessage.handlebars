@@ -1,0 +1,103 @@
+{
+  "chat_id": "$ChatID",
+  "parse_mode": "html",
+  {{#if_equals NotificationType 'AuthenticationFailure'}}
+    "text": "<b>{{ServerName}} - Authentication Failure</b>\nThe user {{NotificationUsername}} failed to authenticate while trying to access {{App}} from the device {{DeviceName}} with IP address {{RemoteEndPoint}}."
+  {{else}} {{#if_equals NotificationType 'AuthenticationSuccess'}}
+    "text": "<b>{{ServerName}} - Authentication Success</b>\nThe user {{NotificationUsername}} successfully authenticated to {{Client}} from device {{DeviceName}} with IP address {{RemoteEndPoint}}. Last login was on {{LastLoginDate}}."
+  {{else}} {{#if_equals NotificationType 'ItemAdded'}}
+    {{#if_equals ItemType 'Series'}}
+      "text": "<b>{{ServerName}} - Series Added</b>\nA new series has been added: {{{SeriesName}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Season'}}
+      "text": "<b>{{ServerName}} - Season Added</b>\nA new season has been added to {{{SeriesName}}} ({{Year}}): Season {{SeasonNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Episode'}}
+      "text": "<b>{{ServerName}} - Episode Added</b>\nA new episode has been added to {{{SeriesName}}} ({{Year}}): S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "text": "<b>{{ServerName}} - Movie Added</b>\nA new movie has been added: {{{Name}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "text": "<b>{{ServerName}} - Audio Added</b>\nA new track has been added: {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} with a runtime of {{RunTime}}."
+    {{else}}
+      "text": "<b>{{ServerName}} - Item Added</b>\nA new item has been added: {{{Name}}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'ItemDeleted'}}
+    {{#if_equals ItemType 'Series'}}
+      "text": "<b>{{ServerName}} - Series Deleted</b>\nA series has been deleted: {{{SeriesName}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Season'}}
+      "text": "<b>{{ServerName}} - Season Deleted</b>\nA season has been deleted from {{{SeriesName}}} ({{Year}}): Season {{SeasonNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Episode'}}
+      "text": "<b>{{ServerName}} - Episode Deleted</b>\nAn episode has been deleted from {{{SeriesName}}} ({{Year}}): S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "text": "<b>{{ServerName}} - Movie Deleted</b>\nA movie has been deleted: {{{Name}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "text": "<b>{{ServerName}} - Audio Deleted</b>\nA track has been deleted: {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} with a runtime of {{RunTime}}."
+    {{else}}
+      "text": "<b>{{ServerName}} - Item Deleted</b>\nAn item has been deleted: {{{Name}}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PendingRestart'}}
+    "text": "<b>{{ServerName}} - Pending Restart</b>\nThe server is pending a restart."
+  {{else}} {{#if_equals NotificationType 'PlaybackProgress'}}
+   {{#if_equals ItemType 'Episode'}}
+      "text": "<b>{{ServerName}} - Episode Progress</b>\nUser {{NotificationUsername}} is watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "text": "<b>{{ServerName}} - Movie Progress</b>\nUser {{NotificationUsername}} is watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "text": "<b>{{ServerName}} - Audio Progress</b>\nUser {{NotificationUsername}} is listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}}
+      "text": "<b>{{ServerName}} - Item Progress</b>\nUser {{NotificationUsername}} is playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PlaybackStart'}}
+    {{#if_equals ItemType 'Episode'}}
+      "text": "<b>{{ServerName}} - Episode Started</b>\nUser {{NotificationUsername}} started watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "text": "<b>{{ServerName}} - Movie Started</b>\nUser {{NotificationUsername}} started watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "text": "<b>{{ServerName}} - Audio Started</b>\nUser {{NotificationUsername}} started listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}}
+      "text": "<b>{{ServerName}} - Item Started</b>\nUser {{NotificationUsername}} started playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PlaybackStop'}}
+    {{#if_equals ItemType 'Episode'}}
+      "text": "<b>{{ServerName}} - Episode Stopped</b>\nUser {{NotificationUsername}} stopped watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "text": "<b>{{ServerName}} - Movie Stopped</b>\nUser {{NotificationUsername}} stopped watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "text": "<b>{{ServerName}} - Audio Stopped</b>\nUser {{NotificationUsername}} stopped listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}}
+      "text": "<b>{{ServerName}} - Item Stopped</b>\nUser {{NotificationUsername}} stopped playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PluginInstallationCancelled'}}
+    "text": "<b>{{ServerName}} - Plugin Installation Cancelled</b>\nThe installation of plugin {{PluginName}} version {{PluginVersion}} has been cancelled."
+  {{else}} {{#if_equals NotificationType 'PluginInstallationFailed'}}
+    "text": "<b>{{ServerName}} - Plugin Installation Failed</b>\nThe installation of plugin {{PluginName}} version {{PluginVersion}} has failed. Exception: {{ExceptionMessage}}"
+  {{else}} {{#if_equals NotificationType 'PluginInstalled'}}
+    "text": "<b>{{ServerName}} - Plugin Installed</b>\nThe plugin {{PluginName}} version {{PluginVersion}} has been installed. A restart may be required."
+  {{else}} {{#if_equals NotificationType 'PluginInstalling'}}
+    "text": "<b>{{ServerName}} - Plugin Installing</b>\nThe plugin {{PluginName}} version {{PluginVersion}} is currently being installed."
+  {{else}} {{#if_equals NotificationType 'PluginUninstalled'}}
+    "text": "<b>{{ServerName}} - Plugin Uninstalled</b>\nThe plugin {{PluginName}} version {{PluginVersion}} has been uninstalled. A restart may be required."
+  {{else}} {{#if_equals NotificationType 'PluginUpdated'}}
+    "text": "<b>{{ServerName}} - Plugin Updated</b>\nThe plugin {{PluginName}} has been updated to version {{PluginVersion}}. A restart may be required."
+  {{else}} {{#if_equals NotificationType 'SessionStart'}}
+    "text": "<b>{{ServerName}} - Session Start</b>\nUser {{NotificationUsername}} has started a new session using {{Client}} on device {{DeviceName}} from IP address {{RemoteEndPoint}}."
+  {{else}} {{#if_equals NotificationType 'SubtitleDownloadFailureNotification'}}
+    "text": "<b>{{ServerName}} - Subtitle Download Failure</b>\nA subtitle download has failed on the server."
+  {{else}} {{#if_equals NotificationType 'TaskCompleted'}}
+    "text": "<b>{{ServerName}} - Task Completed</b>\nThe task {{TaskName}} has completed with status: {{ResultStatus}}."
+  {{else}} {{#if_equals NotificationType 'UserCreated'}}
+    "text": "<b>{{ServerName}} - User Created</b>\nA new user has been created: {{NotificationUsername}}."
+  {{else}} {{#if_equals NotificationType 'UserDeleted'}}
+    "text": "<b>{{ServerName}} - User Deleted</b>\nThe user {{NotificationUsername}} has been deleted."
+  {{else}} {{#if_equals NotificationType 'UserLockedOut'}}
+    "text": "<b>{{ServerName}} - User Locked Out</b>\nThe user {{NotificationUsername}} has been locked out."
+  {{else}} {{#if_equals NotificationType 'UserPasswordChanged'}}
+    "text": "<b>{{ServerName}} - User Password Changed</b>\nThe password for user {{NotificationUsername}} has been changed."
+  {{else}} {{#if_equals NotificationType 'UserDataSaved'}}
+    "text": "<b>{{ServerName}} - User Data Saved</b>\nUser data for {{NotificationUsername}} has been saved. Reason: {{SaveReason}}."
+  {{else}} {{#if_equals NotificationType 'UserUpdated'}}
+    "text": "<b>{{ServerName}} - User Updated</b>\nThe user {{NotificationUsername}} has been updated."
+  {{else}}
+    "text": "<b>{{ServerName}} - {{NotificationType}}</b>\nNotification not handled."
+  {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{/if_equals}}{{/if_equals}}{{/if_equals}}
+}

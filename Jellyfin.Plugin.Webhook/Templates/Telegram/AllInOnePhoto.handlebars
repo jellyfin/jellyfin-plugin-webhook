@@ -1,0 +1,66 @@
+{
+  "chat_id": "$ChatID",
+  "parse_mode": "html",
+  "photo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+  {{#if_equals NotificationType 'ItemAdded'}}
+    {{#if_equals ItemType 'Series'}}
+      "caption": "<b>{{ServerName}} - Series Added</b>\nA new series has been added: {{{SeriesName}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Season'}}
+      "caption": "<b>{{ServerName}} - Season Added</b>\nA new season has been added to {{{SeriesName}}} ({{Year}}): Season {{SeasonNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Added</b>\nA new episode has been added to {{{SeriesName}}} ({{Year}}): S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Added</b>\nA new movie has been added: {{{Name}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Added</b>\nA new track has been added: {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} with a runtime of {{RunTime}}."
+    {{else}}
+      "caption": "<b>{{ServerName}} - Item Added</b>\nA new item has been added: {{{Name}}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'ItemDeleted'}}
+    {{#if_equals ItemType 'Series'}}
+      "caption": "<b>{{ServerName}} - Series Deleted</b>\nA series has been deleted: {{{SeriesName}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Season'}}
+      "caption": "<b>{{ServerName}} - Season Deleted</b>\nA season has been deleted from {{{SeriesName}}} ({{Year}}): Season {{SeasonNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Deleted</b>\nAn episode has been deleted from {{{SeriesName}}} ({{Year}}): S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Deleted</b>\nA movie has been deleted: {{{Name}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Deleted</b>\nA track has been deleted: {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} with a runtime of {{RunTime}}."
+    {{else}}
+      "caption": "<b>{{ServerName}} - Item Deleted</b>\nAn item has been deleted: {{{Name}}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PlaybackProgress'}}
+   {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Progress</b>\nUser {{NotificationUsername}} is watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Progress</b>\nUser {{NotificationUsername}} is watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Progress</b>\nUser {{NotificationUsername}} is listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{else}}
+      "caption": "<b>{{ServerName}} - Item Progress</b>\nUser {{NotificationUsername}} is playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}. Paused: {{IsPaused}}, Automated: {{IsAutomated}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PlaybackStart'}}
+    {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Started</b>\nUser {{NotificationUsername}} started watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Started</b>\nUser {{NotificationUsername}} started watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Started</b>\nUser {{NotificationUsername}} started listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{else}}
+      "caption": "<b>{{ServerName}} - Item Started</b>\nUser {{NotificationUsername}} started playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}} using {{PlayMethod}} at position {{PlaybackPosition}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}} {{#if_equals NotificationType 'PlaybackStop'}}
+    {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Stopped</b>\nUser {{NotificationUsername}} stopped watching S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} from {{{SeriesName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Stopped</b>\nUser {{NotificationUsername}} stopped watching {{{Name}}} ({{Year}}) on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Stopped</b>\nUser {{NotificationUsername}} stopped listening to {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{else}}
+      "caption": "<b>{{ServerName}} - Item Stopped</b>\nUser {{NotificationUsername}} stopped playing {{{Name}}} on {{ClientName}} ({{DeviceName}}) from IP {{RemoteEndPoint}}. Played to completion: {{PlayedToCompletion}}, Position: {{PlaybackPosition}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}
+  {{else}}
+    "caption": "<b>{{NotificationType}}</b>\n- Server: {{ServerName}}\n- Message: Notification not handled."
+  {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
+}
