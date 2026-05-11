@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Library;
 using Microsoft.Extensions.Hosting;
@@ -37,10 +37,22 @@ public class ItemAddedNotifierEntryPoint : IHostedService
         _itemAddedManager.AddItem(itemChangeEventArgs.Item);
     }
 
+    private void ItemUpdatedHandler(object? sender, ItemChangeEventArgs itemChangeEventArgs)
+    {
+        // Never notify on virtual items.
+        if (itemChangeEventArgs.Item.IsVirtualItem)
+        {
+            return;
+        }
+
+        _itemAddedManager.HandleItemUpdated(itemChangeEventArgs.Item);
+    }
+
     /// <inheritdoc />
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _libraryManager.ItemAdded += ItemAddedHandler;
+        _libraryManager.ItemUpdated += ItemUpdatedHandler;
         return Task.CompletedTask;
     }
 
@@ -48,6 +60,7 @@ public class ItemAddedNotifierEntryPoint : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _libraryManager.ItemAdded -= ItemAddedHandler;
+        _libraryManager.ItemUpdated -= ItemUpdatedHandler;
         return Task.CompletedTask;
     }
 }
