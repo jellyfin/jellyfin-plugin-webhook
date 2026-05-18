@@ -55,11 +55,25 @@ public class GenericFormClient : BaseClient, IWebhookClient<GenericFormOption>
                 return;
             }
 
-            var dictionaryBody = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
-            if (dictionaryBody is null)
+            var json = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(body);
+            if (json is null)
             {
-                _logger.LogWarning("Body is null, unable to send webhook");
+                _logger.LogWarning("Body is null or invalid JSON, unable to send webhook");
                 return;
+            }
+
+            // Convert all JSON values to strings for form-encoding compatibility
+            var formFields = new Dictionary<string, string>();
+            foreach (var kvp in json)
+            {
+                var value = kvp.Value.ValueKind switch
+                {
+                    JsonValueKind.String => kvp.Value.GetString() ?? string.Empty,
+                    JsonValueKind.Null => string.Empty,
+                    _ => kvp.Value.ToString()
+                };
+
+                formFields[kvp.Key] = value;
             }
 
             _logger.LogDebug("SendAsync Body: {@Body}", body);
@@ -74,7 +88,7 @@ public class GenericFormClient : BaseClient, IWebhookClient<GenericFormOption>
                 httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
-            httpRequestMessage.Content = new FormUrlEncodedContent(dictionaryBody!);
+            httpRequestMessage.Content = new FormUrlEncodedContent(formFields);
             using var response = await _httpClientFactory
                 .CreateClient(NamedClient.Default)
                 .SendAsync(httpRequestMessage)
