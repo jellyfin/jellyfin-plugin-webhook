@@ -5,6 +5,9 @@
     "embeds": [
         {
             "author": {
+                {{#if IsLiveTv}}
+                    "name": "Playback Stopped • {{{Name}}} (Live TV)",
+                {{else}}
                 {{#if_equals ItemType 'Episode'}}
                     {{#if_equals PlayedToCompletion true}}
                         "name": "Playback Completed • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
@@ -19,6 +22,7 @@
                         "name": "Playback Stopped • {{{Name}}} ({{Year}})",
                     {{/if_equals}}
                 {{/if_equals}}
+                {{/if}}
 
                 "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
@@ -27,7 +31,11 @@
                 "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
             },
 
+            {{#if IsLiveTv}}
+            "description": "``[{{PlaybackPosition}}]``",
+            {{else}}
             "description": "> {{{Overview}}}\n\n``[{{PlaybackPosition}}/{{RunTime}}]``",
+            {{/if}}
 
             {{#if_equals PlayedToCompletion true}}
                 "color": "3381759",

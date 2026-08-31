@@ -176,7 +176,19 @@ public class WebhookSender : IWebhookSender
             return true;
         }
 
+        if (baseOptions.EnableLiveTv && IsLiveTvChannel(itemType))
+        {
+            return true;
+        }
+
         return false;
+    }
+
+    private static bool IsLiveTvChannel(Type? itemType)
+    {
+        // LiveTvChannel (MediaBrowser.Controller.LiveTv) implements IHasProgramAttributes
+        // across the 10.x line, which keeps this check version-robust.
+        return itemType is not null && typeof(IHasProgramAttributes).IsAssignableFrom(itemType);
     }
 
     private async Task SendNotification<T>(IWebhookClient<T> webhookClient, T option, Dictionary<string, object> itemData, Type? itemType)

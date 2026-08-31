@@ -1,5 +1,11 @@
 {
   "chat_id":"$ChatID",
+  {{#if IsLiveTv}}
+    "photo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+    "caption": "<b>📺 Jellyfin Live TV 📡 </b> \n<b>User:</b> {{NotificationUsername}} \n<b>Client:</b> {{ClientName}} \n<b>Device:</b> {{DeviceName}} \n<b>Client IP:</b> {{RemoteEndPoint}} \n<b>Channel:</b> {{Name}} \n<b>Play Method:</b> {{PlayMethod}}",
+    "parse_mode": "html",
+    "protect_content": "true"
+  {{else}}
   {{#if_equals ItemType 'Episode'}}
     "photo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
     "caption": "<b>🎬 Jellyfin Playing 🎥 </b> \n<b>User:</b> {{NotificationUsername}} \n<b>Client:</b> {{ClientName}} \n<b>Device:</b> {{DeviceName}} \n<b>Client IP:</b> {{RemoteEndPoint}} \n<b>Series:</b> {{SeriesName}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{Name}} {{RunTime}} \n<b>Video:</b> {{Video_0_Title}} {{Video_0_Profile}} {{Video_0_Width}}x{{Video_0_Height}} \n<b>Audio:</b> {{Audio_0_Title}} {{Audio_0_Language}} {{Audio_0_Codec}}, {{Audio_0_Channels}} channels \n<b>Subtitles:</b> {{Subtitle_0_Language}} \n<b>Play Method:</b> {{PlayMethod}}",
@@ -18,4 +24,5 @@
       "protect_content": "true"
     {{/if_equals}}
   {{/if_equals}}
+  {{/if}}
 }

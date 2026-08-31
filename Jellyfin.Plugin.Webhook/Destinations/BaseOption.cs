@@ -68,6 +68,11 @@ public abstract class BaseOption
     public bool EnableVideos { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to notify on live tv channels.
+    /// </summary>
+    public bool EnableLiveTv { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to send all possible properties.
     /// </summary>
     public bool SendAllProperties { get; set; }

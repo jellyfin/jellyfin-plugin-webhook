@@ -5,11 +5,15 @@
     "embeds": [
         {
             "author": {
+                {{#if IsLiveTv}}
+                    "name": "Playback Started • {{{Name}}} (Live TV)",
+                {{else}}
                 {{#if_equals ItemType 'Episode'}}
                     "name": "Playback Started • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
                 {{else}}
                     "name": "Playback Started • {{{Name}}} ({{Year}})",
                 {{/if_equals}}
+                {{/if}}
 
                 "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
             },
@@ -18,7 +22,11 @@
                 "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
             },
 
+            {{#if IsLiveTv}}
+            "description": "``[{{PlaybackPosition}}]``",
+            {{else}}
             "description": "> {{{Overview}}}\n\n``[{{PlaybackPosition}}/{{RunTime}}]``",
+            {{/if}}
 
             "color": "3394611",
 
