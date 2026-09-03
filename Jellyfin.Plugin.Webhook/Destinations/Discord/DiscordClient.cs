@@ -59,7 +59,6 @@ public class DiscordClient : BaseClient, IWebhookClient<DiscordOption>
 
             if (!string.IsNullOrEmpty(option.Username))
             {
-                data["Username"] = option.Username;
                 data["BotUsername"] = option.Username;
             }
 
