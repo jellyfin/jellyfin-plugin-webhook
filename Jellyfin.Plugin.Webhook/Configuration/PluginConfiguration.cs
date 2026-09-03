@@ -22,6 +22,7 @@ public class PluginConfiguration : BasePluginConfiguration
     /// </summary>
     public PluginConfiguration()
     {
+        ItemNotificationDelay = 5;
         ServerUrl = string.Empty;
         DiscordOptions = Array.Empty<DiscordOption>();
         GenericOptions = Array.Empty<GenericOption>();
@@ -33,6 +34,11 @@ public class PluginConfiguration : BasePluginConfiguration
         SmtpOptions = Array.Empty<SmtpOption>();
         MqttOptions = Array.Empty<MqttOption>();
     }
+
+    /// <summary>
+    /// Gets or sets the delay in seconds before firing item added/deleted webhooks.
+    /// </summary>
+    public int ItemNotificationDelay { get; set; }
 
     /// <summary>
     /// Gets or sets the jellyfin server url.

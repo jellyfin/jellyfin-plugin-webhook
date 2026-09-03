@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers.ItemDeletedNotifier;
@@ -9,13 +8,7 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemDeletedNotifier;
 public interface IItemDeletedManager
 {
     /// <summary>
-    /// Process the current queue.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task ProcessItemsAsync();
-
-    /// <summary>
-    /// Add item to process queue.
+    /// Add item and fire the webhook after a short delay.
     /// </summary>
     /// <param name="item">The deleted item.</param>
     public void AddItem(BaseItem item);

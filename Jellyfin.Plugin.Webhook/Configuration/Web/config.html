@@ -14,6 +14,10 @@
 
         <form class="webhookConfigurationForm">
             <div class="inputContainer">
+                <input is="emby-input" type="number" id="txtItemNotificationDelay" min="0" step="1" label="Item Notification Delay (seconds):" />
+                <span>Delay in seconds before firing Item Added and Item Deleted webhooks. Default: 5</span>
+            </div>
+            <div class="inputContainer">
                 <input is="emby-input" type="text" id="txtServerUrl" required="required" label="Server Url:" />
                 <span>For linking to content. Include base url.</span>
             </div>
