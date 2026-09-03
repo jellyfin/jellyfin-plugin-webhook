@@ -1,8 +1,8 @@
 name: "Webhook"
 guid: "71552A5A-5C5C-4350-A2AE-EBE451A30173"
 imageUrl: "https://repo.jellyfin.org/releases/plugin/images/jellyfin-plugin-webhook.png"
-version: 21
-targetAbi: "10.11.8.0"
+version: 22
+targetAbi: "12.0.0.0"
 framework: "net9.0"
 owner: "jellyfin"
 overview: "Sends notifications."
@@ -19,4 +19,5 @@ artifacts:
   - "MQTTnet.dll"
   - "MQTTnet.Extensions.ManagedClient.dll"
 changelog: |-
-  - Revert "Update dependency Microsoft.Extensions.Http to v10" (#364) @Shadowghost
+  - Construct SMTP addresses by parsing (#324) @andrasmaroy
+  - Fix color formatting in Discord template (#390) @espdesign
