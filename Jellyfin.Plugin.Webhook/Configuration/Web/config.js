@@ -329,6 +329,43 @@ export default function (view) {
                 element.querySelector("[data-name=field-wrapper]").appendChild(template);
             }
         },
+        ntfy: {
+            btnAdd: document.querySelector("#btnAddNtfy"),
+            defaultTemplate: `{
+    "topic": "{{{NtfyTopic}}}",
+    "title": "{{json_encode ServerName}} - {{json_encode NotificationType}}",
+    "message": "{{#if_exist Name}}{{json_encode Name}}{{else}}{{json_encode NotificationType}}{{/if_exist}}{{#if_exist NotificationUsername}}\\nUser: {{json_encode NotificationUsername}}{{/if_exist}}",
+    "click": "{{{ServerUrl}}}web/#/details?id={{{ItemId}}}"
+}`,
+            defaultConfig: function () {
+                return {
+                    WebhookName: "Ntfy",
+                    WebhookUri: "https://ntfy.sh",
+                    EnableWebhook: true,
+                    TrimWhitespace: true,
+                    Template: Webhook.utoa(Webhook.ntfy.defaultTemplate),
+                    Headers: [
+                        {
+                            Key: "Content-Type",
+                            Value: "application/json"
+                        },
+                        {
+                            Key: "X-Markdown",
+                            Value: "true"
+                        }
+                    ],
+                    Fields: [
+                        {
+                            Key: "NtfyTopic",
+                            Value: "jellyfin"
+                        }
+                    ]
+                };
+            },
+            addConfig: function () {
+                Webhook.generic.addConfig(Webhook.ntfy.defaultConfig());
+            }
+        },
         genericForm: {
             btnAdd: document.querySelector("#btnAddGenericForm"),
             template: document.querySelector("#template-generic-form"),
@@ -627,6 +664,7 @@ export default function (view) {
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
             Webhook.generic.btnAdd.addEventListener("click", Webhook.generic.addConfig);
+            Webhook.ntfy.btnAdd.addEventListener("click", Webhook.ntfy.addConfig);
             Webhook.genericForm.btnAdd.addEventListener("click", Webhook.genericForm.addConfig);
             Webhook.gotify.btnAdd.addEventListener("click", Webhook.gotify.addConfig);
             Webhook.pushbullet.btnAdd.addEventListener("click", Webhook.pushbullet.addConfig);
