@@ -73,6 +73,8 @@ See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
         - Current user name
     - UserId
         - User ID
+    - UserIdN
+        - User ID, hyphens removed
     - LastLoginDate
         - Last user login date
     - LastActivityDate

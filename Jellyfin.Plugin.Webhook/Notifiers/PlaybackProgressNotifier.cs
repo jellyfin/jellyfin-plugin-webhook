@@ -64,7 +64,8 @@ public class PlaybackProgressNotifier : IEventConsumer<PlaybackProgressEventArgs
             var userDataObject = new Dictionary<string, object>(dataObject)
             {
                 ["NotificationUsername"] = user.Username,
-                ["UserId"] = user.Id
+                ["UserId"] = user.Id,
+                ["UserIdN"] = user.Id.ToString("N")
             };
 
             await _webhookSender.SendNotification(NotificationType.PlaybackProgress, userDataObject, eventArgs.Item.GetType())
