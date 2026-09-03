@@ -159,6 +159,14 @@ public static class DataObjectHelpers
                     dataObject["AirTime"] = episode.Series.AirTime;
                 }
 
+                if (episode.Series?.ProviderIds is not null)
+                {
+                    foreach (var (providerKey, providerValue) in episode.Series.ProviderIds)
+                    {
+                        dataObject[$"SeriesProvider_{providerKey.ToLowerInvariant()}"] = providerValue;
+                    }
+                }
+
                 break;
             case Audio audio:
                 if (!string.IsNullOrEmpty(audio.Album))
