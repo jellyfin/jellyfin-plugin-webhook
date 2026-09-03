@@ -27,10 +27,18 @@
                 "message": "The password for the user '{{NotificationUsername}}' has been changed"
             {{else}}
                 {{#if_equals NotificationType 'PlaybackStart'}}
-                    "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                    {{#if IsLiveTv}}
+                        "message": "{{NotificationUsername}} started watching live channel {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                    {{else}}
+                        "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                    {{/if}}
                 {{else}}
                     {{#if_equals NotificationType 'PlaybackStop'}}
-                        "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                        {{#if IsLiveTv}}
+                            "message": "{{NotificationUsername}} stopped watching live channel {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                        {{else}}
+                            "message": "{{NotificationUsername}} stopped playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+                        {{/if}}
                     {{else}}
                         {{#if_equals NotificationType 'PlaybackProgress'}}
                             "message": "Playback position for client '{{ClientName}}': {{PlaybackPosition}}"

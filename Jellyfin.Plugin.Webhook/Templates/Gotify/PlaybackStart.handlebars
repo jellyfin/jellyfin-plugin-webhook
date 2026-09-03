@@ -4,6 +4,10 @@
             "contentType": "text/markdown"
         }
     },
+    {{~#if IsLiveTv~}}
+    "title": "📺 Jellyfin Live TV",
+    "message": "--------------\n\n![]({{ServerUrl}}/Items/{{ItemId}}/Images/Primary)\n\n--------------\n\n**User:** {{NotificationUsername}}\n\n**Client:** {{ClientName}} \n\n**Device:** {{DeviceName}} \n\n**Client IP:** {{RemoteEndPoint}}\n\n**Channel:** {{Name}} (Live TV)\n\n**Play Method:** {{PlayMethod}}",
+    {{~else~}}
     "title": "🎬 Jellyfin Playing 🎥",
     {{~#if_equals ItemType 'Episode'~}}
         "message": "--------------\n\n![]({{ServerUrl}}/Items/{{ItemId}}/Images/Primary)\n\n--------------\n\n**User:** {{NotificationUsername}}\n\n**Client:** {{ClientName}} \n\n**Device:** {{DeviceName}} \n\n**Client IP:** {{RemoteEndPoint}} \n\n**Series:** {{SeriesName}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{Name}} {{RunTime}}\n\n**Video:** {{Video_0_Title}} {{Video_0_Profile}} {{Video_0_Width}}x{{Video_0_Height}}\n\n**Audio:** {{Audio_0_Title}} {{Audio_0_Language}} {{Audio_0_Codec}}, {{Audio_0_Channels}} channels\n\n**Subtitles:** {{Subtitle_0_Language}}\n\n**Play Method:** {{PlayMethod}}",
@@ -14,5 +18,6 @@
         "message": "--------------\n\n![]({{ServerUrl}}/Items/{{ItemId}}/Images/Primary)\n\n--------------\n\n**User:** {{NotificationUsername}}\n\n**Client:** {{ClientName}} \n\n**Device:** {{DeviceName}} \n\n**Client IP:** {{RemoteEndPoint}}\n\n**Video:** {{Name}} {{RunTime}}\n\n**Play Method:** {{PlayMethod}}",
     {{~/if_equals~}}
     {{~/if_equals~}}
+    {{~/if~}}
     "priority": {{Priority}}
 }

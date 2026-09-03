@@ -1,9 +1,11 @@
-﻿{
+{
   "DeviceId": "{{DeviceId}}",
   "DeviceName": "{{DeviceName}}",
   "ClientName": "{{ClientName}}",
   "ItemId": "{{ItemId}}",
+  {{#unless IsLiveTv}}
   "RunTime": "{{RunTime}}",
+  {{/unless}}
   "PlaybackPosition": "{{PlaybackPosition}}",
 {{#if_equals NotificationType 'PlaybackStart'}}
     "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}",
@@ -11,6 +13,9 @@
     "backdrop": "{{ServerUrl}}/Items/{{ItemId}}/Images/Backdrop",
     "logo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Logo",
     "Name": "{{Name}}",
+{{#if IsLiveTv}}
+        "IsLiveTv": true
+{{else}}
 {{#if_equals ItemType 'Episode'}}
         "SeriesName": "{{SeriesName}}",
         "SeasonNumber": "{{SeasonNumber}}",
@@ -18,6 +23,7 @@
 {{else}}
         "Year": {{Year}}
 {{/if_equals}}
+{{/if}}
 {{/if_equals}}
 {{#if_equals NotificationType 'PlaybackStop'}}
     "PlayedToCompletion": "{{PlayedToCompletion}}"

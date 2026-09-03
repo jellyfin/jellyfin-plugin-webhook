@@ -7,7 +7,11 @@
     "url_title": "{{{MessageUrlTitle}}}",
     "priority": {{MessagePriority}},
     "sound": "{{NotificationSound}}",
+    {{#if IsLiveTv}}
+        "message": "{{NotificationUsername}} started watching live channel {{{Name}}} on {{DeviceName}} with {{ClientName}}"
+    {{else}}
     {{#if_equals ItemType 'Episode'}}
         "message": "{{NotificationUsername}} started playback of {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} {{{Name}}} on {{DeviceName}} with {{ClientName}}"
     {{/if_equals}}
+    {{/if}}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Jellyfin.Database.Implementations.Entities;
@@ -60,6 +60,7 @@ public static class DataObjectHelpers
         dataObject["ItemType"] = item.GetType().Name.Escape();
         dataObject["RunTimeTicks"] = item.RunTimeTicks ?? 0;
         dataObject["RunTime"] = TimeSpan.FromTicks(item.RunTimeTicks ?? 0).ToString(@"hh\:mm\:ss", CultureInfo.InvariantCulture);
+        dataObject["IsLiveTv"] = item is IHasProgramAttributes;
 
         if (item.ProductionYear is not null)
         {
