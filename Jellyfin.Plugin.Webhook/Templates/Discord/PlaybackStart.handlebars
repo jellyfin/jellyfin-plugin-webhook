@@ -1,40 +1,68 @@
 {
-    "content": "{{MentionType}}",
-    "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
-    "username": "{{BotUsername}}",
-    "embeds": [
+  "content": "{{MentionType}}",
+  "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
+  "username": "{{BotUsername}}",
+  "embeds": [
+    {
+      "author": {
+        "name": "{{#if_equals ItemType 'Episode'}}📺 Playback Started • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}{{else}}{{#if_equals ItemType 'Movie'}}🎬 Playback Started • {{{Name}}}{{#if_exist Year}} ({{Year}}){{/if_exist}}{{else}}{{#if_equals ItemType 'Audio'}}🎵 Playback Started • {{{Name}}}{{else}}▶️ Playback Started • {{{Name}}}{{/if_equals}}{{/if_equals}}{{/if_equals}}",
+        "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+      },
+      "thumbnail": {
+        "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
+      },
+      "image": {
+        "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Backdrop"
+      },
+      "description": "{{#if_exist Overview}}> {{{Overview}}}{{/if_exist}}",
+      "color": 6011533,
+      "fields": [
+        {{#if_exist PremiereDate}}
         {
-            "author": {
-                {{#if_equals ItemType 'Episode'}}
-                    "name": "Playback Started • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
-                {{else}}
-                    "name": "Playback Started • {{{Name}}} ({{Year}})",
-                {{/if_equals}}
-
-                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
-            },
-            
-            "thumbnail":{
-                "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
-            },
-
-            "description": "> {{{Overview}}}\n\n``[{{PlaybackPosition}}/{{RunTime}}]``",
-
-            "color": "3394611",
-
-            "footer": {
-                "text": "{{{ServerName}}}",
-                "icon_url": "{{AvatarUrl}}"
-            },
-            "fields": [
-            {
-              "name": "User",
-              "value": "{{{NotificationUsername}}}",
-              "inline": true
-            }
-            ],
-
-            "timestamp": "{{Timestamp}}"
+          "name": "Release Date",
+          "value": "{{PremiereDate}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist Genres}},
+        {
+          "name": "Genre",
+          "value": "{{Genres}}",
+          "inline": false
+        }{{/if_exist}},
+        {
+          "name": "User",
+          "value": "{{{NotificationUsername}}}",
+          "inline": true
+        }{{#if_exist ClientName}},
+        {
+          "name": "Client",
+          "value": "{{ClientName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist DeviceName}},
+        {
+          "name": "Device",
+          "value": "{{DeviceName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist PlayMethod}},
+        {
+          "name": "Play Method",
+          "value": "{{PlayMethod}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist PlaybackPosition}},
+        {
+          "name": "Runtime",
+          "value": "`[{{PlaybackPosition}}/{{RunTime}}]`",
+          "inline": true
+        }{{/if_exist}},
+        {
+          "name": "Jellyfin",
+          "value": "[Open]({{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})",
+          "inline": true
         }
-    ]
+      ],
+      "footer": {
+        "text": "{{{ServerName}}}"
+      },
+      "timestamp": "{{Timestamp}}"
+    }
+  ]
 }
