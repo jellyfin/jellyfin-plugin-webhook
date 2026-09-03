@@ -12,6 +12,26 @@ namespace Jellyfin.Plugin.Webhook.Destinations;
 /// </summary>
 public abstract class BaseOption
 {
+    /// <summary>
+    /// The data fields that have historically been manually escaped in <see cref="DataObjectHelpers"/>.
+    /// More fields may be added as needed.
+    /// </summary>
+    private static readonly string[] FieldsToEscape =
+    [
+        "ServerName",
+        "Name",
+        "Overview",
+        "Tagline",
+        "ItemType",
+        "SeriesName",
+        "NotificationUsername",
+        "Client",
+        "DeviceName",
+        "PluginName",
+        "PluginChangelog",
+        "ExceptionMessage"
+    ];
+
     private HandlebarsTemplate<object, string>? _compiledTemplate;
 
     /// <summary>
@@ -98,6 +118,11 @@ public abstract class BaseOption
     public Guid[] UserFilter { get; set; } = Array.Empty<Guid>();
 
     /// <summary>
+    /// Gets or sets the Media-Content type of the webhook body. Should not be set by User except for Generic Client.
+    /// </summary>
+    public WebhookMediaContentType MediaContentType { get; set; } = WebhookMediaContentType.Json;
+
+    /// <summary>
     /// Gets the compiled handlebars template.
     /// </summary>
     /// <returns>The compiled handlebars template.</returns>
@@ -113,10 +138,45 @@ public abstract class BaseOption
     /// <returns>The string message body.</returns>
     public string GetMessageBody(Dictionary<string, object> data)
     {
+        Dictionary<string, object> cloneData = new(data); // Quickly clone the dictionary to avoid "over escaping" if we use the same data object for multiple services in a row.
+        foreach (var field in fieldsToEscape)
+        {
+            if (cloneData.TryGetValue(field, out object? value))
+            {
+                cloneData[field] = MediaContentType switch
+                {
+                    WebhookMediaContentType.Json => JsonEncode(value.ToString() ?? string.Empty),
+                    WebhookMediaContentType.PlainText => DefaultEscape(value.ToString() ?? string.Empty),
+                    WebhookMediaContentType.Xml => DefaultEscape(value.ToString() ?? string.Empty),
+                    _ => DefaultEscape(value.ToString() ?? string.Empty)
+                };
+            }
+        }
+
         var body = SendAllProperties
-            ? JsonSerializer.Serialize(data, JsonDefaults.Options)
-            : GetCompiledTemplate()(data);
+            ? JsonSerializer.Serialize(cloneData, JsonDefaults.Options)
+            : GetCompiledTemplate()(cloneData);
 
         return TrimWhitespace ? body.Trim() : body;
+    }
+
+    /// <summary>
+    /// Escape a text string using the default Json Encoder.
+    /// </summary>
+    /// <param name="value">A plain-text string that needs escaped.</param>
+    /// <returns>The escaped string.</returns>
+    private static string JsonEncode(string value)
+    {
+        return JsonEncodedText.Encode(value).Value;
+    }
+
+    /// <summary>
+    /// Escapes all backslashes in a string. This is the previous escape method used for all strings.
+    /// </summary>
+    /// <param name="value">A plain-text string that needs escaped.</param>
+    /// <returns>The escaped string.</returns>
+    private static string DefaultEscape(string value)
+    {
+        return value.Replace("\"", "\\\"", StringComparison.Ordinal);
     }
 }
