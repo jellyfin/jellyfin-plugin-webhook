@@ -1,14 +1,18 @@
-{"chat_id":"$ChatID",   
-"photo":"{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
-   {{#if_equals ItemType 'Season'}}
-       "caption": "<b>{{ItemType}} Now Available</b>\n\n<b>{{{SeriesName}}} ({{Year}})</b>\n<b><em>{{{Name}}}</em></b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
-   {{else}}
-       {{#if_equals ItemType 'Episode'}}
-           "caption": "<b>Episode Now Available</b>\n\n<b>{{{SeriesName}}} ({{Year}})</b>\n<b>S{{SeasonNumber00}}E{{EpisodeNumber00}}</b> - <b><em>{{{Name}}}</em></b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
+{
+    "chat_id": "$ChatID",
+    "parse_mode": "html",
+    "photo": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+    {{#if_equals ItemType 'Series'}}
+      "caption": "<b>{{ServerName}} - Series Added</b>\nA new series has been added: {{{SeriesName}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Season'}}
+      "caption": "<b>{{ServerName}} - Season Added</b>\nA new season has been added to {{{SeriesName}}} ({{Year}}): Season {{SeasonNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Episode'}}
+      "caption": "<b>{{ServerName}} - Episode Added</b>\nA new episode has been added to {{{SeriesName}}} ({{Year}}): S{{SeasonNumber00}}E{{EpisodeNumber00}} - {{{Name}}} with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Movie'}}
+      "caption": "<b>{{ServerName}} - Movie Added</b>\nA new movie has been added: {{{Name}}} ({{Year}}) with a runtime of {{RunTime}}."
+    {{else}} {{#if_equals ItemType 'Audio'}}
+      "caption": "<b>{{ServerName}} - Audio Added</b>\nA new track has been added: {{{TrackName}}} by {{{ArtistName}}} from the album {{{AlbumName}}} with a runtime of {{RunTime}}."
     {{else}}
-       "caption": "<b>{{ItemType}} Now Available</b>\n\n<b>{{{Name}}} ({{Year}})</b>\n{{Overview}}\n\n<b>Runtime</b>\n{{RunTime}}\n\n<b>Status</b>\nAvailable"
-   {{/if_equals}}
-{{/if_equals}},
-"parse_mode": "html",
-"protect_content":"true"
+      "caption": "<b>{{ServerName}} - Item Added</b>\nA new item has been added: {{{Name}}}."
+    {{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}{{/if_equals}}
 }
