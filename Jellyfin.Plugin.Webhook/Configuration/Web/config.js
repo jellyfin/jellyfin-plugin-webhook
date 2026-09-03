@@ -31,13 +31,87 @@ export default function (view) {
         return cur;
     }
 
+    const defaultTestData =
+`{
+  "NotificationUsername": "",
+  "Username": "",
+  "UserId": "00000000-0000-0000-0000-000000000000",
+  "LastLoginDate": "1970-01-01T00:00:00Z",
+  "LastActivityDate": "1970-01-01T00:00:00Z",
+  
+  "DeviceName": "",
+  "DeviceId": "",
+  
+  "ClientName": "",
+  "Client": "",
+  "RemoteEndPoint": "",
+  
+  "Timestamp": "1970-01-01T00:00:00Z",
+  "UtcTimestamp": "1970-01-01T00:00:00Z",
+  "Name": "",
+  "Overview": "",
+  "Tagline": "",
+  "ItemId": "00000000-0000-0000-0000-000000000000",
+  "RunTimeTicks": 0,
+  "RunTime": "",
+  "Year": 0,
+  "PremiereDate": "1970-01-01T00:00:00Z",
+  "Genres": [],
+  "AspectRatio": "",
+  "MediaSourceId": "",
+  "Provider_tmdb": "",
+  "Provider_imdb": "",
+  
+  "SeriesName": "",
+  "SeriesId": "00000000-0000-0000-0000-000000000000",
+  "SeriesPremiereDate": "1970-01-01T00:00:00Z",
+  "SeasonNumber": 0,
+  "SeasonNumber00": "",
+  "SeasonNumber000": "",
+  
+  "EpisodeNumber": 0,
+  "EpisodeNumber00": "",
+  "EpisodeNumber000": "",
+  "EpisodeNumberEnd": 0,
+  "EpisodeNumberEnd00": "",
+  "EpisodeNumberEnd000": "",
+  "AirTime": "",
+  
+  "Album": "",
+  "Artist": "",
+  
+  "PlaybackPositionTicks": 0,
+  "PlaybackPosition": "",
+  "PlayMethod": "",
+  "PlayedToCompletion": "",
+  "IsPaused": false,
+  "IsAutomated": false,
+  "Likes": false,
+  "Rating": 0,
+  "PlayCount": 0,
+  "Favorite": false,
+  "Played": false,
+  "AudioStreamIndex": 0,
+  "SubtitleStreamIndex": 0,
+  "LastPlayedDate": "1970-01-01T00:00:00Z",
+  
+  "PluginId": "00000000-0000-0000-0000-000000000000",
+  "PluginName": "",
+  "PluginVersion": "",
+  "PluginChangelog": "",
+  "PluginChecksum": "",
+  "PluginSourceUrl": ""
+}
+`
+
     const Webhook = {
         pluginId: "71552A5A-5C5C-4350-A2AE-EBE451A30173",
 
         configurationWrapper: document.querySelector("#configurationWrapper"),
+        testWrapper: document.querySelector("#testWrapper"),
 
         notificationType: {
-            template: document.querySelector("#template-notification-type"),
+            checkboxTemplate: document.querySelector("#template-notification-type"),
             values: {
                 "ItemAdded": "Item Added",
                 "ItemDeleted": "Item Deleted",
@@ -63,10 +137,10 @@ export default function (view) {
                 "UserUpdated": "User Updated",
                 "UserDataSaved": "User Data Saved"
             },
-            create: function (container, selected = []) {
+            createCheckboxes: function (container, selected = []) {
                 const notificationTypeKeys = Object.keys(Webhook.notificationType.values).sort();
                 for (const key of notificationTypeKeys) {
-                    const template = Webhook.notificationType.template.cloneNode(true).content;
+                    const template = Webhook.notificationType.checkboxTemplate.cloneNode(true).content;
                     const name = template.querySelector("[data-name=notificationTypeName]");
                     const value = template.querySelector("[data-name=notificationTypeValue]");
 
@@ -77,13 +151,24 @@ export default function (view) {
                     container.appendChild(template);
                 }
             },
-            get: function (container) {
+            getCheckboxes: function (container) {
                 const notificationTypes = [];
                 const checkboxes = container.querySelectorAll('[data-name=notificationTypeValue]:checked');
                 for (const checkbox of checkboxes) {
                     notificationTypes.push(checkbox.dataset.value);
                 }
                 return notificationTypes;
+            },
+            createOptions: function (container, selected = null) {
+                const notificationTypeKeys = Object.keys(Webhook.notificationType.values).sort();
+                for (const key of notificationTypeKeys) {
+                    const option = document.createElement("option");
+                    option.value = key
+                    option.innerText = Webhook.notificationType.values[key];
+
+                    container.appendChild(option);
+                }
+                container.value = selected
             }
         },
         userFilter: {
@@ -169,7 +254,7 @@ export default function (view) {
                 element.querySelector("[data-name=txtTemplate]").value = Webhook.atou(config.Template || "");
 
                 const notificationTypeContainer = element.querySelector("[data-name=notificationTypeContainer]");
-                Webhook.notificationType.create(notificationTypeContainer, config.NotificationTypes);
+                Webhook.notificationType.createCheckboxes(notificationTypeContainer, config.NotificationTypes);
 
                 const userFilterContainer = element.querySelector("[data-name=userFilterContainer]");
                 Webhook.userFilter.create(userFilterContainer, config.UserFilter);
@@ -193,7 +278,7 @@ export default function (view) {
                 config.Template = Webhook.utoa(element.querySelector("[data-name=txtTemplate]").value || "");
 
                 config.NotificationTypes = [];
-                config.NotificationTypes = Webhook.notificationType.get(element);
+                config.NotificationTypes = Webhook.notificationType.getCheckboxes(element);
 
                 config.UserFilter = [];
                 config.UserFilter = Webhook.userFilter.get(element);
@@ -620,9 +705,110 @@ export default function (view) {
                 return config;
             }
         },
+        tester: {
+            btnAdd: document.querySelector("#btnAddTest"),
+            template: document.querySelector("#template-test"),
+            addConfig: function (config) {
+                const collapse = document.createElement("div");
+                collapse.setAttribute("is", "emby-collapse");
+                collapse.dataset.testWrapper = "2";
+
+                const collapseContent = document.createElement("div");
+                collapseContent.classList.add("collapseContent");
+
+                // Append template content.
+                const template = document.createElement("div");
+                template.dataset.type = "tester";
+                template.appendChild(Webhook.tester.template.cloneNode(true).content);
+                template.querySelector("#btnTest").addEventListener("click", Webhook.tester.test);
+                collapseContent.appendChild(template);
+
+                // Append removal button.
+                const btnRemove = document.createElement("button");
+                btnRemove.innerText = "Remove";
+                btnRemove.setAttribute("is", "emby-button");
+                btnRemove.classList.add("raised", "button-warning", "block");
+                btnRemove.addEventListener("click", Webhook.tester.removeConfig);
+                collapseContent.appendChild(btnRemove);
+
+                collapse.appendChild(collapseContent);
+
+                Webhook.testWrapper.appendChild(collapse);
+
+                // Load configuration
+                Webhook.tester.setConfig(config, collapse);
+            },
+            removeConfig: function (e) {
+                e.preventDefault();
+                findParentBySelector(e.target, '[data-test-wrapper]').remove();
+            },
+            setConfig: function (config, element) {
+                const notificationTypeSelector = element.querySelector("[data-name=notificationTypeSelector]");
+                Webhook.notificationType.createOptions(notificationTypeSelector, config.NotificationType);
+                notificationTypeSelector.value = config.NotificationType || "None";
+                element.querySelector("[data-name=itemTypeSelector]").value = config.ItemType || "None";
+                element.querySelector("[data-name=txtTestData]").value = config.TestData ? Webhook.atou(config.TestData) : defaultTestData;
+            },
+            getConfig: function (element) {
+                const config = {}
+                config.NotificationType = element.querySelector("[data-name=notificationTypeSelector]").value || "None";
+                config.ItemType = element.querySelector("[data-name=itemTypeSelector]").value || "None";
+                config.TestData = Webhook.utoa(element.querySelector("[data-name=txtTestData]").value || defaultTestData);
+                return config;
+            },
+            test: async function (element) {
+                element.preventDefault();
+
+                Dashboard.showLoadingMsg();
+
+                // Save configuration before testing to ensure test uses latest configuration values.
+                const config = Webhook.getConfig();
+                await window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config);
+
+                // Get test data.
+                parent = findParentBySelector(element.target, '[data-test-wrapper]');
+                const notificationType = parent.querySelector("[data-name=notificationTypeSelector]").value || "";
+                const itemType = parent.querySelector("[data-name=itemTypeSelector]").value || "None";
+                const testData = Webhook.utoa(parent.querySelector("[data-name=txtTestData]").value || "");
+
+                // Make API call to test the webhooks.
+                const testWebhookUrl = window.ApiClient.serverAddress() + "/Webhook/Test";
+                const data = {
+                    notificationType,
+                    itemType,
+                    testData
+                }
+                try {
+                    const response = await fetch(testWebhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization':
+                                'MediaBrowser Client=' + window.ApiClient.appName() +
+                                ', Device=' + window.ApiClient.deviceName() +
+                                ', DeviceId=' + window.ApiClient.deviceId() +
+                                ', Version=' + window.ApiClient.appVersion() +
+                                ', Token=' + window.ApiClient.accessToken()
+                        },
+                        body: JSON.stringify(data)
+                    })
+
+                    if (!response.ok) {
+                        throw new Error(`Status ${response.status} ${response.statusText}`);
+                    }
+
+                    Dashboard.alert("Test notification sent.");
+                } catch (error) {
+                    Dashboard.alert(`Test notification send failed: ${error.message}`);
+                }
+
+                Dashboard.hideLoadingMsg()
+            }
+        },
         init: async function () {
             // Clear any previously loaded configuration.
             Webhook.configurationWrapper.innerHTML = "";
+            Webhook.testWrapper.innerHTML = "";
 
             // Add click handlers
             Webhook.discord.btnAdd.addEventListener("click", Webhook.discord.addConfig);
@@ -634,6 +820,7 @@ export default function (view) {
             Webhook.slack.btnAdd.addEventListener("click", Webhook.slack.addConfig);
             Webhook.smtp.btnAdd.addEventListener("click", Webhook.smtp.addConfig);
             Webhook.mqtt.btnAdd.addEventListener("click", Webhook.mqtt.addConfig);
+            Webhook.tester.btnAdd.addEventListener("click", Webhook.tester.addConfig);
             document.querySelector("#saveConfig").addEventListener("click", Webhook.saveConfig);
 
             await Webhook.userFilter.populate();
@@ -643,11 +830,7 @@ export default function (view) {
             e.preventDefault();
             findParentBySelector(e.target, '[data-config-wrapper]').remove();
         },
-        saveConfig: function (e) {
-            e.preventDefault();
-
-            Dashboard.showLoadingMsg();
-
+        getConfig: function (e) {
             const config = {};
             config.ServerUrl = document.querySelector("#txtServerUrl").value;
             config.DiscordOptions = [];
@@ -704,6 +887,21 @@ export default function (view) {
                 config.MqttOptions.push(Webhook.mqtt.getConfig(mqttConfigs[i]));
             }
 
+            config.TestOptions = [];
+            const testOptions = document.querySelectorAll("[data-type=tester]");
+            for (let i = 0; i < testOptions.length; i++) {
+                config.TestOptions.push(Webhook.tester.getConfig(testOptions[i]));
+            }
+
+            return config;
+        },
+        saveConfig: function (e) {
+            e.preventDefault();
+
+            Dashboard.showLoadingMsg();
+
+            const config = Webhook.getConfig()
+
             window.ApiClient.updatePluginConfiguration(Webhook.pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
         },
         loadConfig: function () {
@@ -745,6 +943,10 @@ export default function (view) {
 
                 for (let i = 0; i < config.MqttOptions.length; i++) {
                     Webhook.mqtt.addConfig(config.MqttOptions[i]);
+                }
+
+                for (let i = 0; i < config.TestOptions.length; i++) {
+                    Webhook.tester.addConfig(config.TestOptions[i]);
                 }
             });
 
