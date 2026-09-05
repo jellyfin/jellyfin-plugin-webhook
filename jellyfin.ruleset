@@ -104,5 +104,7 @@
         <Rule Id="CA2101" Action="None" />
         <!-- disable warning CA2234: Pass System.Uri objects instead of strings -->
         <Rule Id="CA2234" Action="None" />
+        <!-- disable warning CA1873: Evaluation of this argument may be expensive and unnecessary if logging is disabled -->
+        <Rule Id="CA1873" Action="None" />
     </Rules>
 </RuleSet>
