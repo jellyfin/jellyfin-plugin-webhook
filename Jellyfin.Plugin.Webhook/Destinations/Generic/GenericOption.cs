@@ -14,6 +14,7 @@ public class GenericOption : BaseOption
     {
         Headers = Array.Empty<GenericOptionValue>();
         Fields = Array.Empty<GenericOptionValue>();
+        MediaContentType = WebhookMediaContentType.PlainText;
     }
 
     /// <summary>

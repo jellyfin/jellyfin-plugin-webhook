@@ -52,13 +52,6 @@ public class GenericClient : BaseClient, IWebhookClient<GenericOption>
                 data[field.Key] = field.Value;
             }
 
-            var body = option.GetMessageBody(data);
-            if (!SendMessageBody(_logger, option, body))
-            {
-                return;
-            }
-
-            _logger.LogDebug("SendAsync Body: {@Body}", body);
             using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, option.WebhookUri);
             var contentType = MediaTypeNames.Text.Plain;
             foreach (var header in option.Headers)
@@ -73,12 +66,30 @@ public class GenericClient : BaseClient, IWebhookClient<GenericOption>
                     && !string.IsNullOrEmpty(header.Value))
                 {
                     contentType = header.Value;
+
+                    // Set the MediaType for the text escape/encode.
+                    if (string.Equals(MediaTypeNames.Application.Json, header.Value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        option.MediaContentType = WebhookMediaContentType.Json;
+                    }
+                    else if (string.Equals(MediaTypeNames.Application.Xml, header.Value, StringComparison.OrdinalIgnoreCase) || string.Equals(MediaTypeNames.Text.Xml, header.Value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        option.MediaContentType = WebhookMediaContentType.Xml;
+                    }
                 }
                 else
                 {
                     httpRequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
             }
+
+            var body = option.GetMessageBody(data);
+            if (!SendMessageBody(_logger, option, body))
+            {
+                return;
+            }
+
+            _logger.LogDebug("SendAsync Body: {@Body}", body);
 
             httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
             using var response = await _httpClientFactory
