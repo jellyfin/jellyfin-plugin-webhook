@@ -65,7 +65,8 @@ public class PlaybackStopNotifier : IEventConsumer<PlaybackStopEventArgs>
             var userDataObject = new Dictionary<string, object>(dataObject)
             {
                 ["NotificationUsername"] = user.Username,
-                ["UserId"] = user.Id
+                ["UserId"] = user.Id,
+                ["UserIdN"] = user.Id.ToString("N")
             };
 
             await _webhookSender.SendNotification(NotificationType.PlaybackStop, userDataObject, eventArgs.Item.GetType())
