@@ -11,6 +11,71 @@ namespace Jellyfin.Plugin.Webhook.Helpers;
 /// </summary>
 public static class HandlebarsFunctionHelpers
 {
+    private static readonly HandlebarsBlockHelper StringEqualityAllHelper = (output, options, context, arguments) =>
+    {
+        if (arguments.Length < 2)
+        {
+            throw new HandlebarsException("{{if_all}} helper requires at least two arguments");
+        }
+
+        if (arguments.Length % 2 != 0)
+        {
+            throw new HandlebarsException("{{if_all}} helper must have an even number of arguments");
+        }
+
+        bool isMatch = true;
+        for (int i = 0; i < arguments.Length; i += 2)
+        {
+            if (!string.Equals(GetStringValue(arguments[i]), GetStringValue(arguments[i + 1]), StringComparison.OrdinalIgnoreCase))
+            {
+                isMatch = false;
+                break;
+            }
+        }
+
+        if (isMatch)
+        {
+            options.Template(output, context);
+        }
+        else
+        {
+            options.Inverse(output, context);
+        }
+    };
+
+    private static readonly HandlebarsBlockHelper StringEqualityAnyHelper = (output, options, context, arguments) =>
+    {
+        if (arguments.Length < 2)
+        {
+            throw new HandlebarsException("{{if_any}} helper requires at least two arguments");
+        }
+
+        if (arguments.Length % 2 != 0)
+        {
+            throw new HandlebarsException("{{if_any}} helper must have an even number of arguments");
+        }
+
+        var argument = GetStringValue(arguments[0]);
+        bool isMatch = false;
+        for (int i = 0; i < arguments.Length; i += 2)
+        {
+            if (string.Equals(GetStringValue(arguments[i]), GetStringValue(arguments[i + 1]), StringComparison.OrdinalIgnoreCase))
+            {
+                isMatch = true;
+                break;
+            }
+        }
+
+        if (isMatch)
+        {
+            options.Template(output, context);
+        }
+        else
+        {
+            options.Inverse(output, context);
+        }
+    };
+
     private static readonly HandlebarsBlockHelper StringEqualityHelper = (output, options, context, arguments) =>
     {
         if (arguments.Length != 2)
@@ -79,6 +144,8 @@ public static class HandlebarsFunctionHelpers
     /// </summary>
     public static void RegisterHelpers()
     {
+        Handlebars.RegisterHelper("if_all", StringEqualityAllHelper);
+        Handlebars.RegisterHelper("if_any", StringEqualityAnyHelper);
         Handlebars.RegisterHelper("if_equals", StringEqualityHelper);
         Handlebars.RegisterHelper("if_exist", StringExistHelper);
         Handlebars.RegisterHelper("link_to", (writer, context, parameters) =>
