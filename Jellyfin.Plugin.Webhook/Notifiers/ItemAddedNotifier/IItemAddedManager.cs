@@ -1,4 +1,3 @@
-﻿using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 
 namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
@@ -9,14 +8,16 @@ namespace Jellyfin.Plugin.Webhook.Notifiers.ItemAddedNotifier;
 public interface IItemAddedManager
 {
     /// <summary>
-    /// Process the current queue.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task ProcessItemsAsync();
-
-    /// <summary>
-    /// Add item to process queue.
+    /// Add item to the pending queue. The webhook fires when
+    /// <see cref="HandleItemUpdated"/> sees this item with metadata.
     /// </summary>
     /// <param name="item">The added item.</param>
     public void AddItem(BaseItem item);
+
+    /// <summary>
+    /// Called when any library item is updated. If the item is in the
+    /// pending queue and now has provider IDs, fires the webhook.
+    /// </summary>
+    /// <param name="item">The updated item.</param>
+    public void HandleItemUpdated(BaseItem item);
 }
