@@ -8,6 +8,7 @@ using Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
 using Jellyfin.Plugin.Webhook.Destinations.Pushover;
 using Jellyfin.Plugin.Webhook.Destinations.Slack;
 using Jellyfin.Plugin.Webhook.Destinations.Smtp;
+using Jellyfin.Plugin.Webhook.Tester;
 using MediaBrowser.Model.Plugins;
 
 namespace Jellyfin.Plugin.Webhook.Configuration;
@@ -32,6 +33,7 @@ public class PluginConfiguration : BasePluginConfiguration
         SlackOptions = Array.Empty<SlackOption>();
         SmtpOptions = Array.Empty<SmtpOption>();
         MqttOptions = Array.Empty<MqttOption>();
+        TestOptions = Array.Empty<TestOption>();
     }
 
     /// <summary>
@@ -83,4 +85,9 @@ public class PluginConfiguration : BasePluginConfiguration
     /// Gets or sets the mqtt options.
     /// </summary>
     public MqttOption[] MqttOptions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the test options.
+    /// </summary>
+    public TestOption[] TestOptions { get; set; }
 }

@@ -32,7 +32,20 @@ Change your `logging.json` file to output `debug` logs for `Jellyfin.Plugin.Webh
         }
 
 ```
+At the bottom of the configuration page, you can make a test notification for each notification type and item type. This will send a simulated notification to the configured webhooks with the provided test data. The test data is a JSON object that contains all the variables used by your handlebars template.
 
+Example test data for a movie added notification:
+```json
+{
+  "Timestamp": "2026-04-30T15:46:39.5078129-06:00",
+  "Name": "Spirited Away",
+  "Overview": "A young girl, Chihiro, becomes trapped in a strange new world of spirits. When her parents undergo a mysterious transformation, she must call upon the courage she never knew she had to free her family.",
+  "ItemId": "4e19c34d-da84-d3eb-8952-8a246315ee8a",
+  "Year": 2001,
+  "Provider_tmdb": "129",
+  "Provider_imdb": "tt0245429"
+}
+```
 
 ## Documentation:
 Use [Handlebars](https://handlebarsjs.com/guide/) templating engine to format notifications however you wish.
