@@ -1,0 +1,46 @@
+{
+  "content": "{{MentionType}}",
+  "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
+  "username": "{{BotUsername}}",
+  "embeds": [
+    {
+      "author": {
+        "name": "{{#if_equals NotificationType 'AuthenticationSuccess'}}✅ Authentication Success{{else}}❌ Authentication Failure{{/if_equals}}",
+        "url": "{{ServerUrl}}"
+      },
+      "description": "{{#if_equals NotificationType 'AuthenticationSuccess'}}> A user successfully signed in to Jellyfin.{{else}}> A login attempt failed on Jellyfin.{{/if_equals}}",
+      "color": 11164867,
+      "fields": [
+        {
+          "name": "User",
+          "value": "{{{NotificationUsername}}}",
+          "inline": true
+        }{{#if_exist ClientName}},
+        {
+          "name": "Client",
+          "value": "{{ClientName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist DeviceName}},
+        {
+          "name": "Device",
+          "value": "{{DeviceName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist RemoteEndPoint}},
+        {
+          "name": "IP Address",
+          "value": "{{RemoteEndPoint}}",
+          "inline": true
+        }{{/if_exist}},
+        {
+          "name": "Jellyfin",
+          "value": "[Open]({{ServerUrl}})",
+          "inline": true
+        }
+      ],
+      "footer": {
+        "text": "{{{ServerName}}}"
+      },
+      "timestamp": "{{Timestamp}}"
+    }
+  ]
+}

@@ -1,56 +1,68 @@
 {
-    "content": "{{MentionType}}",
-    "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
-    "username": "{{BotUsername}}",
-    "embeds": [
+  "content": "{{MentionType}}",
+  "avatar_url": "{{ServerUrl}}/Users/{{UserId}}/Images/Primary",
+  "username": "{{BotUsername}}",
+  "embeds": [
+    {
+      "author": {
+        "name": "{{#if_equals ItemType 'Episode'}}⏹️ Playback Stopped • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}{{else}}{{#if_equals ItemType 'Movie'}}🛑 Playback Stopped • {{{Name}}}{{#if_exist Year}} ({{Year}}){{/if_exist}}{{else}}{{#if_equals ItemType 'Audio'}}⏸️ Playback Stopped • {{{Name}}}{{else}}⏹️ Playback Stopped • {{{Name}}}{{/if_equals}}{{/if_equals}}{{/if_equals}}",
+        "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
+      },
+      "thumbnail": {
+        "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
+      },
+      "image": {
+        "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Backdrop"
+      },
+      "description": "{{#if_exist Overview}}> {{{Overview}}}{{/if_exist}}",
+      "color": 12737371,
+      "fields": [
+        {{#if_exist PremiereDate}}
         {
-            "author": {
-                {{#if_equals ItemType 'Episode'}}
-                    {{#if_equals PlayedToCompletion true}}
-                        "name": "Playback Completed • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
-                    {{else}}
-                        "name": "Playback Stopped • {{{SeriesName}}} S{{SeasonNumber00}}E{{EpisodeNumber00}} ~ {{{Name}}}",
-                    {{/if_equals}}
-                    
-                {{else}}
-                    {{#if_equals PlayedToCompletion true}}
-                        "name": "Playback Completed • {{{Name}}} ({{Year}})",
-                    {{else}}
-                        "name": "Playback Stopped • {{{Name}}} ({{Year}})",
-                    {{/if_equals}}
-                {{/if_equals}}
-
-                "url": "{{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}}"
-            },
-
-            "thumbnail":{
-                "url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary"
-            },
-
-            "description": "> {{{Overview}}}\n\n``[{{PlaybackPosition}}/{{RunTime}}]``",
-
-            {{#if_equals PlayedToCompletion true}}
-                "color": "3381759",
-            {{else}}
-                "color": "15737923",
-            {{/if_equals}}
-            
-            
-
-            "footer": {
-                "text": "{{{ServerName}}}",
-                "icon_url": "{{AvatarUrl}}"
-            },
-            
-            "fields": [
-            {
-              "name": "User",
-              "value": "{{{NotificationUsername}}}",
-              "inline": true
-            }
-            ],
-
-            "timestamp": "{{Timestamp}}"
+          "name": "Release Date",
+          "value": "{{PremiereDate}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist Genres}},
+        {
+          "name": "Genre",
+          "value": "{{Genres}}",
+          "inline": false
+        }{{/if_exist}},
+        {
+          "name": "User",
+          "value": "{{{NotificationUsername}}}",
+          "inline": true
+        }{{#if_exist ClientName}},
+        {
+          "name": "Client",
+          "value": "{{ClientName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist DeviceName}},
+        {
+          "name": "Device",
+          "value": "{{DeviceName}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist PlayMethod}},
+        {
+          "name": "Play Method",
+          "value": "{{PlayMethod}}",
+          "inline": true
+        }{{/if_exist}}{{#if_exist PlaybackPosition}},
+        {
+          "name": "Runtime",
+          "value": "`[{{PlaybackPosition}}/{{RunTime}}]`",
+          "inline": true
+        }{{/if_exist}},
+        {
+          "name": "Jellyfin",
+          "value": "[Open]({{ServerUrl}}/web/index.html#!/details?id={{ItemId}}&serverId={{ServerId}})",
+          "inline": true
         }
-    ]
+      ],
+      "footer": {
+        "text": "{{{ServerName}}}"
+      },
+      "timestamp": "{{Timestamp}}"
+    }
+  ]
 }
