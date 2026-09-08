@@ -47,6 +47,7 @@ public class WebhookPlugin : BasePlugin<PluginConfiguration>, IHasWebPages
         yield return new PluginPageInfo
         {
             Name = Name,
+            EnableInMainMenu = true,
             EmbeddedResourcePath = prefix + ".Configuration.Web.config.html"
         };
 
