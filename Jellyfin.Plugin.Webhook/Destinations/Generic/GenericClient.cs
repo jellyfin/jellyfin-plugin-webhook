@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Extensions;
-using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
@@ -81,11 +79,7 @@ public class GenericClient : BaseClient, IWebhookClient<GenericOption>
             }
 
             httpRequestMessage.Content = new StringContent(body, Encoding.UTF8, contentType);
-            using var response = await _httpClientFactory
-                .CreateClient(NamedClient.Default)
-                .SendAsync(httpRequestMessage)
-                .ConfigureAwait(false);
-            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            await SendAsync(_httpClientFactory, httpRequestMessage, _logger).ConfigureAwait(false);
         }
         catch (HttpRequestException e)
         {

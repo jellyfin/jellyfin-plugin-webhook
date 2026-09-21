@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Extensions;
-using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushover;
@@ -78,12 +76,11 @@ public class PushoverClient : BaseClient, IWebhookClient<PushoverOption>
             }
 
             _logger.LogDebug("SendAsync Body: {@Body}", body);
-            using var content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
-            using var response = await _httpClientFactory
-                .CreateClient(NamedClient.Default)
-                .PostAsync(string.IsNullOrEmpty(option.WebhookUri) ? PushoverOption.ApiUrl : new Uri(option.WebhookUri), content)
-                .ConfigureAwait(false);
-            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            using var request = new HttpRequestMessage(HttpMethod.Post, string.IsNullOrEmpty(option.WebhookUri) ? PushoverOption.ApiUrl : new Uri(option.WebhookUri))
+            {
+                Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            await SendAsync(_httpClientFactory, request, _logger).ConfigureAwait(false);
         }
         catch (HttpRequestException e)
         {

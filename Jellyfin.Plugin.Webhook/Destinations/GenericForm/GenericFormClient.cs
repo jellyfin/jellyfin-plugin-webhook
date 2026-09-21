@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Extensions;
-using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.GenericForm;
@@ -89,11 +87,7 @@ public class GenericFormClient : BaseClient, IWebhookClient<GenericFormOption>
             }
 
             httpRequestMessage.Content = new FormUrlEncodedContent(formFields);
-            using var response = await _httpClientFactory
-                .CreateClient(NamedClient.Default)
-                .SendAsync(httpRequestMessage)
-                .ConfigureAwait(false);
-            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            await SendAsync(_httpClientFactory, httpRequestMessage, _logger).ConfigureAwait(false);
         }
         catch (HttpRequestException e)
         {

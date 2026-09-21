@@ -3,8 +3,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Webhook.Extensions;
-using MediaBrowser.Common.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Jellyfin.Plugin.Webhook.Destinations.Pushbullet;
@@ -56,11 +54,7 @@ public class PushbulletClient : BaseClient, IWebhookClient<PushbulletOption>
             requestOptions.Headers.TryAddWithoutValidation("Access-Token", option.Token);
             requestOptions.Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
 
-            using var response = await _httpClientFactory
-                .CreateClient(NamedClient.Default)
-                .SendAsync(requestOptions)
-                .ConfigureAwait(false);
-            await response.LogIfFailedAsync(_logger).ConfigureAwait(false);
+            await SendAsync(_httpClientFactory, requestOptions, _logger).ConfigureAwait(false);
         }
         catch (HttpRequestException e)
         {
