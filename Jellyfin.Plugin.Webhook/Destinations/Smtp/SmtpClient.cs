@@ -50,9 +50,9 @@ public class SmtpClient : BaseClient, IWebhookClient<SmtpOption>
             using var smtpClient = new MailKit.Net.Smtp.SmtpClient();
             var secureSocketOptions = option.ProtocolEncryption switch 
             {
-                UseSsl   => SecureSocketOptions.SslOnConnect,
-                StartTls => SecureSocketOptions.StartTls,
-                None     => SecureSocketOptions.None,
+                "UseSsl"   => SecureSocketOptions.SslOnConnect,
+                "StartTls" => SecureSocketOptions.StartTls,
+                "None"     => SecureSocketOptions.None,
                 -        => SecureSocketOptions.Auto
             };
             
