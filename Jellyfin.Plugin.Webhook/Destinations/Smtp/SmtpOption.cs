@@ -46,9 +46,9 @@ public class SmtpOption : BaseOption
     public string Password { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets a value indicating whether to use ssl.
+    /// Gets or sets a value indicating what encryption to use with connection.
     /// </summary>
-    public bool UseSsl { get; set; }
+    public string ProtocolEncryption { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether the body is html.
