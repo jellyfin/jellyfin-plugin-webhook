@@ -562,7 +562,7 @@ export default function (view) {
                 element.querySelector("[data-name=chkUseCredentials]").checked = config.UseCredentials || false;
                 element.querySelector("[data-name=txtUsername]").value = config.Username || "";
                 element.querySelector("[data-name=txtPassword]").value = config.Password || "";
-                element.querySelector("[data-name=chkUseSsl]").checked = config.UseSsl || false;
+                element.querySelector("[data-name=ddlProtocolEncryption]").value = config.ProtocolEncryption || "";
                 element.querySelector("[data-name=chkIsHtml]").checked = config.IsHtml || false;
                 element.querySelector("[data-name=txtSubjectTemplate]").value = Webhook.atou(config.SubjectTemplate || "");
             },
@@ -575,7 +575,7 @@ export default function (view) {
                 config.UseCredentials = element.querySelector("[data-name=chkUseCredentials]").checked || false;
                 config.Username = element.querySelector("[data-name=txtUsername]").value || "";
                 config.Password = element.querySelector("[data-name=txtPassword]").value || "";
-                config.UseSsl = element.querySelector("[data-name=chkUseSsl]").checked || false;
+                config.ProtocolEncryption = element.querySelector("[data-name=ddlProtocolEncryption]").value || "";
                 config.IsHtml = element.querySelector("[data-name=chkIsHtml]").checked || false;
                 config.SubjectTemplate = Webhook.utoa(element.querySelector("[data-name=txtSubjectTemplate]").value || "");
                 return config;
