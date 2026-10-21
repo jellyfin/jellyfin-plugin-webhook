@@ -128,5 +128,15 @@ public enum NotificationType
     /// <summary>
     /// Item Deleted notification.
     /// </summary>
-    ItemDeleted = 24
+    ItemDeleted = 24,
+
+    /// <summary>
+    /// Item played notification.
+    /// </summary>
+    ItemPlayed = 25,
+
+    /// <summary>
+    /// Item unplayed notification.
+    /// </summary>
+    ItemUnplayed = 26
 }

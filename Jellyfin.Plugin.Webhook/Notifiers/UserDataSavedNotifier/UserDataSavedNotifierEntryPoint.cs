@@ -5,6 +5,7 @@ using Jellyfin.Plugin.Webhook.Destinations;
 using Jellyfin.Plugin.Webhook.Helpers;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Model.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -61,28 +62,48 @@ public class UserDataSavedNotifierEntryPoint : IHostedService
                 return;
             }
 
-            var dataObject = DataObjectHelpers
-                .GetBaseDataObject(_applicationHost, NotificationType.UserDataSaved)
-                .AddBaseItemData(eventArgs.Item)
-                .AddUserItemData(eventArgs.UserData);
-
-            dataObject["SaveReason"] = eventArgs.SaveReason.ToString();
-            dataObject["NotificationUsername"] = user.Username;
-            dataObject["UserId"] = user.Id;
-
-            var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
-            await using (scope.ConfigureAwait(false))
+            var specificType = GetSpecificNotificationType(eventArgs.SaveReason, eventArgs.UserData.Played);
+            if (specificType is not null)
             {
-                var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
-                await webhookSender
-                    .SendNotification(NotificationType.UserDataSaved, dataObject, eventArgs.Item.GetType())
-                    .ConfigureAwait(false);
+                await SendNotificationAsync(specificType.Value, eventArgs, user.Username, user.Id).ConfigureAwait(false);
             }
+
+            await SendNotificationAsync(NotificationType.UserDataSaved, eventArgs, user.Username, user.Id).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Unable to send notification");
         }
+    }
+
+    private async Task SendNotificationAsync(NotificationType notificationType, UserDataSaveEventArgs eventArgs, string username, Guid userId)
+    {
+        var dataObject = DataObjectHelpers
+            .GetBaseDataObject(_applicationHost, notificationType)
+            .AddBaseItemData(eventArgs.Item)
+            .AddUserItemData(eventArgs.UserData);
+
+        dataObject["SaveReason"] = eventArgs.SaveReason.ToString();
+        dataObject["NotificationUsername"] = username;
+        dataObject["UserId"] = userId;
+
+        var scope = _applicationHost.ServiceProvider!.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false))
+        {
+            var webhookSender = scope.ServiceProvider.GetRequiredService<IWebhookSender>();
+            await webhookSender
+                .SendNotification(notificationType, dataObject, eventArgs.Item.GetType())
+                .ConfigureAwait(false);
+        }
+    }
+
+    private static NotificationType? GetSpecificNotificationType(UserDataSaveReason saveReason, bool played)
+    {
+        return saveReason switch
+        {
+            UserDataSaveReason.TogglePlayed => played ? NotificationType.ItemPlayed : NotificationType.ItemUnplayed,
+            _ => null
+        };
     }
 
     /// <inheritdoc />
