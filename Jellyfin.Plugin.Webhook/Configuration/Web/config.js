@@ -61,7 +61,9 @@ export default function (view) {
                 "UserLockedOut": "User Locked Out",
                 "UserPasswordChanged": "User Password Changed",
                 "UserUpdated": "User Updated",
-                "UserDataSaved": "User Data Saved"
+                "UserDataSaved": "User Data Saved",
+                "ItemPlayed": "Marked Played",
+                "ItemUnplayed": "Marked Unplayed"
             },
             create: function (container, selected = []) {
                 const notificationTypeKeys = Object.keys(Webhook.notificationType.values).sort();
