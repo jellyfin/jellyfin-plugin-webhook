@@ -39,6 +39,13 @@ Use [Handlebars](https://handlebarsjs.com/guide/) templating engine to format no
 
 See [Templates](Jellyfin.Plugin.Webhook/Templates) for sample templates.
 
+#### Audiobook playback notifications:
+- Enable **Audiobooks** in each destination's item filters and select **Playback Start** and/or **Playback Stop**.
+- This is separate from **Songs**, which continues to control music. Audiobooks are disabled by default, so existing configurations do not start sending new notifications after upgrading.
+- Audiobook payloads use `ItemType == AudioBook`. Custom templates that only match `Audio` need a separate audiobook branch.
+- See `Templates/Discord/AudioBookPlaybackStart.handlebars` and `AudioBookPlaybackStop.handlebars` for audiobook-only examples showing the listener, title, playback position, runtime, and completion on stop. Enable **Skip Empty Message Body** when using these conditional templates.
+- Position and runtime describe the current item/file, not aggregate progress across a multi-file book. These examples use the existing time-format fields; the raw tick fields are also available to custom consumers.
+
 #### Helpers:
 
 - if_equals

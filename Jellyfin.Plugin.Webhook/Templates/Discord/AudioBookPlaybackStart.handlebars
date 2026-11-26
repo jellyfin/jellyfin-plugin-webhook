@@ -1,0 +1,9 @@
+{{#if_equals ItemType 'AudioBook'}}
+{
+    "embeds": [{
+        "title": "Audiobook started: {{{Name}}}",
+        "description": "Listener: {{json_encode NotificationUsername}}\nPosition: {{PlaybackPosition}} / {{RunTime}}",
+        "color": 3394611
+    }]
+}
+{{/if_equals}}
