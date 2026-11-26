@@ -133,7 +133,7 @@ public class WebhookSender : IWebhookSender
         }
     }
 
-    private static bool NotifyOnItem<T>(T baseOptions, Type? itemType)
+    internal static bool NotifyOnItem<T>(T baseOptions, Type? itemType)
         where T : BaseOption
     {
         if (itemType is null)
@@ -167,6 +167,11 @@ public class WebhookSender : IWebhookSender
         }
 
         if (baseOptions.EnableSongs && itemType == typeof(Audio))
+        {
+            return true;
+        }
+
+        if (baseOptions.EnableAudiobooks && itemType == typeof(AudioBook))
         {
             return true;
         }

@@ -63,6 +63,11 @@ public abstract class BaseOption
     public bool EnableSongs { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to notify on audiobooks.
+    /// </summary>
+    public bool EnableAudiobooks { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether to notify on videos.
     /// </summary>
     public bool EnableVideos { get; set; }

@@ -1,0 +1,13 @@
+{{#if_equals ItemType 'AudioBook'}}
+{
+    "embeds": [{
+        {{#if_equals PlayedToCompletion true}}
+        "title": "Audiobook completed: {{{Name}}}",
+        {{else}}
+        "title": "Audiobook stopped: {{{Name}}}",
+        {{/if_equals}}
+        "description": "Listener: {{json_encode NotificationUsername}}\nPosition: {{PlaybackPosition}} / {{RunTime}}",
+        "color": 15737923
+    }]
+}
+{{/if_equals}}
